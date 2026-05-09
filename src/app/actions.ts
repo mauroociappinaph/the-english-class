@@ -113,3 +113,17 @@ Schema:
     return null;
   }
 }
+
+export async function getExpressions() {
+  const expressions = await prisma.expression.findMany({
+    include: { examples: true },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return expressions.map(ex => ({
+    ...ex,
+    secondaryMeanings: JSON.parse(ex.secondaryMeanings || "[]"),
+    usageTips: JSON.parse(ex.usageTips || "{}"),
+    tenses: JSON.parse(ex.tenses || "{}"),
+  }));
+}

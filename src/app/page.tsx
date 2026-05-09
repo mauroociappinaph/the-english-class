@@ -5,16 +5,22 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, Sparkles, BookOpen, GraduationCap, ChevronRight, Languages } from "lucide-react";
 import { useStudyStore } from "@/store/useStudyStore";
 import { INITIAL_EXPRESSION } from "@/lib/constants";
-import { analyzeExpression } from "./actions";
+import { analyzeExpression, getExpressions } from "./actions";
 
 export default function Home() {
   const [input, setInput] = useState("");
   const [activeTab, setActiveTab] = useState<"search" | "library" | "study">("search");
-  const { isAnalyzing, setAnalyzing, currentAnalysis, setCurrentAnalysis, expressions } = useStudyStore();
+  const { isAnalyzing, setAnalyzing, currentAnalysis, setCurrentAnalysis, expressions, setExpressions, addExpression } = useStudyStore();
 
   useEffect(() => {
     setCurrentAnalysis(INITIAL_EXPRESSION);
-  }, [setCurrentAnalysis]);
+    // Fetch initial library
+    const fetchLibrary = async () => {
+      const library = await getExpressions();
+      setExpressions(library as any);
+    };
+    fetchLibrary();
+  }, [setCurrentAnalysis, setExpressions]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +31,10 @@ export default function Home() {
       const result = await analyzeExpression(input.toLowerCase());
       if (result) {
         setCurrentAnalysis(result);
+        // Update library if it's new
+        if (!expressions.find(e => e.id === result.id)) {
+          addExpression(result as any);
+        }
       } else {
         // Fallback or show "not found"
         console.log("No result found for:", input);
@@ -241,21 +251,27 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {/* Mock Saved Expressions */}
-          {[currentAnalysis, ...expressions].map((ex, i) => (
-            <div key={i} className="glass p-6 rounded-2xl space-y-3 relative group overflow-hidden">
-               <div className={`absolute top-0 right-0 w-2 h-full ${getCefrColor(ex?.cefr || 'A1')}`} />
-               <div className="flex justify-between items-center">
-                  <span className="text-[10px] font-bold text-zinc-500 uppercase">{ex?.type}</span>
-                  <span className="text-[10px] font-bold text-white/50">{ex?.cefr}</span>
-               </div>
-               <h4 className="text-xl font-bold">{ex?.text}</h4>
-               <p className="text-zinc-400 text-sm">{ex?.translation}</p>
-               <button className="text-xs text-blue-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-                  Ver detalle <ChevronRight size={12} />
-               </button>
-            </div>
-          ))}
+        {/* Real Saved Expressions */}
+        {expressions.map((ex, i) => (
+          <div key={ex.id || i} className="glass p-6 rounded-2xl space-y-3 relative group overflow-hidden">
+             <div className={`absolute top-0 right-0 w-2 h-full ${getCefrColor(ex?.cefr || 'A1')}`} />
+             <div className="flex justify-between items-center">
+                <span className="text-[10px] font-bold text-zinc-500 uppercase">{ex?.type}</span>
+                <span className="text-[10px] font-bold text-white/50">{ex?.cefr}</span>
+             </div>
+             <h4 className="text-xl font-bold">{ex?.text}</h4>
+             <p className="text-zinc-400 text-sm">{ex?.translation}</p>
+             <button 
+               onClick={() => {
+                 setCurrentAnalysis(ex);
+                 setActiveTab("search");
+               }}
+               className="text-xs text-blue-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1"
+             >
+                Ver detalle <ChevronRight size={12} />
+             </button>
+          </div>
+        ))}
         </motion.div>
       )}
 
