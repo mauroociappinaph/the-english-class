@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Expression {
+  id                String   @id @default(cuid())
+  text              String   @unique
+  translation       String
+  meaning           String
+  secondaryMeanings String?  // Store as JSON string
+  type              String   // verb, phrasal_verb, idiom, etc.
+  cefr              String   // A1-C2
+  ipa               String?
+  frequency         Float?
+  formality         String?
+  usageTips         String?  // Store as JSON string
+  tenses            String?  // Store as JSON string
+  status            String   @default("pending") // pending, learning, mastered
+  difficulty        Int      @default(1)
+  timesStudied      Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  examples          Example[]
+}
+
+model Example {
+  id           String     @id @default(cuid())
+  text         String
+  category     String     // cotidiano, avanzado, dialectal
+  explanation  String?
+  expressionId String
+  expression   Expression @relation(fields: [expressionId], references: [id])
+}

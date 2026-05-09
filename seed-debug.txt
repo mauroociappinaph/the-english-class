@@ -1,0 +1,33 @@
+SEED ERROR: PrismaClientKnownRequestError: 
+Invalid `prisma.expression.upsert()` invocation in
+/Users/mauroociappina/Desktop/TheEnglishClass/prisma/seed.ts:9:50
+
+  6 
+  7 async function main() {
+  8   try {
+→ 9     const isPackedWith = await prisma.expression.upsert(
+The table `main.Expression` does not exist in the current database.
+    at zr.handleRequestError (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client/src/runtime/RequestHandler.ts:237:13)
+    at zr.handleAndLogRequestError (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client/src/runtime/RequestHandler.ts:183:12)
+    at zr.request (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client/src/runtime/RequestHandler.ts:152:12)
+    at async a (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client/src/runtime/getPrismaClient.ts:963:24)
+    at async main (/Users/mauroociappina/Desktop/TheEnglishClass/prisma/seed.ts:9:26) {
+  code: 'P2021',
+  meta: {
+    modelName: 'Expression',
+    driverAdapterError: DriverAdapterError: TableDoesNotExist
+        at BetterSQLite3Transaction.onError (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/adapter-better-sqlite3/dist/index.js:569:11)
+        at BetterSQLite3Transaction.performIO (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/adapter-better-sqlite3/dist/index.js:564:12)
+        at BetterSQLite3Transaction.queryRaw (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/adapter-better-sqlite3/dist/index.js:505:63)
+        at callback (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client-engine-runtime/src/interpreter/query-interpreter.ts:188:16)
+        at withQuerySpanAndEvent (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client-engine-runtime/src/tracing.ts:80:12)
+        at e.#withQuerySpanAndEvent (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client-engine-runtime/src/interpreter/query-interpreter.ts:373:12)
+        at e.interpretNode (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client-engine-runtime/src/interpreter/query-interpreter.ts:186:37)
+        at e.interpretNode (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client-engine-runtime/src/interpreter/query-interpreter.ts:128:40)
+        at e.interpretNode (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client-engine-runtime/src/interpreter/query-interpreter.ts:272:52)
+        at e.interpretNode (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client-engine-runtime/src/interpreter/query-interpreter.ts:262:36) {
+      cause: [Object]
+    }
+  },
+  clientVersion: '7.8.0'
+}

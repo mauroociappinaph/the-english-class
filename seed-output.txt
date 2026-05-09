@@ -1,0 +1,13 @@
+TypeError: Cannot read properties of undefined (reading 'replace')
+    at createBetterSQLite3Client (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/adapter-better-sqlite3/dist/index.js:658:22)
+    at PrismaBetterSqlite3AdapterFactory.connect (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/adapter-better-sqlite3/dist/index.js:647:59)
+    at e.connect (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client/src/runtime/core/engines/client/LocalExecutor.ts:49:58)
+    at jt.#connectExecutor (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client/src/runtime/core/engines/client/ClientEngine.ts:239:34)
+    at callback (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client/src/runtime/core/engines/client/ClientEngine.ts:188:35)
+    at Object.runInChildSpan (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client/src/runtime/core/tracing/TracingHelper.ts:28:12)
+    at fi.runInChildSpan (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client/src/runtime/core/tracing/TracingHelper.ts:53:36)
+    at jt.#ensureStarted (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client/src/runtime/core/engines/client/ClientEngine.ts:183:47)
+    at jt.request (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client/src/runtime/core/engines/client/ClientEngine.ts:470:52)
+    at Object.singleLoader (/Users/mauroociappina/Desktop/TheEnglishClass/node_modules/@prisma/client/src/runtime/RequestHandler.ts:112:52) {
+  clientVersion: '7.8.0'
+}
