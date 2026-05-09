@@ -34,20 +34,20 @@ export async function analyzeExpression(text: string) {
 Analyze the provided English expression and return a strictly valid JSON object.
 
 RULES:
-- "translation": Provide a natural Spanish translation.
+- "translation": Provide a natural Spanish translation of the expression.
 - "meaning": Provide a clear explanation in ENGLISH.
 - "secondaryMeanings": Provide other meanings in ENGLISH.
 - "usageTips": All descriptions must be in ENGLISH.
-- "tenses": All examples must be in ENGLISH.
-- "examples": All texts and explanations must be in ENGLISH.
+- "tenses": Each tense must have a "text" (ENGLISH example) and a "translation" (SPANISH).
+- "examples": Each example must have a "text" (ENGLISH), "translation" (SPANISH), and "explanation" (ENGLISH).
 
 Expression: "${normalizedText}"
 
 Schema:
 {
-  "translation": "natural Spanish translation",
-  "meaning": "clear explanation in English",
-  "secondaryMeanings": ["optional", "other", "meanings in English"],
+  "translation": "Spanish translation",
+  "meaning": "English explanation",
+  "secondaryMeanings": ["English secondary meaning"],
   "type": "verb | phrasal_verb | idiom | expression | tense",
   "cefr": "A1 | A2 | B1 | B2 | C1 | C2",
   "ipa": "/phonetic transcription/",
@@ -59,15 +59,18 @@ Schema:
     "context": "English description"
   },
   "tenses": {
-    "present": "Example in English",
-    "past": "Example in English",
-    "presentPerfect": "Example in English",
-    "future": "Example in English"
+    "present": { "text": "English example", "translation": "Spanish translation" },
+    "past": { "text": "English example", "translation": "Spanish translation" },
+    "presentPerfect": { "text": "English example", "translation": "Spanish translation" },
+    "future": { "text": "English example", "translation": "Spanish translation" }
   },
   "examples": [
-    { "text": "natural example 1 in English", "category": "cotidiano", "explanation": "English explanation" },
-    { "text": "advanced example 2 in English", "category": "avanzado", "explanation": "English explanation" },
-    { "text": "dialectal/slang example 3 in English", "category": "dialectal", "explanation": "English explanation" }
+    { 
+      "text": "English example", 
+      "translation": "Spanish translation",
+      "category": "cotidiano", 
+      "explanation": "English explanation" 
+    }
   ]
 }`;
 
@@ -100,6 +103,7 @@ Schema:
         examples: {
           create: (result.examples || []).map((ex: any) => ({
             text: ex.text,
+            translation: ex.translation, // New field
             category: ex.category,
             explanation: ex.explanation
           }))

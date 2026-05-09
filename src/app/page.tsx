@@ -6,6 +6,7 @@ import { Search, Sparkles, BookOpen, GraduationCap, ChevronRight, Languages, X }
 import { useStudyStore } from "@/store/useStudyStore";
 import { INITIAL_EXPRESSION } from "@/lib/constants";
 import { analyzeExpression, getExpressions, deleteExpression } from "./actions";
+import { InteractiveText } from "@/components/InteractiveText";
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -179,11 +180,15 @@ export default function Home() {
                       <h3>Verb Tenses / Timeline</h3>
                     </div>
                     <div className="space-y-3">
-                      {Object.entries(currentAnalysis.tenses).map(([tense, text]: [string, any]) => (
+                      {Object.entries(currentAnalysis.tenses).map(([tense, data]: [string, any]) => (
                         <div key={tense} className="flex gap-4 items-center group">
                           <span className="w-32 text-xs font-bold text-zinc-500 uppercase">{tense.replace('_', ' ')}</span>
                           <div className="flex-1 bg-white/5 p-3 rounded-xl border border-transparent group-hover:border-purple-500/30 transition-colors">
-                            <p className="text-zinc-200">{text}</p>
+                            <InteractiveText 
+                              text={data.text || data} 
+                              translation={data.translation} 
+                              className="text-zinc-200" 
+                            />
                           </div>
                         </div>
                       ))}
@@ -203,7 +208,13 @@ export default function Home() {
                       {currentAnalysis.examples.map((ex: any, i: number) => (
                         <div key={i} className="space-y-1">
                           <span className="text-[10px] font-black uppercase text-zinc-500 tracking-tighter">{ex.category}</span>
-                          <p className="text-sm text-zinc-200 leading-snug">{ex.text}</p>
+                          <div className="block">
+                            <InteractiveText 
+                              text={ex.text} 
+                              translation={ex.translation} 
+                              className="text-sm text-zinc-200 leading-snug" 
+                            />
+                          </div>
                           {ex.explanation && <p className="text-[10px] text-zinc-500 italic">{ex.explanation}</p>}
                         </div>
                       ))}

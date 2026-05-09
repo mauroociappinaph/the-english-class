@@ -1,16 +1,40 @@
 {
   "node": {
-    "407515e1a3123c6092a6cdefcd7419542d2dfb2d35": {
+    "40075ed5e4bdd75f3bcff5c089d5334066a9f04dce": {
       "workers": {
         "app/page": {
           "moduleId": "[project]/Desktop/TheEnglishClass/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/Desktop/TheEnglishClass/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false,
-          "exportedName": "getExpression",
+          "exportedName": "analyzeExpression",
           "filename": "Desktop/TheEnglishClass/src/app/actions.ts"
         }
       },
       "filename": "Desktop/TheEnglishClass/src/app/actions.ts",
-      "exportedName": "getExpression"
+      "exportedName": "analyzeExpression"
+    },
+    "002a21210d0b7af7d0e6d2c6a9cfcee39d1e5f214a": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/Desktop/TheEnglishClass/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/Desktop/TheEnglishClass/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false,
+          "exportedName": "getExpressions",
+          "filename": "Desktop/TheEnglishClass/src/app/actions.ts"
+        }
+      },
+      "filename": "Desktop/TheEnglishClass/src/app/actions.ts",
+      "exportedName": "getExpressions"
+    },
+    "40b040a34ecb8a20083f7970988d64528bae584432": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/Desktop/TheEnglishClass/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/Desktop/TheEnglishClass/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false,
+          "exportedName": "deleteExpression",
+          "filename": "Desktop/TheEnglishClass/src/app/actions.ts"
+        }
+      },
+      "filename": "Desktop/TheEnglishClass/src/app/actions.ts",
+      "exportedName": "deleteExpression"
     }
   },
   "edge": {},

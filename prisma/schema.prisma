@@ -30,6 +30,7 @@ model Expression {
 model Example {
   id           String     @id @default(cuid())
   text         String
+  translation  String?    // Added for hover translation
   category     String     // cotidiano, avanzado, dialectal
   explanation  String?
   expressionId String

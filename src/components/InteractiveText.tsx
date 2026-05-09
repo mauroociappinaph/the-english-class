@@ -1,0 +1,40 @@
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+interface InteractiveTextProps {
+  text: string;
+  translation: string;
+  className?: string;
+}
+
+export function InteractiveText({ text, translation, className = "" }: InteractiveTextProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div 
+      className={`relative inline-block group cursor-help ${className}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <span className="border-b border-dotted border-zinc-500 group-hover:border-blue-400 group-hover:text-blue-300 transition-colors">
+        {text}
+      </span>
+      
+      <AnimatePresence>
+        {isHovered && translation && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 5, scale: 0.95 }}
+            className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-blue-600 text-white text-xs font-bold rounded-lg shadow-xl whitespace-nowrap pointer-events-none"
+          >
+            {translation}
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-blue-600" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
