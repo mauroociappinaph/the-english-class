@@ -17,6 +17,7 @@ interface StudyState {
   currentAnalysis: any | null;
   setExpressions: (exprs: Expression[]) => void;
   addExpression: (expr: Expression) => void;
+  removeExpression: (id: string) => void;
   setAnalyzing: (val: boolean) => void;
   setCurrentAnalysis: (analysis: any) => void;
 }
@@ -27,6 +28,9 @@ export const useStudyStore = create<StudyState>((set) => ({
   currentAnalysis: null,
   setExpressions: (exprs) => set({ expressions: exprs }),
   addExpression: (expr) => set((state) => ({ expressions: [expr, ...state.expressions] })),
+  removeExpression: (id) => set((state) => ({ 
+    expressions: state.expressions.filter(e => e.id !== id) 
+  })),
   setAnalyzing: (val) => set({ isAnalyzing: val }),
   setCurrentAnalysis: (analysis) => set({ currentAnalysis: analysis }),
 }));

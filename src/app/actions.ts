@@ -127,3 +127,14 @@ export async function getExpressions() {
     tenses: JSON.parse(ex.tenses || "{}"),
   }));
 }
+
+export async function deleteExpression(id: string) {
+  // First delete related examples
+  await prisma.example.deleteMany({
+    where: { expressionId: id },
+  });
+
+  await prisma.expression.delete({
+    where: { id },
+  });
+}

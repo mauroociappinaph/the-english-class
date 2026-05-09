@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Sparkles, BookOpen, GraduationCap, ChevronRight, Languages } from "lucide-react";
+import { Search, Sparkles, BookOpen, GraduationCap, ChevronRight, Languages, X } from "lucide-react";
 import { useStudyStore } from "@/store/useStudyStore";
 import { INITIAL_EXPRESSION } from "@/lib/constants";
-import { analyzeExpression, getExpressions } from "./actions";
+import { analyzeExpression, getExpressions, deleteExpression } from "./actions";
 
 export default function Home() {
   const [input, setInput] = useState("");
   const [activeTab, setActiveTab] = useState<"search" | "library" | "study">("search");
-  const { isAnalyzing, setAnalyzing, currentAnalysis, setCurrentAnalysis, expressions, setExpressions, addExpression } = useStudyStore();
+  const { isAnalyzing, setAnalyzing, currentAnalysis, setCurrentAnalysis, expressions, setExpressions, addExpression, removeExpression } = useStudyStore();
 
   useEffect(() => {
     setCurrentAnalysis(INITIAL_EXPRESSION);
@@ -255,6 +255,21 @@ export default function Home() {
         {expressions.map((ex, i) => (
           <div key={ex.id || i} className="glass p-6 rounded-2xl space-y-3 relative group overflow-hidden">
              <div className={`absolute top-0 right-0 w-2 h-full ${getCefrColor(ex?.cefr || 'A1')}`} />
+             
+             {/* Delete Button */}
+             <button 
+               onClick={async (e) => {
+                 e.stopPropagation();
+                 if (ex.id) {
+                   await deleteExpression(ex.id);
+                   removeExpression(ex.id);
+                 }
+               }}
+               className="absolute top-2 right-4 p-1 rounded-lg bg-red-500/10 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500 hover:text-white"
+             >
+               <X size={14} />
+             </button>
+
              <div className="flex justify-between items-center">
                 <span className="text-[10px] font-bold text-zinc-500 uppercase">{ex?.type}</span>
                 <span className="text-[10px] font-bold text-white/50">{ex?.cefr}</span>
