@@ -1,0 +1,18 @@
+{
+  "node": {
+    "40c307fc1861fa30e0085778fc186c7833229ca59d": {
+      "workers": {
+        "app/page": {
+          "moduleId": 94454,
+          "async": false,
+          "exportedName": "getExpression",
+          "filename": "Desktop/TheEnglishClass/src/app/actions.ts"
+        }
+      },
+      "filename": "Desktop/TheEnglishClass/src/app/actions.ts",
+      "exportedName": "getExpression"
+    }
+  },
+  "edge": {},
+  "encryptionKey": "bIX5ZWU1Op7lT1Jyt7fnx9tzNMUyWOkMhjlrYuVLvEk="
+}

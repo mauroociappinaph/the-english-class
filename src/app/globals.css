@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   --background: #0a0a0a;
@@ -13,9 +11,20 @@ body {
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-cefr-a1: #22c55e;
+  --color-cefr-a2: #84cc16;
+  --color-cefr-b1: #3b82f6;
+  --color-cefr-b2: #6366f1;
+  --color-cefr-c1: #a855f7;
+  --color-cefr-c2: #ec4899;
+}
+
 @layer base {
   * {
-    @apply border-white/10;
+    border-color: rgba(255, 255, 255, 0.1);
   }
 }
 
