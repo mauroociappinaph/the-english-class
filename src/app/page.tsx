@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, Sparkles, BookOpen, GraduationCap, ChevronRight, Languages } from "lucide-react";
 import { useStudyStore } from "@/store/useStudyStore";
 import { INITIAL_EXPRESSION } from "@/lib/constants";
-import { getExpression } from "./actions";
+import { analyzeExpression } from "./actions";
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -22,12 +22,12 @@ export default function Home() {
 
     setAnalyzing(true);
     try {
-      const result = await getExpression(input.toLowerCase());
+      const result = await analyzeExpression(input.toLowerCase());
       if (result) {
         setCurrentAnalysis(result);
       } else {
         // Fallback or show "not found"
-        console.log("No result found in DB for:", input);
+        console.log("No result found for:", input);
       }
     } catch (err) {
       console.error(err);
