@@ -1,10 +1,13 @@
 "use server";
 
 import { prisma } from "@/lib/db";
+import { groq } from "@/lib/groq";
 
 export async function getExpression(text: string) {
+  const normalizedText = text.toLowerCase().trim();
+  
   const expression = await prisma.expression.findUnique({
-    where: { text },
+    where: { text: normalizedText },
     include: { examples: true },
   });
 
@@ -19,11 +22,94 @@ export async function getExpression(text: string) {
 }
 
 export async function analyzeExpression(text: string) {
-  // Simulate AI analysis or check DB
-  const existing = await getExpression(text);
+  const normalizedText = text.toLowerCase().trim();
+  
+  // 1. Check if it exists in DB
+  const existing = await getExpression(normalizedText);
   if (existing) return existing;
 
-  // In a real app, here we would call Gemini
-  // For now, if it's not 'is packed with', we return null or a generic response
-  return null;
+  // 2. Call Groq for analysis
+  try {
+    const prompt = `You are a Senior English Professor and Linguistic Analyst (Cambridge standards). 
+Analyze the provided English expression and return a strictly valid JSON object.
+Translations and explanations MUST be in Spanish.
+
+Expression: "${normalizedText}"
+
+Schema:
+{
+  "translation": "natural Spanish translation",
+  "meaning": "clear explanation in Spanish",
+  "secondaryMeanings": ["optional", "other", "meanings"],
+  "type": "verb | phrasal_verb | idiom | expression | tense",
+  "cefr": "A1 | A2 | B1 | B2 | C1 | C2",
+  "ipa": "/phonetic transcription/",
+  "frequency": 0.0 to 1.0,
+  "formality": "formal | informal | neutral",
+  "usageTips": {
+    "naturalness": "description",
+    "commonMistake": "description",
+    "context": "description"
+  },
+  "tenses": {
+    "present": "Example in present",
+    "past": "Example in past",
+    "presentPerfect": "Example in present perfect",
+    "future": "Example in future"
+  },
+  "examples": [
+    { "text": "natural example 1", "category": "cotidiano", "explanation": "Spanish explanation" },
+    { "text": "advanced example 2", "category": "avanzado", "explanation": "Spanish explanation" },
+    { "text": "dialectal/slang example 3", "category": "dialectal", "explanation": "Spanish explanation" }
+  ]
+}`;
+
+    const completion = await groq.chat.completions.create({
+      messages: [
+        { role: "system", content: "Return ONLY a valid JSON object." },
+        { role: "user", content: prompt }
+      ],
+      model: "llama-3.3-70b-versatile",
+      response_format: { type: "json_object" },
+      temperature: 0.1,
+    });
+
+    const result = JSON.parse(completion.choices[0]?.message?.content || "{}");
+
+    // 3. Save to DB
+    const newExpression = await prisma.expression.create({
+      data: {
+        text: normalizedText,
+        translation: result.translation || "",
+        meaning: result.meaning || "",
+        secondaryMeanings: JSON.stringify(result.secondaryMeanings || []),
+        type: result.type || "expression",
+        cefr: result.cefr || "B1",
+        ipa: result.ipa || "",
+        frequency: result.frequency || 0.5,
+        formality: result.formality || "neutral",
+        usageTips: JSON.stringify(result.usageTips || {}),
+        tenses: JSON.stringify(result.tenses || {}),
+        examples: {
+          create: (result.examples || []).map((ex: any) => ({
+            text: ex.text,
+            category: ex.category,
+            explanation: ex.explanation
+          }))
+        }
+      },
+      include: { examples: true }
+    });
+
+    return {
+      ...newExpression,
+      secondaryMeanings: JSON.parse(newExpression.secondaryMeanings || "[]"),
+      usageTips: JSON.parse(newExpression.usageTips || "{}"),
+      tenses: JSON.parse(newExpression.tenses || "{}"),
+    };
+
+  } catch (error) {
+    console.error("Analysis failed:", error);
+    return null;
+  }
 }

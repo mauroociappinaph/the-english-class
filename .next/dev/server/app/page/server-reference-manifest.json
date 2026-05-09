@@ -1,0 +1,17 @@
+{
+  "node": {
+    "407515e1a3123c6092a6cdefcd7419542d2dfb2d35": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/Desktop/TheEnglishClass/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/Desktop/TheEnglishClass/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false,
+          "exportedName": "getExpression",
+          "filename": "Desktop/TheEnglishClass/src/app/actions.ts"
+        }
+      },
+      "exportedName": "getExpression",
+      "filename": "Desktop/TheEnglishClass/src/app/actions.ts"
+    }
+  },
+  "edge": {}
+}
