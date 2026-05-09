@@ -32,35 +32,42 @@ export async function analyzeExpression(text: string) {
   try {
     const prompt = `You are a Senior English Professor and Linguistic Analyst (Cambridge standards). 
 Analyze the provided English expression and return a strictly valid JSON object.
-Translations and explanations MUST be in Spanish.
+
+RULES:
+- "translation": Provide a natural Spanish translation.
+- "meaning": Provide a clear explanation in ENGLISH.
+- "secondaryMeanings": Provide other meanings in ENGLISH.
+- "usageTips": All descriptions must be in ENGLISH.
+- "tenses": All examples must be in ENGLISH.
+- "examples": All texts and explanations must be in ENGLISH.
 
 Expression: "${normalizedText}"
 
 Schema:
 {
   "translation": "natural Spanish translation",
-  "meaning": "clear explanation in Spanish",
-  "secondaryMeanings": ["optional", "other", "meanings"],
+  "meaning": "clear explanation in English",
+  "secondaryMeanings": ["optional", "other", "meanings in English"],
   "type": "verb | phrasal_verb | idiom | expression | tense",
   "cefr": "A1 | A2 | B1 | B2 | C1 | C2",
   "ipa": "/phonetic transcription/",
   "frequency": 0.0 to 1.0,
   "formality": "formal | informal | neutral",
   "usageTips": {
-    "naturalness": "description",
-    "commonMistake": "description",
-    "context": "description"
+    "naturalness": "English description",
+    "commonMistake": "English description",
+    "context": "English description"
   },
   "tenses": {
-    "present": "Example in present",
-    "past": "Example in past",
-    "presentPerfect": "Example in present perfect",
-    "future": "Example in future"
+    "present": "Example in English",
+    "past": "Example in English",
+    "presentPerfect": "Example in English",
+    "future": "Example in English"
   },
   "examples": [
-    { "text": "natural example 1", "category": "cotidiano", "explanation": "Spanish explanation" },
-    { "text": "advanced example 2", "category": "avanzado", "explanation": "Spanish explanation" },
-    { "text": "dialectal/slang example 3", "category": "dialectal", "explanation": "Spanish explanation" }
+    { "text": "natural example 1 in English", "category": "cotidiano", "explanation": "English explanation" },
+    { "text": "advanced example 2 in English", "category": "avanzado", "explanation": "English explanation" },
+    { "text": "dialectal/slang example 3 in English", "category": "dialectal", "explanation": "English explanation" }
   ]
 }`;
 
