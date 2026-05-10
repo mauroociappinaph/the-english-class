@@ -1,3 +1,0 @@
-module.exports=[9240,a=>{"use strict";var b=a.i(80638);a.s(["default",0,function({children:a}){return(0,b.jsx)("html",{lang:"en",className:"dark",children:(0,b.jsxs)("body",{className:"antialiased min-h-screen bg-[#050505]",children:[(0,b.jsx)("div",{className:"fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,20,20,1)_0%,rgba(5,5,5,1)_100%)] -z-10"}),(0,b.jsx)("main",{className:"max-w-6xl mx-auto px-4 py-8",children:a})]})})},"metadata",0,{title:"The English Class | Smart Study Guide",description:"A modern, AI-powered English study guide to master expressions, idioms, and grammar."}])},8877,a=>{a.n(a.i(9240))}];
-
-//# sourceMappingURL=Desktop_TheEnglishClass_src_app_layout_tsx_0b-_~_q._.js.map
