@@ -234,7 +234,7 @@ export default function Home() {
                       </div>
                       <div className="bg-red-500/10 border border-red-500/20 p-3 rounded-xl">
                         <span className="text-red-400 font-bold">Common Error:</span>
-                        <p className="text-zinc-400 mt-1">{currentAnalysis.usageTips.common_errors}</p>
+                        <p className="text-zinc-400 mt-1">{currentAnalysis.usageTips.commonMistake}</p>
                       </div>
                     </div>
                   </div>

@@ -12,6 +12,8 @@ interface InteractiveTextProps {
 export function InteractiveText({ text, translation, className = "" }: InteractiveTextProps) {
   const [isHovered, setIsHovered] = useState(false);
 
+  if (!text) return null;
+
   return (
     <div 
       className={`relative inline-block group cursor-help ${className}`}
