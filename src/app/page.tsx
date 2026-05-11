@@ -6,6 +6,8 @@ import { useStudyStore } from "@/frontend/store/useStudyStore";
 import { INITIAL_EXPRESSION } from "@/backend/infrastructure/constants";
 
 import { analyzeExpression, getExpressions, deleteExpression } from "./actions";
+import { Expression } from "@/frontend/types/store";
+
 import { SearchBar } from "@/frontend/components/SearchBar";
 import { AnalysisResult } from "@/frontend/components/AnalysisResult";
 import { ExpressionLibrary } from "@/frontend/components/ExpressionLibrary";

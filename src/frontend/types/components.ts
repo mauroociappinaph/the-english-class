@@ -34,7 +34,8 @@ export interface TenseTimelineProps {
 
 export interface VisualCardProps {
   imageUrl?: string;
-  mnemonic: string;
+  mnemonic?: string;
   text: string;
 }
+
 
