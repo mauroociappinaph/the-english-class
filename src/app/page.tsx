@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Sparkles, BookOpen, GraduationCap, ChevronRight, Languages, X } from "lucide-react";
 import { useStudyStore } from "@/store/useStudyStore";
-import { INITIAL_EXPRESSION } from "@/lib/constants";
+import { INITIAL_EXPRESSION } from "@/backend/infrastructure/constants";
+
 import { analyzeExpression, getExpressions, deleteExpression } from "./actions";
 import { InteractiveText } from "@/components/InteractiveText";
 import { TenseTimeline } from "@/components/TenseTimeline";

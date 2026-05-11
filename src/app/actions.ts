@@ -1,9 +1,10 @@
 "use server";
 
-import { prisma } from "@/lib/db";
-import { groq } from "@/lib/groq";
+import { prisma } from "@/backend/infrastructure/db";
+import { groq } from "@/backend/infrastructure/groq";
 import { Prisma } from "@prisma/client";
-import { withTelemetry } from "@/lib/telemetry";
+import { withTelemetry } from "@/backend/infrastructure/telemetry";
+
 
 
 /**
