@@ -20,6 +20,13 @@ body {
   --color-cefr-b2: #6366f1;
   --color-cefr-c1: #a855f7;
   --color-cefr-c2: #ec4899;
+
+  --cefr-glow-A1: 34, 197, 94;
+  --cefr-glow-A2: 132, 204, 22;
+  --cefr-glow-B1: 59, 130, 246;
+  --cefr-glow-B2: 99, 102, 241;
+  --cefr-glow-C1: 168, 85, 247;
+  --cefr-glow-C2: 236, 72, 153;
 }
 
 @layer base {

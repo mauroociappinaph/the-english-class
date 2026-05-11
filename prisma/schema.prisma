@@ -19,6 +19,8 @@ model Expression {
   formality         String?
   usageTips         String?  // Store as JSON string
   tenses            String?  // Store as JSON string
+  imageUrl          String?
+  mnemonic          String?
   status            String   @default("pending") // pending, learning, mastered
   difficulty        Int      @default(1)
   timesStudied      Int      @default(0)

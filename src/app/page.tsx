@@ -7,6 +7,8 @@ import { useStudyStore } from "@/store/useStudyStore";
 import { INITIAL_EXPRESSION } from "@/lib/constants";
 import { analyzeExpression, getExpressions, deleteExpression } from "./actions";
 import { InteractiveText } from "@/components/InteractiveText";
+import { TenseTimeline } from "@/components/TenseTimeline";
+import { VisualCard } from "@/components/VisualCard";
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -47,16 +49,16 @@ export default function Home() {
     }
   };
 
-  const getCefrColor = (level: string) => {
-    const colors: Record<string, string> = {
-      A1: "bg-cefr-a1",
-      A2: "bg-cefr-a2",
-      B1: "bg-cefr-b1",
-      B2: "bg-cefr-b2",
-      C1: "bg-cefr-c1",
-      C2: "bg-cefr-c2",
+  const getCefrStyle = (level: string) => {
+    const styles: Record<string, { bg: string; glow: string }> = {
+      A1: { bg: "bg-cefr-a1", glow: "var(--cefr-glow-A1)" },
+      A2: { bg: "bg-cefr-a2", glow: "var(--cefr-glow-A2)" },
+      B1: { bg: "bg-cefr-b1", glow: "var(--cefr-glow-B1)" },
+      B2: { bg: "bg-cefr-b2", glow: "var(--cefr-glow-B2)" },
+      C1: { bg: "bg-cefr-c1", glow: "var(--cefr-glow-C1)" },
+      C2: { bg: "bg-cefr-c2", glow: "var(--cefr-glow-C2)" },
     };
-    return colors[level] || "bg-zinc-500";
+    return styles[level] || { bg: "bg-zinc-500", glow: "255, 255, 255" };
   };
 
   return (
@@ -128,21 +130,32 @@ export default function Home() {
             {currentAnalysis && !isAnalyzing && (
               <motion.div
                 key={currentAnalysis.text}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="w-full grid grid-cols-1 md:grid-cols-3 gap-6"
+                exit={{ opacity: 0, y: -30 }}
+                className="w-full space-y-8"
               >
+                {/* Visual Anchors */}
+                <VisualCard 
+                  imageUrl={currentAnalysis.imageUrl} 
+                  mnemonic={currentAnalysis.mnemonic} 
+                  text={currentAnalysis.text} 
+                />
+
+                <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Main Info Card */}
                 <div className="md:col-span-2 space-y-6">
                   <div className="glass rounded-3xl p-8 space-y-6 border-l-4 border-l-cefr-b2">
                     <div className="flex justify-between items-start">
                       <div>
-                        <span className="text-zinc-500 uppercase tracking-widest text-xs font-bold">{currentAnalysis.type}</span>
-                        <h2 className="text-4xl font-bold mt-1">{currentAnalysis.text}</h2>
-                        <p className="text-zinc-400 italic mt-1 font-mono">{currentAnalysis.ipa}</p>
+                        <span className="text-zinc-500 uppercase tracking-widest text-[10px] font-black">{currentAnalysis.type}</span>
+                        <h2 className="text-5xl font-bold mt-1 tracking-tight">{currentAnalysis.text}</h2>
+                        <p className="text-zinc-400 italic mt-1 font-mono text-sm">{currentAnalysis.ipa}</p>
                       </div>
-                      <div className={`${getCefrColor(currentAnalysis.cefr)} text-white px-4 py-1 rounded-full font-bold text-sm shadow-lg`}>
+                      <div 
+                        className={`${getCefrStyle(currentAnalysis.cefr).bg} text-white px-5 py-1.5 rounded-full font-black text-xs border border-white/20`}
+                        style={{ boxShadow: `0 0 20px rgba(${getCefrStyle(currentAnalysis.cefr).glow}, 0.3)` }}
+                      >
                         {currentAnalysis.cefr}
                       </div>
                     </div>
@@ -177,22 +190,9 @@ export default function Home() {
                   <div className="glass rounded-3xl p-8 space-y-4">
                     <div className="flex items-center gap-2 text-zinc-300 font-bold">
                       <Sparkles size={20} className="text-purple-400" />
-                      <h3>Verb Tenses / Timeline</h3>
+                      <h3>Linguistic Timeline</h3>
                     </div>
-                    <div className="space-y-3">
-                      {Object.entries(currentAnalysis.tenses).map(([tense, data]: [string, any]) => (
-                        <div key={tense} className="flex gap-4 items-center group">
-                          <span className="w-32 text-xs font-bold text-zinc-500 uppercase">{tense.replace('_', ' ')}</span>
-                          <div className="flex-1 bg-white/5 p-3 rounded-xl border border-transparent group-hover:border-purple-500/30 transition-colors">
-                            <InteractiveText 
-                              text={data.text || data} 
-                              translation={data.translation} 
-                              className="text-zinc-200" 
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                    <TenseTimeline tenses={currentAnalysis.tenses} />
                   </div>
                 </div>
 
@@ -265,7 +265,10 @@ export default function Home() {
         {/* Real Saved Expressions */}
         {expressions.map((ex, i) => (
           <div key={ex.id || i} className="glass p-6 rounded-2xl space-y-3 relative group overflow-hidden">
-             <div className={`absolute top-0 right-0 w-2 h-full ${getCefrColor(ex?.cefr || 'A1')}`} />
+             <div 
+               className={`absolute top-0 right-0 w-2 h-full ${getCefrStyle(ex?.cefr || 'A1').bg}`} 
+               style={{ boxShadow: `-5px 0 15px rgba(${getCefrStyle(ex?.cefr || 'A1').glow}, 0.2)` }}
+             />
              
              {/* Delete Button */}
              <button 

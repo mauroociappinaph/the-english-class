@@ -9,6 +9,8 @@ export const INITIAL_EXPRESSION = {
   ipa: "/ɪz pækt wɪð/",
   frequency: 0.75,
   formality: "Neutral / Informal",
+  mnemonic: "Imagine two gears that 'fit together' perfectly to work without noise.",
+  imageUrl: "/Users/mauroociappina/.gemini/antigravity/brain/3681305e-92dc-4eaf-b866-34ecea1b4aed/get_along_visual_1778506922743.png",
   usageTips: {
     context: "Used to describe places, events, or objects that are at full capacity.",
     naturalness: "Very natural in both spoken and written English.",

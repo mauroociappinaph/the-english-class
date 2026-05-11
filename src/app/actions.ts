@@ -18,6 +18,8 @@ export async function getExpression(text: string) {
     secondaryMeanings: JSON.parse(expression.secondaryMeanings || "[]"),
     usageTips: JSON.parse(expression.usageTips || "{}"),
     tenses: JSON.parse(expression.tenses || "{}"),
+    mnemonic: expression.mnemonic,
+    imageUrl: expression.imageUrl,
   };
 }
 
@@ -53,6 +55,8 @@ Schema:
   "ipa": "/phonetic transcription/",
   "frequency": 0.0 to 1.0,
   "formality": "formal | informal | neutral",
+  "mnemonic": "a clever memory trick or mnemonic device in English to remember this expression",
+  "imagePrompt": "a detailed, artistic prompt for an image generator (DALL-E/Midjourney style) that visually represents the core concept of this expression",
   "usageTips": {
     "naturalness": "English description",
     "commonMistake": "English description",
@@ -98,6 +102,7 @@ Schema:
         ipa: result.ipa || "",
         frequency: result.frequency || 0.5,
         formality: result.formality || "neutral",
+        mnemonic: result.mnemonic || "",
         usageTips: JSON.stringify(result.usageTips || {}),
         tenses: JSON.stringify(result.tenses || {}),
         examples: {
@@ -117,6 +122,8 @@ Schema:
       secondaryMeanings: JSON.parse(newExpression.secondaryMeanings || "[]"),
       usageTips: JSON.parse(newExpression.usageTips || "{}"),
       tenses: JSON.parse(newExpression.tenses || "{}"),
+      mnemonic: newExpression.mnemonic,
+      imageUrl: newExpression.imageUrl
     };
 
   } catch (error) {
@@ -136,6 +143,8 @@ export async function getExpressions() {
     secondaryMeanings: JSON.parse(ex.secondaryMeanings || "[]"),
     usageTips: JSON.parse(ex.usageTips || "{}"),
     tenses: JSON.parse(ex.tenses || "{}"),
+    mnemonic: ex.mnemonic,
+    imageUrl: ex.imageUrl,
   }));
 }
 
