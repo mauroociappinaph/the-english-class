@@ -7,7 +7,9 @@ import { GroqExample, GroqExpressionResponse } from "@/backend/domain/types";
 /**
  * Service to handle Expression business logic
  */
+export class ExpressionService {
   private static formatExpression(expression: PrismaExpression | null) {
+
     if (!expression) return null;
     
     return {
