@@ -1,4 +1,6 @@
+import path from 'path';
 import { Project, SourceFile } from 'ts-morph';
+
 import { ParsedDeclaration, ParsedFile } from './interfaces/parser';
 
 export class TSParser {
@@ -6,13 +8,20 @@ export class TSParser {
 
   constructor() {
     this.project = new Project({
-      compilerOptions: { 
-        allowJs: true,
-        jsx: 1, // Preserve or React
-        target: 99 // ESNext
-      }
+      tsConfigFilePath: path.join(process.cwd(), 'tsconfig.json'),
+      skipAddingFilesFromTsConfig: true
     });
+
   }
+
+  /**
+   * Load all relevant files into the project context for cross-file analysis
+   */
+  public loadProject(files: string[]) {
+    this.project.addSourceFilesAtPaths(files);
+    this.project.resolveSourceFileDependencies();
+  }
+
 
   public parseFile(filePath: string): ParsedFile | null {
     try {

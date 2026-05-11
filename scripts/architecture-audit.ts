@@ -3,6 +3,9 @@ import { FileScanner } from '../src/backend/infrastructure/file-scanner';
 import { TSParser } from '../src/backend/infrastructure/ts-parser';
 import { InterfaceLocationAnalyzer } from '../src/backend/infrastructure/analyzers/interface-location.analyzer';
 import { NamingConventionAnalyzer } from '../src/backend/infrastructure/analyzers/naming-convention.analyzer';
+import { UnusedTypesAnalyzer } from '../src/backend/infrastructure/analyzers/unused-types.analyzer';
+import { Project } from 'ts-morph';
+
 
 
 
@@ -12,13 +15,18 @@ async function runAudit() {
   const parser = new TSParser();
   const locationAnalyzer = new InterfaceLocationAnalyzer();
   const namingAnalyzer = new NamingConventionAnalyzer();
+  const unusedAnalyzer = new UnusedTypesAnalyzer();
 
-
-  
   const files = await scanner.scan();
-  let violations = 0;
+  const allFilePaths = files.map(f => f.path);
+  
+  // Phase 1: Global Loading (Needed for cross-file analysis)
+  console.log('\x1b[34m[ArchAudit]\x1b[0m Loading project context for semantic analysis...');
+  parser.loadProject(allFilePaths);
 
+  let violations = 0;
   console.log('\x1b[34m[ArchAudit]\x1b[0m Starting Semantic Analysis (AST-Powered)...');
+
 
   for (const fileMetadata of files) {
     const analysis = parser.parseFile(fileMetadata.path);
@@ -79,7 +87,14 @@ async function runAudit() {
     });
   }
 
-
+  // Phase 2: Global Project Analysis (Unused Code)
+  console.log('\x1b[34m[ArchAudit]\x1b[0m Running Global Dead Code Analysis...');
+  const unusedIssues = unusedAnalyzer.analyzeProject((parser as any).project);
+  unusedIssues.forEach(issue => {
+    const relativePath = path.relative(projectRoot, issue.file);
+    console.warn(`\x1b[33m⚠️  [Dead Code Warning]:\x1b[0m ${relativePath}:${issue.line} - ${issue.explanation}`);
+    console.warn(`   👉 ${issue.suggestion}`);
+  });
 
   if (violations > 0) {
     console.error(`\n\x1b[31m💥 Semantic Audit FAILED with ${violations} violations.\x1b[0m`);
