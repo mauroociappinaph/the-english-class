@@ -3,11 +3,12 @@ import { Languages, GraduationCap, Sparkles } from "lucide-react";
 import { InteractiveText } from "./InteractiveText";
 import { TenseTimeline } from "./TenseTimeline";
 import { VisualCard } from "./VisualCard";
-
 import { AnalysisResultProps } from "@/frontend/types/components";
 
-
 export function AnalysisResult({ currentAnalysis, getCefrStyle }: AnalysisResultProps) {
+  // Global Guard: If there is no data, render nothing.
+  if (!currentAnalysis) return null;
+
   return (
     <motion.div
       key={currentAnalysis.text}
@@ -100,7 +101,7 @@ export function AnalysisResult({ currentAnalysis, getCefrStyle }: AnalysisResult
                 <div className="h-px flex-1 bg-zinc-800" />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-                {currentAnalysis.examples.map((ex: any, i: number) => (
+                {currentAnalysis.examples?.map((ex, i) => (
                   <motion.div 
                     key={i}
                     variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}
@@ -145,7 +146,7 @@ export function AnalysisResult({ currentAnalysis, getCefrStyle }: AnalysisResult
                      <span className="text-emerald-500/70 text-[9px] font-black uppercase tracking-widest block">Naturalness</span>
                    </div>
                    <p className="text-zinc-300 text-base leading-relaxed font-medium pl-3 border-l border-emerald-500/20">
-                     {currentAnalysis.usageTips.naturalness}
+                     {currentAnalysis.usageTips?.naturalness}
                    </p>
                  </div>
 
@@ -155,7 +156,7 @@ export function AnalysisResult({ currentAnalysis, getCefrStyle }: AnalysisResult
                      <span className="text-[9px] font-black uppercase tracking-widest">Common Pitfall</span>
                    </div>
                    <p className="text-zinc-300 text-sm leading-relaxed font-medium italic">
-                     "{currentAnalysis.usageTips.commonMistake}"
+                     "{currentAnalysis.usageTips?.commonMistake}"
                    </p>
                  </div>
 
