@@ -245,34 +245,52 @@ export default function Home() {
                     <div className="lg:col-span-4 space-y-6">
                        <motion.div 
                         variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}
-                        className="glass-deep p-8 rounded-[2.5rem] space-y-8 text-left animate-float"
+                        className="glass-deep p-10 rounded-[3rem] space-y-10 text-left animate-float border border-white/5 relative overflow-hidden"
                        >
-                         <div className="flex items-center gap-3 text-emerald-400">
-                           <GraduationCap size={24} />
-                           <h3 className="text-xs font-black uppercase tracking-widest">Mastery Tips</h3>
+                         {/* Decorative Background Icon */}
+                         <GraduationCap size={120} className="absolute -bottom-10 -right-10 text-emerald-500 opacity-5" />
+
+                         <div className="flex items-center gap-4 text-emerald-400">
+                           <div className="p-3 bg-emerald-500/10 rounded-2xl">
+                             <GraduationCap size={24} />
+                           </div>
+                           <h3 className="text-xs font-black uppercase tracking-[0.3em]">Mastery Tips</h3>
                          </div>
                          
-                         <div className="space-y-6">
-                           <div>
-                             <span className="text-emerald-500/50 text-[10px] font-black uppercase tracking-widest block mb-2">Naturalness</span>
-                             <p className="text-zinc-300 text-sm leading-relaxed">{currentAnalysis.usageTips.naturalness}</p>
+                         <div className="space-y-10 relative z-10">
+                           <div className="space-y-3">
+                             <div className="flex items-center gap-2">
+                               <div className="w-1 h-1 rounded-full bg-emerald-500" />
+                               <span className="text-emerald-500/70 text-[9px] font-black uppercase tracking-widest block">Naturalness</span>
+                             </div>
+                             <p className="text-zinc-300 text-base leading-relaxed font-medium pl-3 border-l border-emerald-500/20">
+                               {currentAnalysis.usageTips.naturalness}
+                             </p>
                            </div>
 
-                           <div className="p-6 bg-red-500/5 border border-red-500/10 rounded-2xl">
-                             <span className="text-red-400 text-[10px] font-black uppercase tracking-widest block mb-2">Common Pitfall</span>
-                             <p className="text-zinc-400 text-xs leading-relaxed">{currentAnalysis.usageTips.commonMistake}</p>
+                           <div className="p-8 bg-gradient-to-br from-red-500/10 to-transparent border border-red-500/10 rounded-[2rem] space-y-3">
+                             <div className="flex items-center gap-2 text-red-400">
+                               <Sparkles size={16} />
+                               <span className="text-[9px] font-black uppercase tracking-widest">Common Pitfall</span>
+                             </div>
+                             <p className="text-zinc-300 text-sm leading-relaxed font-medium italic">
+                               "{currentAnalysis.usageTips.commonMistake}"
+                             </p>
                            </div>
 
-                           <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
-                              <div className="space-y-1">
-                                <span className="text-zinc-600 text-[8px] font-black uppercase tracking-widest">Formality</span>
-                                <p className="text-white text-xs font-bold uppercase">{currentAnalysis.formality}</p>
+                           <div className="grid grid-cols-2 gap-6 pt-6 border-t border-white/10">
+                              <div className="space-y-2">
+                                <span className="text-zinc-600 text-[9px] font-black uppercase tracking-widest block">Formality</span>
+                                <p className="text-white text-sm font-black uppercase tracking-tighter">{currentAnalysis.formality}</p>
                               </div>
-                              <div className="space-y-1 text-right">
-                                <span className="text-zinc-600 text-[8px] font-black uppercase tracking-widest">Frequency</span>
-                                <div className="flex gap-1 mt-1 justify-end">
+                              <div className="space-y-2 text-right">
+                                <span className="text-zinc-600 text-[9px] font-black uppercase tracking-widest block">Frequency</span>
+                                <div className="flex gap-1.5 mt-2 justify-end">
                                   {[1,2,3,4,5].map(i => (
-                                    <div key={i} className={`h-1 w-2 rounded-full ${i <= 4 ? 'bg-blue-500/50' : 'bg-zinc-800'}`} />
+                                    <div 
+                                      key={i} 
+                                      className={`h-1.5 w-3 rounded-full transition-all duration-500 ${i <= 4 ? 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'bg-zinc-800'}`} 
+                                    />
                                   ))}
                                 </div>
                               </div>
