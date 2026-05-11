@@ -65,7 +65,11 @@ export class ConfigLoader {
       }
     }
 
-    const config = this.deepMerge(DEFAULT_CONFIG, fileConfig) as AuditConfig;
+    const config = this.deepMerge(
+      DEFAULT_CONFIG as unknown as Record<string, unknown>, 
+      fileConfig as unknown as Record<string, unknown>
+    ) as unknown as AuditConfig;
+
     return this.applyEnvOverrides(config);
   }
 
