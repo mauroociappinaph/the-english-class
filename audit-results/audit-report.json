@@ -1,20 +1,28 @@
 {
   "schemaVersion": "1.1.0",
   "metadata": {
-    "generatedAt": "2026-05-11T21:59:35.813Z",
+    "generatedAt": "2026-05-11T22:03:03.428Z",
     "project": "TheEnglishClass",
     "environment": "development",
     "nodeVersion": "v25.4.0"
   },
   "stats": {
-    "total": 6,
+    "total": 7,
     "criticals": 0,
-    "warnings": 6,
+    "warnings": 7,
     "suggestions": 0,
-    "score": 82,
-    "durationMs": 1284
+    "score": 79,
+    "durationMs": 1555
   },
   "issues": [
+    {
+      "file": "src/backend/infrastructure/config.ts",
+      "line": 7,
+      "severity": "MEDIUM",
+      "explanation": "Violation: Interface \"AuditConfig\" found in a logic file.",
+      "suggestion": "Move this contract to a dedicated file inside a \"/types\" or \"/interfaces\" directory to ensure SRP and modularity.",
+      "analyzer": "InterfaceLocationAnalyzer"
+    },
     {
       "file": ".next/types/routes.d.ts",
       "line": 17,

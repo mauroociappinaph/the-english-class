@@ -1,11 +1,14 @@
 import { Project, Node, SyntaxKind } from 'ts-morph';
 import { AnalyzerIssue } from '../interfaces/analyzer';
+import { auditConfig } from '../config';
 
 /**
  * AnyUsageAnalyzer: Specialist in Type Safety enforcement.
  * Detects and discourages the use of 'any', promoting 'unknown' or strong typing.
  */
 export class AnyUsageAnalyzer {
+  private readonly ALLOW_ASSERTIONS = auditConfig.rules.anyUsage.allowTypeAssertions;
+
   
   public analyzeProject(project: Project): AnalyzerIssue[] {
     const issues: AnalyzerIssue[] = [];
@@ -23,10 +26,12 @@ export class AnyUsageAnalyzer {
 
       // 2. Find Type Assertions using 'any' (as any)
       sourceFile.getDescendantsOfKind(SyntaxKind.AsExpression).forEach(node => {
+        if (this.ALLOW_ASSERTIONS) return;
         if (node.getType().getText() === 'any') {
           issues.push(this.createIssue(filePath, node, 'TYPE_ASSERTION_ANY'));
         }
       });
+
     });
 
     return issues;

@@ -7,7 +7,7 @@
       <style>
         body { font-family: -apple-system, system-ui, sans-serif; line-height: 1.6; color: #1f2937; max-width: 1200px; margin: 40px auto; padding: 0 20px; background: #f9fafb; }
         .card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 24px; }
-        .score-badge { font-size: 48px; font-weight: 800; color: #22c55e; }
+        .score-badge { font-size: 48px; font-weight: 800; color: #eab308; }
         .tag { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
         .tag-high { background: #fee2e2; color: #991b1b; }
         .tag-medium { background: #fef9c3; color: #854d0e; }
@@ -22,20 +22,38 @@
     <body>
       <div class="card" style="text-align: center">
         <h1>Architecture Audit Result</h1>
-        <div class="score-badge">82</div>
+        <div class="score-badge">79</div>
         <p>Quality Score</p>
       </div>
       
       <div class="card">
         <h2>Executive Summary</h2>
         <div style="display: flex; justify-content: space-around; text-align: center">
-          <div><h3>6</h3><p>Total Issues</p></div>
+          <div><h3>7</h3><p>Total Issues</p></div>
           <div style="color: #991b1b"><h3>0</h3><p>Critical</p></div>
-          <div style="color: #854d0e"><h3>6</h3><p>Warnings</p></div>
-          <div><h3>1284ms</h3><p>Analysis Time</p></div>
+          <div style="color: #854d0e"><h3>7</h3><p>Warnings</p></div>
+          <div><h3>1555ms</h3><p>Analysis Time</p></div>
         </div>
       </div>
-    <h2 class="analyzer-title">UnusedTypesAnalyzer</h2><table>
+    <h2 class="analyzer-title">InterfaceLocationAnalyzer</h2><table>
+        <thead>
+          <tr>
+            <th>Severity</th>
+            <th>File</th>
+            <th>Line</th>
+            <th>Explanation</th>
+            <th>Suggestion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag tag-medium">MEDIUM</span></td>
+            <td><code>config.ts</code></td>
+            <td>7</td>
+            <td>Violation: Interface "AuditConfig" found in a logic file.</td>
+            <td>Move this contract to a dedicated file inside a "/types" or "/interfaces" directory to ensure SRP and modularity.</td>
+          </tr>
+        </tbody></table><h2 class="analyzer-title">UnusedTypesAnalyzer</h2><table>
         <thead>
           <tr>
             <th>Severity</th>

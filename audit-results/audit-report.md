@@ -3,14 +3,15 @@
 ## 📊 Executive Summary
 
 > **Audit Status:** ⚠️ STABLE
-> **Quality Score:** `82/100`
-> **Timestamp:** 5/11/2026, 6:59:35 PM
+> **Quality Score:** `79/100`
+> **Timestamp:** 5/11/2026, 7:03:03 PM
 
 ### 📋 Contents
 
 - [Executive Summary](#-executive-summary)
 - [Project Metrics](#-project-metrics)
 - [Detailed Analysis](#-detailed-analysis)
+  - [InterfaceLocationAnalyzer](#interfacelocationanalyzer)
   - [UnusedTypesAnalyzer](#unusedtypesanalyzer)
   - [AnyUsageAnalyzer](#anyusageanalyzer)
 
@@ -18,15 +19,21 @@
 
 | Metric | Value | Status |
 | :--- | :--- | :--- |
-| Total Issues | **6** | 🔍 Action required |
+| Total Issues | **7** | 🔍 Action required |
 | Critical Violations | **0** | ✅ Passed |
-| Architectural Warnings | **6** | ⚠️ Technical Debt |
+| Architectural Warnings | **7** | ⚠️ Technical Debt |
 | Efficiency Suggestions | **0** | 🟢 Optimal |
-| Analysis Duration | `1284ms` | 🚀 High Performance |
+| Analysis Duration | `1555ms` | 🚀 High Performance |
 
 ---
 
 ## 🔍 Detailed Analysis
+
+### InterfaceLocationAnalyzer
+
+| Severity | File | Line | Explanation | Suggestion |
+| :---: | :--- | :---: | :--- | :--- |
+| 🟡 **MEDIUM** | [`config.ts`](/Users/mauroociappina/Desktop/TheEnglishClass/src/backend/infrastructure/config.ts) | `7` | Violation: Interface "AuditConfig" found in a logic file. | _Move this contract to a dedicated file inside a "/types" or "/interfaces" directory to ensure SRP and modularity._ |
 
 ### UnusedTypesAnalyzer
 

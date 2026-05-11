@@ -1,14 +1,16 @@
 import { Project, InterfaceDeclaration, TypeAliasDeclaration, Node, Type, Symbol } from 'ts-morph';
 import { AnalyzerIssue, InterfaceMetrics } from '../interfaces/analyzer';
+import { auditConfig } from '../config';
 
 /**
  * GiantInterfacesAnalyzer: Enforcement of the Interface Segregation Principle (ISP).
  * Detects interfaces that are too complex, deeply nested, or have too many responsibilities.
  */
 export class GiantInterfacesAnalyzer {
-  private readonly MAX_PROPERTIES = 20;
-  private readonly MAX_NESTING = 3;
-  private readonly COMPLEXITY_THRESHOLD = 300;
+  private readonly MAX_PROPERTIES = auditConfig.rules.giantInterfaces.maxProperties;
+  private readonly MAX_NESTING = auditConfig.rules.giantInterfaces.maxNesting;
+  private readonly COMPLEXITY_THRESHOLD = auditConfig.rules.giantInterfaces.complexityThreshold;
+
 
   public analyzeProject(project: Project): AnalyzerIssue[] {
     const issues: AnalyzerIssue[] = [];

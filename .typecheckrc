@@ -1,0 +1,16 @@
+{
+  "ignorePaths": ["node_modules", ".next", "dist", "reports", "scripts"],
+  "rules": {
+    "giantInterfaces": {
+      "maxProperties": 25,
+      "complexityThreshold": 400
+    },
+    "anyUsage": {
+      "allowTypeAssertions": false
+    }
+  },
+  "reporting": {
+    "outputDir": "audit-results",
+    "formats": ["json", "markdown", "html"]
+  }
+}
