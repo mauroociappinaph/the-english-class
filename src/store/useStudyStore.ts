@@ -5,9 +5,20 @@ interface Expression {
   text: string;
   translation: string;
   meaning: string;
+  secondaryMeanings?: string[];
   type: string;
   cefr: string;
   ipa?: string;
+  frequency?: number;
+  formality?: string;
+  mnemonic?: string;
+  usageTips?: {
+    naturalness: string;
+    commonMistake: string;
+    context: string;
+  };
+  tenses?: Record<string, { text: string; translation: string }>;
+  imageUrl?: string;
   status: 'pending' | 'learning' | 'mastered';
 }
 
