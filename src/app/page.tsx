@@ -36,12 +36,12 @@ export default function Home() {
     try {
       const result = await analyzeExpression(input.toLowerCase());
       if (result) {
-        setCurrentAnalysis(result);
+        setCurrentAnalysis(result as unknown as Expression);
         if (!expressions.find(e => e.id === result.id)) {
-          addExpression(result as Expression);
-
+          addExpression(result as unknown as Expression);
         }
       }
+
     } catch (err) {
       console.error(err);
     } finally {

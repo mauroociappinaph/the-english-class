@@ -9,19 +9,20 @@ export function TenseTimeline({ tenses = {} }: TenseTimelineProps) {
   const tenseOrder = ["past", "present", "future"];
   
   // Group tenses into the three main categories
-  const categories: Record<string, any[]> = {
+  const categories: Record<string, { key: string; text: string; translation: string }[]> = {
     past: [],
     present: [],
     future: []
   };
 
-  Object.entries(tenses).forEach(([key, data]) => {
+  Object.entries(tenses || {}).forEach(([key, data]) => {
     const k = key.toLowerCase();
     const tenseData = data as { text: string; translation: string };
     if (k.includes("past")) categories.past.push({ key, ...tenseData });
     else if (k.includes("future")) categories.future.push({ key, ...tenseData });
     else categories.present.push({ key, ...tenseData });
   });
+
 
 
   return (
