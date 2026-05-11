@@ -5,14 +5,14 @@
     "warnings": 6,
     "suggestions": 0,
     "score": 82,
-    "durationMs": 1277
+    "durationMs": 1388
   },
   "issues": [
     {
       "file": "/Users/mauroociappina/Desktop/TheEnglishClass/.next/types/routes.d.ts",
       "line": 17,
       "severity": "MEDIUM",
-      "explanation": "Unused TypeAliasDeclaration \"ParamsOf\" is declared but never used in the project.",
+      "explanation": "Unused TypeAliasDeclaration \"anonymous\" is declared but never used in the project.",
       "suggestion": "Remove the unused typealiasdeclaration or ensure it is correctly imported and used.",
       "analyzer": "UnusedTypesAnalyzer"
     },
@@ -57,5 +57,5 @@
       "analyzer": "AnyUsageAnalyzer"
     }
   ],
-  "generatedAt": "2026-05-11T21:54:39.048Z"
+  "generatedAt": "2026-05-11T21:56:38.498Z"
 }

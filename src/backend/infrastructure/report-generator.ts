@@ -1,9 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import { AnalyzerIssue, AuditStats } from './interfaces/analyzer';
+import { MarkdownReporter } from './reporters/markdown.report';
 
 /**
  * ReportGenerator: Orchestrator of architectural visibility.
+
  * Consolidates issues from all analyzers into actionable reports.
  */
 export class ReportGenerator {
@@ -31,8 +33,9 @@ export class ReportGenerator {
     const groupedIssues = this.groupByAnalyzer(sortedIssues);
 
     this.writeJson(outputDir, stats, sortedIssues);
-    this.writeMarkdown(outputDir, stats, groupedIssues);
+    this.writeMarkdown(outputDir, stats, sortedIssues);
     this.writeHtml(outputDir, stats, groupedIssues);
+
     
     console.log(`\n\x1b[32m✅ Reports generated in /${outputDir}\x1b[0m`);
   }
@@ -77,30 +80,12 @@ export class ReportGenerator {
     fs.writeFileSync(path.join(dir, 'audit-report.json'), JSON.stringify(report, null, 2));
   }
 
-  private writeMarkdown(dir: string, stats: AuditStats, grouped: Map<string, AnalyzerIssue[]>): void {
-    let md = `# Architecture Audit Report\n\n`;
-    md += `**Generated At:** ${new Date().toLocaleString()}\n`;
-    md += `**Quality Score:** ${stats.score}/100\n\n`;
-    
-    md += `## Summary\n`;
-    md += `- **Total Issues:** ${stats.total}\n`;
-    md += `- **Critical (High):** ${stats.criticals}\n`;
-    md += `- **Warnings (Medium):** ${stats.warnings}\n`;
-    md += `- **Suggestions (Low):** ${stats.suggestions}\n\n`;
-
-    grouped.forEach((issues, analyzer) => {
-      md += `### ${analyzer}\n`;
-      md += `| Severity | File | Line | Explanation | Suggestion |\n`;
-      md += `| --- | --- | --- | --- | --- |\n`;
-      issues.forEach(i => {
-        const fileLink = `[${path.basename(i.file)}](${i.file})`;
-        md += `| ${i.severity} | ${fileLink} | ${i.line} | ${i.explanation} | ${i.suggestion} |\n`;
-      });
-      md += `\n`;
-    });
-
+  private writeMarkdown(dir: string, stats: AuditStats, issues: AnalyzerIssue[]): void {
+    const reporter = new MarkdownReporter();
+    const md = reporter.generate(stats, issues);
     fs.writeFileSync(path.join(dir, 'audit-report.md'), md);
   }
+
 
   private writeHtml(dir: string, stats: AuditStats, grouped: Map<string, AnalyzerIssue[]>): void {
     const scoreColor = stats.score > 80 ? '#22c55e' : stats.score > 50 ? '#eab308' : '#ef4444';
