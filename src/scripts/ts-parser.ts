@@ -1,7 +1,8 @@
 import path from 'path';
 import { Project, SourceFile, Node } from 'ts-morph';
 
-import { ParsedDeclaration, ParsedFile } from './interfaces/parser';
+import { ParsedDeclaration, ParsedFile } from './types/parser';
+
 
 export class TSParser {
   public project: Project;

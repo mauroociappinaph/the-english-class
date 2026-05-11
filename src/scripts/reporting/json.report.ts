@@ -1,4 +1,5 @@
-import { Issue, AuditStats, Report } from '../interfaces/analyzer';
+import { Issue, AuditStats, Report } from '../types/analyzer.types';
+
 
 /**
  * JsonReporter: Specialist in machine-readable architectural data.

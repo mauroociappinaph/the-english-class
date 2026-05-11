@@ -1,8 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import { AnalyzerIssue, AuditStats } from './interfaces/analyzer';
-import { MarkdownReporter } from './reporters/markdown.report';
-import { JsonReporter } from './reporters/json.report';
+import { AnalyzerIssue, AuditStats } from '../types/analyzer';
+import { MarkdownReporter } from './markdown.report';
+import { JsonReporter } from './json.report';
+
 
 
 /**

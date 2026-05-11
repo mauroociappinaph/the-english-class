@@ -111,7 +111,8 @@ export class CircularDepsAnalyzer implements Analyzer {
         const imports = sourceFile.getImportDeclarations();
         imports.forEach(imp => {
           const modulePath = imp.getModuleSpecifierValue();
-          if (modulePath.includes('/infrastructure/') || modulePath.includes('@/infrastructure')) {
+          if (modulePath && (modulePath.includes('/infrastructure/') || modulePath.includes('@/infrastructure'))) {
+
             issues.push({
               file: filePath,
               line: imp.getStartLineNumber(),

@@ -1,11 +1,12 @@
 import path from 'path';
 import { FileScanner } from './file-scanner';
 import { TSParser } from './ts-parser';
-import { ReportGenerator } from './report-generator';
+import { ReportGenerator } from './reporting/report-generator';
 import { auditConfig } from './config';
 import { Issue, Analyzer, AnalysisContext } from './types/analyzer.types';
 import { logger } from './logger';
-import { ParsedFile, ParsedDeclaration } from './interfaces/parser';
+import { ParsedFile, ParsedDeclaration } from './types/parser';
+
 
 // Analyzers
 import { InterfaceLocationAnalyzer } from './analyzers/interface-location.analyzer';

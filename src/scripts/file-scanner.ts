@@ -1,7 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { Stats } from 'fs';
-import { FileMetadata, ScannerConfig } from './interfaces/scanner';
+import { FileMetadata, ScannerConfig } from './types/scanner';
+
 
 /**
  * Default enterprise-grade configuration

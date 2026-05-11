@@ -1,5 +1,6 @@
 import path from 'path';
-import { AnalyzerIssue, AuditStats } from '../interfaces/analyzer';
+import { AnalyzerIssue, AuditStats } from '../types/analyzer';
+
 
 /**
  * MarkdownReporter: Specialized in generating high-impact GitHub-flavored Markdown.

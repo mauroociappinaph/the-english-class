@@ -1,6 +1,7 @@
 import { Project, InterfaceDeclaration, TypeAliasDeclaration, Node, Type, Symbol } from 'ts-morph';
-import { Issue, Analyzer, AnalysisContext, AnalyzerResult } from '../types/analyzer.types';
-import { InterfaceMetrics } from '../interfaces/analyzer';
+import { Issue, Analyzer, AnalysisContext, AnalyzerResult, GiantInterfaceRules } from '../types/analyzer.types';
+import { InterfaceMetrics } from '../types/analyzer';
+
 
 /**
  * GiantInterfacesAnalyzer: Enforcement of the Interface Segregation Principle (ISP).
@@ -12,7 +13,6 @@ export class GiantInterfacesAnalyzer implements Analyzer {
   public analyze(context: AnalysisContext): AnalyzerResult {
     const startTime = Date.now();
     const issues = this.analyzeProject(context.project, context.giantInterfaceRules);
-
     
     return {
       analyzerName: this.name,
@@ -21,7 +21,7 @@ export class GiantInterfacesAnalyzer implements Analyzer {
     };
   }
 
-  public analyzeProject(project: Project, thresholds: AnalysisContext['rules']['giantInterfaces']): Issue[] {
+  public analyzeProject(project: Project, thresholds: GiantInterfaceRules): Issue[] {
     const issues: Issue[] = [];
     const sourceFiles = project.getSourceFiles();
 
@@ -80,7 +80,7 @@ export class GiantInterfacesAnalyzer implements Analyzer {
     };
   }
 
-  private isGiant(metrics: InterfaceMetrics, t: AnalysisContext['rules']['giantInterfaces']): boolean {
+  private isGiant(metrics: InterfaceMetrics, t: GiantInterfaceRules): boolean {
     return (
       metrics.properties > t.maxProperties ||
       metrics.maxNesting > t.maxNesting ||
@@ -88,7 +88,7 @@ export class GiantInterfacesAnalyzer implements Analyzer {
     );
   }
 
-  private createIssue(file: string, node: Node, metrics: InterfaceMetrics, t: AnalysisContext['rules']['giantInterfaces']): Issue {
+  private createIssue(file: string, node: Node, metrics: InterfaceMetrics, t: GiantInterfaceRules): Issue {
     const severity = metrics.properties > t.maxProperties * 1.5 || metrics.maxNesting > t.maxNesting + 1 ? 'HIGH' : 'MEDIUM';
     
     let suggestion = `Interface "${metrics.name}" is too large. `;
