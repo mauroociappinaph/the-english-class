@@ -1,33 +1,18 @@
 import path from 'path';
-import { ParsedFile } from '../ts-parser';
-
-/**
- * Standard Issue format for all architectural analyzers
- */
-export interface AnalyzerIssue {
-  file: string;
-  line: number;
-  severity: 'HIGH' | 'MEDIUM' | 'LOW';
-  explanation: string;
-  suggestion: string;
-}
+import { ParsedFile } from '../interfaces/parser';
+import { AnalyzerIssue } from '../interfaces/analyzer';
 
 /**
  * InterfaceLocationAnalyzer: Enforces structural discipline for data contracts.
  * Rule: Interfaces and Types must reside in designated /types, /interfaces or /domain directories.
  */
 export class InterfaceLocationAnalyzer {
-  // Configurable exceptions and allowed patterns
   private readonly ALLOWED_FOLDERS = ['types', 'interfaces', 'domain'];
 
-  /**
-   * Analyzes a parsed file for location violations
-   */
   public analyze(parsedFile: ParsedFile): AnalyzerIssue[] {
     const issues: AnalyzerIssue[] = [];
     const filePath = parsedFile.filePath.toLowerCase();
     
-    // 1. Check if the file is already in an allowed architectural layer
     const isInAllowedFolder = this.ALLOWED_FOLDERS.some(folder => 
       filePath.includes(`${path.sep}${folder}${path.sep}`) || 
       filePath.endsWith(`${path.sep}${folder}.ts`) ||
@@ -36,7 +21,6 @@ export class InterfaceLocationAnalyzer {
 
     if (isInAllowedFolder) return [];
 
-    // 2. Scan for Interface or TypeAlias declarations in unauthorized files
     const violations = parsedFile.declarations.filter(d => 
       d.kind === 'Interface' || d.kind === 'TypeAlias'
     );

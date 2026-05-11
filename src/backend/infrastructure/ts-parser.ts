@@ -1,18 +1,5 @@
 import { Project, SourceFile } from 'ts-morph';
-
-export interface ParsedDeclaration {
-  name: string;
-  kind: string;
-  startLine: number;
-  endLine: number;
-  isExported: boolean;
-}
-
-export interface ParsedFile {
-  filePath: string;
-  declarations: ParsedDeclaration[];
-  imports: { module: string; named: string[] }[];
-}
+import { ParsedDeclaration, ParsedFile } from './interfaces/parser';
 
 export class TSParser {
   private project: Project;
@@ -25,7 +12,6 @@ export class TSParser {
         target: 99 // ESNext
       }
     });
-
   }
 
   public parseFile(filePath: string): ParsedFile | null {
@@ -36,7 +22,6 @@ export class TSParser {
       console.error(`\x1b[31m[TSParser]\x1b[0m Error parsing file ${filePath}:`, error.message);
       return null;
     }
-
   }
 
   private analyzeSourceFile(sourceFile: SourceFile): ParsedFile {
@@ -49,7 +34,6 @@ export class TSParser {
           kind,
           startLine: node.getStartLineNumber(),
           endLine: node.getEndLineNumber(),
-          // Check if method exists before calling
           isExported: typeof node.isExported === 'function' ? node.isExported() : false
         });
       });
@@ -61,7 +45,6 @@ export class TSParser {
     addDecls(sourceFile.getClasses(), 'Class');
     addDecls(sourceFile.getFunctions(), 'Function');
     addDecls(sourceFile.getModules(), 'Namespace');
-
 
     const imports = sourceFile.getImportDeclarations().map(imp => ({
       module: imp.getModuleSpecifierValue(),
