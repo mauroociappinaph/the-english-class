@@ -1,4 +1,4 @@
-import { Expression, StudyState } from './store';
+import { Expression } from './store';
 
 export interface AnalysisResultProps {
   currentAnalysis: Expression | null;
@@ -11,7 +11,6 @@ export interface ExpressionLibraryProps {
   onDelete: (id: string) => Promise<void>;
   onViewDetail: (ex: Expression) => void;
 }
-
 
 export interface InteractiveTextProps {
   text: string;
@@ -27,15 +26,11 @@ export interface SearchBarProps {
 }
 
 export interface TenseTimelineProps {
-  tenses?: Record<string, { text: string; translation: string }>;
+  tenses?: Record<string, { text: string; translation: string }> | null;
 }
-
-
 
 export interface VisualCardProps {
-  imageUrl?: string;
-  mnemonic?: string;
+  imageUrl?: string | null;
+  mnemonic?: string | null;
   text: string;
 }
-
-
