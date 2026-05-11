@@ -237,6 +237,7 @@ export default function Home() {
                         <p className="text-zinc-400 mt-1">{currentAnalysis.usageTips.commonMistake}</p>
                       </div>
                     </div>
+                    </div>
                   </div>
                 </div>
               </motion.div>
