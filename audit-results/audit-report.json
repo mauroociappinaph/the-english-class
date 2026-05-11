@@ -1,18 +1,18 @@
 {
   "schemaVersion": "1.1.0",
   "metadata": {
-    "generatedAt": "2026-05-11T22:03:03.428Z",
+    "generatedAt": "2026-05-11T22:06:14.192Z",
     "project": "TheEnglishClass",
     "environment": "development",
     "nodeVersion": "v25.4.0"
   },
   "stats": {
-    "total": 7,
+    "total": 10,
     "criticals": 0,
-    "warnings": 7,
+    "warnings": 10,
     "suggestions": 0,
-    "score": 79,
-    "durationMs": 1555
+    "score": 70,
+    "durationMs": 1379
   },
   "issues": [
     {
@@ -29,6 +29,22 @@
       "severity": "MEDIUM",
       "explanation": "Unused TypeAliasDeclaration \"anonymous\" is declared but never used in the project.",
       "suggestion": "Remove the unused typealiasdeclaration or ensure it is correctly imported and used.",
+      "analyzer": "UnusedTypesAnalyzer"
+    },
+    {
+      "file": "src/backend/infrastructure/types/analyzer.types.ts",
+      "line": 54,
+      "severity": "MEDIUM",
+      "explanation": "Unused InterfaceDeclaration \"anonymous\" is declared but never used in the project.",
+      "suggestion": "Remove the unused interfacedeclaration or ensure it is correctly imported and used.",
+      "analyzer": "UnusedTypesAnalyzer"
+    },
+    {
+      "file": "src/backend/infrastructure/types/analyzer.types.ts",
+      "line": 62,
+      "severity": "MEDIUM",
+      "explanation": "Unused InterfaceDeclaration \"anonymous\" is declared but never used in the project.",
+      "suggestion": "Remove the unused interfacedeclaration or ensure it is correctly imported and used.",
       "analyzer": "UnusedTypesAnalyzer"
     },
     {
@@ -70,6 +86,14 @@
       "explanation": "Found usage of \"any\" in: any...",
       "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
       "analyzer": "AnyUsageAnalyzer"
+    },
+    {
+      "file": "src/backend/infrastructure/types/analyzer.types.ts",
+      "line": 45,
+      "severity": "MEDIUM",
+      "explanation": "Giant Interface Detected: AnalysisContext (Props: 3, Nesting: 4, Complexity: 25)",
+      "suggestion": "Interface \"AnalysisContext\" is too large. Flatten the structure or extract nested objects into their own named types. ",
+      "analyzer": "GiantInterfacesAnalyzer"
     }
   ]
 }

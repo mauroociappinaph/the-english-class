@@ -1,43 +1,17 @@
 /**
- * Standard Issue format for all architectural analyzers
+ * Specific metrics for structural analysis.
  */
-export interface AnalyzerIssue {
-  file: string;
-  line: number;
-  severity: 'HIGH' | 'MEDIUM' | 'LOW';
-  explanation: string;
-  suggestion: string;
-  analyzer: string;
-}
-
-
 export interface InterfaceMetrics {
-  name: string;
-  propertyCount: number;
+  properties: number;
   maxNesting: number;
   complexity: number;
 }
 
-export interface AuditStats {
-  total: number;
-  criticals: number;
-  warnings: number;
-  suggestions: number;
-  score: number;
-  durationMs: number;
-}
+// Re-exporting global types for backward compatibility during migration
+import { Issue, AuditStats, Report } from '../types/analyzer.types';
+export * from '../types/analyzer.types';
 
-export interface JsonAuditReport {
-  schemaVersion: string;
-  metadata: {
-    generatedAt: string;
-    project: string;
-    environment: string;
-    nodeVersion: string;
-  };
-  stats: AuditStats;
-  issues: AnalyzerIssue[];
-}
-
-
+export type AnalyzerIssue = Issue;
+export type { AuditStats as GlobalAuditStats };
+export type JsonAuditReport = Report;
 
