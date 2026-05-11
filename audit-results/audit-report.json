@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1.0",
   "metadata": {
-    "generatedAt": "2026-05-11T22:38:41.598Z",
+    "generatedAt": "2026-05-11T22:39:43.283Z",
     "project": "TheEnglishClass",
     "environment": "development",
     "nodeVersion": "v25.4.0"
@@ -12,7 +12,7 @@
     "warnings": 0,
     "suggestions": 0,
     "score": 100,
-    "durationMs": 1187
+    "durationMs": 1425
   },
   "results": [],
   "allIssues": []
