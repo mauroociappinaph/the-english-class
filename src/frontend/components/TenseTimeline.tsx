@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import { InteractiveText } from "./InteractiveText";
 import { TenseTimelineProps } from "@/frontend/types/components";
 
-export function TenseTimeline({ tenses }: TenseTimelineProps) {
+export function TenseTimeline({ tenses = {} }: TenseTimelineProps) {
+
   const tenseOrder = ["past", "present", "future"];
   
   // Group tenses into the three main categories

@@ -27,8 +27,9 @@ export interface SearchBarProps {
 }
 
 export interface TenseTimelineProps {
-  tenses: Record<string, { text: string; translation: string }>;
+  tenses?: Record<string, { text: string; translation: string }>;
 }
+
 
 
 export interface VisualCardProps {
