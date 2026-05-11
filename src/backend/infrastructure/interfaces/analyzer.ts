@@ -8,3 +8,11 @@ export interface AnalyzerIssue {
   explanation: string;
   suggestion: string;
 }
+
+export interface InterfaceMetrics {
+  name: string;
+  propertyCount: number;
+  maxNesting: number;
+  complexity: number;
+}
+

@@ -6,7 +6,9 @@ import { NamingConventionAnalyzer } from '../src/backend/infrastructure/analyzer
 import { UnusedTypesAnalyzer } from '../src/backend/infrastructure/analyzers/unused-types.analyzer';
 import { AnyUsageAnalyzer } from '../src/backend/infrastructure/analyzers/any-usage.analyzer';
 import { CircularDepsAnalyzer } from '../src/backend/infrastructure/analyzers/circular-deps.analyzer';
+import { GiantInterfacesAnalyzer } from '../src/backend/infrastructure/analyzers/giant-interfaces.analyzer';
 import { Project } from 'ts-morph';
+
 
 
 
@@ -21,8 +23,10 @@ async function runAudit() {
   const unusedAnalyzer = new UnusedTypesAnalyzer();
   const anyAnalyzer = new AnyUsageAnalyzer();
   const circularAnalyzer = new CircularDepsAnalyzer();
+  const giantAnalyzer = new GiantInterfacesAnalyzer();
 
   const files = await scanner.scan();
+
 
   const allFilePaths = files.map(f => f.path);
   
@@ -134,7 +138,22 @@ async function runAudit() {
   });
 
 
+  // Phase 5: Cohesion Analysis (Giant Interfaces)
+  console.log('\x1b[34m[ArchAudit]\x1b[0m Running Cohesion Analysis (ISP)...');
+  const giantIssues = giantAnalyzer.analyzeProject(parser.project);
+  giantIssues.forEach(issue => {
+    const relativePath = path.relative(projectRoot, issue.file);
+    const color = issue.severity === 'HIGH' ? '\x1b[31m' : '\x1b[33m';
+    const tag = issue.severity === 'HIGH' ? '❌ [ISP Violation]' : '⚠️  [Cohesion Warning]';
+    
+    console.warn(`${color}${tag}\x1b[0m ${relativePath}:${issue.line} - ${issue.explanation}`);
+    console.warn(`   👉 ${issue.suggestion}`);
+    
+    if (issue.severity === 'HIGH') violations++;
+  });
+
   if (violations > 0) {
+
 
     console.error(`\n\x1b[31m💥 Semantic Audit FAILED with ${violations} violations.\x1b[0m`);
     process.exit(1);
