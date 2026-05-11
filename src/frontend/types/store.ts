@@ -17,8 +17,15 @@ export interface Expression {
   };
   tenses?: Record<string, { text: string; translation: string }>;
   imageUrl?: string;
+  examples?: {
+    text: string;
+    translation: string;
+    category?: string;
+    explanation?: string;
+  }[];
   status: 'pending' | 'learning' | 'mastered';
 }
+
 
 export interface StudyState {
   expressions: Expression[];
