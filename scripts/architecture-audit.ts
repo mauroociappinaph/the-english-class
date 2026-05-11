@@ -1,11 +1,15 @@
 import path from 'path';
 import { FileScanner } from '../src/backend/infrastructure/file-scanner';
 import { TSParser } from '../src/backend/infrastructure/ts-parser';
+import { InterfaceLocationAnalyzer } from '../src/backend/infrastructure/analyzers/interface-location.analyzer';
+
 
 async function runAudit() {
   const projectRoot = path.join(__dirname, '..');
   const scanner = new FileScanner({ rootPath: projectRoot });
   const parser = new TSParser();
+  const locationAnalyzer = new InterfaceLocationAnalyzer();
+
   
   const files = await scanner.scan();
   let violations = 0;
@@ -52,7 +56,16 @@ async function runAudit() {
           }
         });
     }
+
+    // RULE 4: Contract Location (Interfaces/Types must be in /types or /interfaces)
+    const locationIssues = locationAnalyzer.analyze(analysis);
+    locationIssues.forEach(issue => {
+      console.error(`\x1b[31m❌ [Location Violation]:\x1b[0m ${relativePath}:${issue.line} - ${issue.explanation}`);
+      console.error(`   👉 ${issue.suggestion}`);
+      violations++;
+    });
   }
+
 
   if (violations > 0) {
     console.error(`\n\x1b[31m💥 Semantic Audit FAILED with ${violations} violations.\x1b[0m`);
