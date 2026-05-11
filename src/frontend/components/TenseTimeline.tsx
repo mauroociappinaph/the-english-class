@@ -16,10 +16,12 @@ export function TenseTimeline({ tenses }: TenseTimelineProps) {
 
   Object.entries(tenses).forEach(([key, data]) => {
     const k = key.toLowerCase();
-    if (k.includes("past")) categories.past.push({ key, ...data });
-    else if (k.includes("future")) categories.future.push({ key, ...data });
-    else categories.present.push({ key, ...data });
+    const tenseData = data as { text: string; translation: string };
+    if (k.includes("past")) categories.past.push({ key, ...tenseData });
+    else if (k.includes("future")) categories.future.push({ key, ...tenseData });
+    else categories.present.push({ key, ...tenseData });
   });
+
 
   return (
     <div className="relative py-20 px-4">

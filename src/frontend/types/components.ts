@@ -26,10 +26,13 @@ export interface SearchBarProps {
 }
 
 export interface TenseTimelineProps {
-  tenses: any;
+  tenses: Record<string, { text: string; translation: string }>;
 }
 
+
 export interface VisualCardProps {
+  imageUrl?: string;
   mnemonic: string;
   text: string;
 }
+
