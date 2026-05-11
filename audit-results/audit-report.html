@@ -22,38 +22,20 @@
     <body>
       <div class="card" style="text-align: center">
         <h1>Architecture Audit Result</h1>
-        <div class="score-badge">70</div>
+        <div class="score-badge">52</div>
         <p>Quality Score</p>
       </div>
       
       <div class="card">
         <h2>Executive Summary</h2>
         <div style="display: flex; justify-content: space-around; text-align: center">
-          <div><h3>10</h3><p>Total Issues</p></div>
+          <div><h3>16</h3><p>Total Issues</p></div>
           <div style="color: #991b1b"><h3>0</h3><p>Critical</p></div>
-          <div style="color: #854d0e"><h3>10</h3><p>Warnings</p></div>
-          <div><h3>1379ms</h3><p>Analysis Time</p></div>
+          <div style="color: #854d0e"><h3>16</h3><p>Warnings</p></div>
+          <div><h3>1368ms</h3><p>Analysis Time</p></div>
         </div>
       </div>
-    <h2 class="analyzer-title">InterfaceLocationAnalyzer</h2><table>
-        <thead>
-          <tr>
-            <th>Severity</th>
-            <th>File</th>
-            <th>Line</th>
-            <th>Explanation</th>
-            <th>Suggestion</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>config.ts</code></td>
-            <td>7</td>
-            <td>Violation: Interface "AuditConfig" found in a logic file.</td>
-            <td>Move this contract to a dedicated file inside a "/types" or "/interfaces" directory to ensure SRP and modularity.</td>
-          </tr>
-        </tbody></table><h2 class="analyzer-title">UnusedTypesAnalyzer</h2><table>
+    <h2 class="analyzer-title">UnusedTypesAnalyzer</h2><table>
         <thead>
           <tr>
             <th>Severity</th>
@@ -68,6 +50,14 @@
             <td><span class="tag tag-medium">MEDIUM</span></td>
             <td><code>routes.d.ts</code></td>
             <td>17</td>
+            <td>Unused TypeAliasDeclaration "anonymous" is declared but never used in the project.</td>
+            <td>Remove the unused typealiasdeclaration or ensure it is correctly imported and used.</td>
+          </tr>
+        
+          <tr>
+            <td><span class="tag tag-medium">MEDIUM</span></td>
+            <td><code>analyzer.ts</code></td>
+            <td>18</td>
             <td>Unused TypeAliasDeclaration "anonymous" is declared but never used in the project.</td>
             <td>Remove the unused typealiasdeclaration or ensure it is correctly imported and used.</td>
           </tr>
@@ -102,6 +92,46 @@
             <td><span class="tag tag-medium">MEDIUM</span></td>
             <td><code>page.tsx</code></td>
             <td>57</td>
+            <td>Found usage of "any" in: any...</td>
+            <td>Replace with "unknown", a generic, or a specific interface.</td>
+          </tr>
+        
+          <tr>
+            <td><span class="tag tag-medium">MEDIUM</span></td>
+            <td><code>index.ts</code></td>
+            <td>111</td>
+            <td>Found usage of "any" in: any...</td>
+            <td>Replace with "unknown", a generic, or a specific interface.</td>
+          </tr>
+        
+          <tr>
+            <td><span class="tag tag-medium">MEDIUM</span></td>
+            <td><code>index.ts</code></td>
+            <td>114</td>
+            <td>Found usage of "any" in: any...</td>
+            <td>Replace with "unknown", a generic, or a specific interface.</td>
+          </tr>
+        
+          <tr>
+            <td><span class="tag tag-medium">MEDIUM</span></td>
+            <td><code>index.ts</code></td>
+            <td>130</td>
+            <td>Found usage of "any" in: any...</td>
+            <td>Replace with "unknown", a generic, or a specific interface.</td>
+          </tr>
+        
+          <tr>
+            <td><span class="tag tag-medium">MEDIUM</span></td>
+            <td><code>index.ts</code></td>
+            <td>134</td>
+            <td>Found usage of "any" in: any...</td>
+            <td>Replace with "unknown", a generic, or a specific interface.</td>
+          </tr>
+        
+          <tr>
+            <td><span class="tag tag-medium">MEDIUM</span></td>
+            <td><code>index.ts</code></td>
+            <td>135</td>
             <td>Found usage of "any" in: any...</td>
             <td>Replace with "unknown", a generic, or a specific interface.</td>
           </tr>
@@ -154,5 +184,23 @@
             <td>45</td>
             <td>Giant Interface Detected: AnalysisContext (Props: 3, Nesting: 4, Complexity: 25)</td>
             <td>Interface "AnalysisContext" is too large. Flatten the structure or extract nested objects into their own named types. </td>
+          </tr>
+        </tbody></table><h2 class="analyzer-title">InterfaceLocationAnalyzer</h2><table>
+        <thead>
+          <tr>
+            <th>Severity</th>
+            <th>File</th>
+            <th>Line</th>
+            <th>Explanation</th>
+            <th>Suggestion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag tag-medium">MEDIUM</span></td>
+            <td><code>config.ts</code></td>
+            <td>7</td>
+            <td>Violation: Interface "AuditConfig" found in a logic file.</td>
+            <td>Move this contract to a dedicated file inside a "/types" or "/interfaces" directory to ensure SRP and modularity.</td>
           </tr>
         </tbody></table></body></html>

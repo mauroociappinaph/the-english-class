@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "analyze:types": "npx tsx src/backend/infrastructure/index.ts",
     "clean": "rm -rf .next",
     "prepare": "husky"
   },

@@ -1,31 +1,32 @@
 {
   "schemaVersion": "1.1.0",
   "metadata": {
-    "generatedAt": "2026-05-11T22:06:14.192Z",
+    "generatedAt": "2026-05-11T22:09:13.387Z",
     "project": "TheEnglishClass",
     "environment": "development",
     "nodeVersion": "v25.4.0"
   },
   "stats": {
-    "total": 10,
+    "total": 16,
     "criticals": 0,
-    "warnings": 10,
+    "warnings": 16,
     "suggestions": 0,
-    "score": 70,
-    "durationMs": 1379
+    "score": 52,
+    "durationMs": 1368
   },
-  "issues": [
-    {
-      "file": "src/backend/infrastructure/config.ts",
-      "line": 7,
-      "severity": "MEDIUM",
-      "explanation": "Violation: Interface \"AuditConfig\" found in a logic file.",
-      "suggestion": "Move this contract to a dedicated file inside a \"/types\" or \"/interfaces\" directory to ensure SRP and modularity.",
-      "analyzer": "InterfaceLocationAnalyzer"
-    },
+  "results": [],
+  "allIssues": [
     {
       "file": ".next/types/routes.d.ts",
       "line": 17,
+      "severity": "MEDIUM",
+      "explanation": "Unused TypeAliasDeclaration \"anonymous\" is declared but never used in the project.",
+      "suggestion": "Remove the unused typealiasdeclaration or ensure it is correctly imported and used.",
+      "analyzer": "UnusedTypesAnalyzer"
+    },
+    {
+      "file": "src/backend/infrastructure/interfaces/analyzer.ts",
+      "line": 18,
       "severity": "MEDIUM",
       "explanation": "Unused TypeAliasDeclaration \"anonymous\" is declared but never used in the project.",
       "suggestion": "Remove the unused typealiasdeclaration or ensure it is correctly imported and used.",
@@ -50,6 +51,46 @@
     {
       "file": "src/app/page.tsx",
       "line": 57,
+      "severity": "MEDIUM",
+      "explanation": "Found usage of \"any\" in: any...",
+      "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
+      "analyzer": "AnyUsageAnalyzer"
+    },
+    {
+      "file": "src/backend/infrastructure/index.ts",
+      "line": 111,
+      "severity": "MEDIUM",
+      "explanation": "Found usage of \"any\" in: any...",
+      "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
+      "analyzer": "AnyUsageAnalyzer"
+    },
+    {
+      "file": "src/backend/infrastructure/index.ts",
+      "line": 114,
+      "severity": "MEDIUM",
+      "explanation": "Found usage of \"any\" in: any...",
+      "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
+      "analyzer": "AnyUsageAnalyzer"
+    },
+    {
+      "file": "src/backend/infrastructure/index.ts",
+      "line": 130,
+      "severity": "MEDIUM",
+      "explanation": "Found usage of \"any\" in: any...",
+      "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
+      "analyzer": "AnyUsageAnalyzer"
+    },
+    {
+      "file": "src/backend/infrastructure/index.ts",
+      "line": 134,
+      "severity": "MEDIUM",
+      "explanation": "Found usage of \"any\" in: any...",
+      "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
+      "analyzer": "AnyUsageAnalyzer"
+    },
+    {
+      "file": "src/backend/infrastructure/index.ts",
+      "line": 135,
       "severity": "MEDIUM",
       "explanation": "Found usage of \"any\" in: any...",
       "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
@@ -94,6 +135,14 @@
       "explanation": "Giant Interface Detected: AnalysisContext (Props: 3, Nesting: 4, Complexity: 25)",
       "suggestion": "Interface \"AnalysisContext\" is too large. Flatten the structure or extract nested objects into their own named types. ",
       "analyzer": "GiantInterfacesAnalyzer"
+    },
+    {
+      "file": "src/backend/infrastructure/config.ts",
+      "line": 7,
+      "severity": "MEDIUM",
+      "explanation": "Violation: Interface \"AuditConfig\" found in a logic file.",
+      "suggestion": "Move this contract to a dedicated file inside a \"/types\" or \"/interfaces\" directory to ensure SRP and modularity.",
+      "analyzer": "InterfaceLocationAnalyzer"
     }
   ]
 }
