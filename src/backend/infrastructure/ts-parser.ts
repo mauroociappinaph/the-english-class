@@ -45,6 +45,18 @@ export class TSParser {
     addDecls(sourceFile.getClasses(), 'Class');
     addDecls(sourceFile.getFunctions(), 'Function');
     addDecls(sourceFile.getModules(), 'Namespace');
+    
+    // Extract Variables (for booleans and ambiguous names)
+    sourceFile.getVariableDeclarations().forEach(node => {
+      declarations.push({
+        name: node.getName(),
+        kind: 'Variable',
+        startLine: node.getStartLineNumber(),
+        endLine: node.getEndLineNumber(),
+        isExported: node.getVariableStatement()?.isExported() || false
+      });
+    });
+
 
     const imports = sourceFile.getImportDeclarations().map(imp => ({
       module: imp.getModuleSpecifierValue(),

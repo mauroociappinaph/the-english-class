@@ -2,6 +2,8 @@ import path from 'path';
 import { FileScanner } from '../src/backend/infrastructure/file-scanner';
 import { TSParser } from '../src/backend/infrastructure/ts-parser';
 import { InterfaceLocationAnalyzer } from '../src/backend/infrastructure/analyzers/interface-location.analyzer';
+import { NamingConventionAnalyzer } from '../src/backend/infrastructure/analyzers/naming-convention.analyzer';
+
 
 
 async function runAudit() {
@@ -9,6 +11,8 @@ async function runAudit() {
   const scanner = new FileScanner({ rootPath: projectRoot });
   const parser = new TSParser();
   const locationAnalyzer = new InterfaceLocationAnalyzer();
+  const namingAnalyzer = new NamingConventionAnalyzer();
+
 
   
   const files = await scanner.scan();
@@ -64,7 +68,17 @@ async function runAudit() {
       console.error(`   👉 ${issue.suggestion}`);
       violations++;
     });
+
+    // RULE 5: Naming Conventions (PascalCase, Suffixes, Prefixes)
+    const namingIssues = namingAnalyzer.analyze(analysis);
+    namingIssues.forEach(issue => {
+      console.warn(`\x1b[33m⚠️  [Naming Warning]:\x1b[0m ${relativePath}:${issue.line} - ${issue.explanation}`);
+      console.warn(`   👉 ${issue.suggestion}`);
+      // Severity LOW doesn't break the build by default, but we count it
+      // violations++; // Descomentar si querés que los warnings de nombres también rompan el push
+    });
   }
+
 
 
   if (violations > 0) {
