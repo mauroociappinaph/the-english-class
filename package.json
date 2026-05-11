@@ -6,9 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "analyze:types": "npx tsx src/scripts/analyze-types.ts"
-,
+    "lint": "npm run analyze:types",
+    "analyze:types": "npx tsx src/scripts/analyze-types.ts",
     "clean": "rm -rf .next",
     "prepare": "husky"
   },
