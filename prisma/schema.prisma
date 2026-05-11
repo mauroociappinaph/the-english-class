@@ -38,3 +38,12 @@ model Example {
   expressionId String
   expression   Expression @relation(fields: [expressionId], references: [id])
 }
+model ActionMetric {
+  id         String   @id @default(cuid())
+  actionName String
+  duration   Int      // In milliseconds
+  success    Boolean
+  error      String?
+  metadata   String?  // JSON string for additional context
+  createdAt  DateTime @default(now())
+}
