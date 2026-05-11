@@ -30,5 +30,4 @@ export function VisualCard({ imageUrl, mnemonic, text }: VisualCardProps) {
       </div>
     </div>
   );
-  );
 }
