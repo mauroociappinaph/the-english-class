@@ -1,12 +1,8 @@
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 
-interface SearchBarProps {
-  input: string;
-  setInput: (val: string) => void;
-  handleSearch: (e: React.FormEvent) => void;
-  isAnalyzing: boolean;
-}
+import { SearchBarProps } from "@/frontend/types/components";
+
 
 export function SearchBar({ input, setInput, handleSearch, isAnalyzing }: SearchBarProps) {
   return (

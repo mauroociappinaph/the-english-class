@@ -4,10 +4,8 @@ import { InteractiveText } from "./InteractiveText";
 import { TenseTimeline } from "./TenseTimeline";
 import { VisualCard } from "./VisualCard";
 
-interface AnalysisResultProps {
-  currentAnalysis: any;
-  getCefrStyle: (level: string) => { bg: string; glow: string };
-}
+import { AnalysisResultProps } from "@/frontend/types/components";
+
 
 export function AnalysisResult({ currentAnalysis, getCefrStyle }: AnalysisResultProps) {
   return (

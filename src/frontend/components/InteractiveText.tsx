@@ -3,11 +3,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-interface InteractiveTextProps {
-  text: string;
-  translation: string;
-  className?: string;
-}
+import { InteractiveTextProps } from "@/frontend/types/components";
+
 
 export function InteractiveText({ text, translation, className = "" }: InteractiveTextProps) {
   const [isHovered, setIsHovered] = useState(false);

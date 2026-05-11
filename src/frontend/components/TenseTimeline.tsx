@@ -2,10 +2,7 @@
 
 import { motion } from "framer-motion";
 import { InteractiveText } from "./InteractiveText";
-
-interface TenseTimelineProps {
-  tenses: Record<string, { text: string; translation: string }>;
-}
+import { TenseTimelineProps } from "@/frontend/types/components";
 
 export function TenseTimeline({ tenses }: TenseTimelineProps) {
   const tenseOrder = ["past", "present", "future"];

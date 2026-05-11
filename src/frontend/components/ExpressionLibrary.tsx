@@ -1,12 +1,8 @@
 import { motion } from "framer-motion";
 import { X, ChevronRight } from "lucide-react";
 
-interface ExpressionLibraryProps {
-  expressions: any[];
-  getCefrStyle: (level: string) => { bg: string; glow: string };
-  onDelete: (id: string) => Promise<void>;
-  onViewDetail: (ex: any) => void;
-}
+import { ExpressionLibraryProps } from "@/frontend/types/components";
+
 
 export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewDetail }: ExpressionLibraryProps) {
   return (

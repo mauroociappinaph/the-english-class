@@ -3,11 +3,7 @@
 import { motion } from "framer-motion";
 import { Lightbulb, Image as ImageIcon } from "lucide-react";
 
-interface VisualCardProps {
-  imageUrl?: string;
-  mnemonic?: string;
-  text: string;
-}
+import { VisualCardProps } from "@/frontend/types/components";
 
 export function VisualCard({ imageUrl, mnemonic, text }: VisualCardProps) {
   return (
