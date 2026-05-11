@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { AnalyzerIssue, AuditStats } from './interfaces/analyzer';
 import { MarkdownReporter } from './reporters/markdown.report';
+import { JsonReporter } from './reporters/json.report';
+
 
 /**
  * ReportGenerator: Orchestrator of architectural visibility.
@@ -76,9 +78,11 @@ export class ReportGenerator {
   }
 
   private writeJson(dir: string, stats: AuditStats, issues: AnalyzerIssue[]): void {
-    const report = { stats, issues, generatedAt: new Date().toISOString() };
-    fs.writeFileSync(path.join(dir, 'audit-report.json'), JSON.stringify(report, null, 2));
+    const reporter = new JsonReporter();
+    const json = reporter.generate(stats, issues);
+    fs.writeFileSync(path.join(dir, 'audit-report.json'), json);
   }
+
 
   private writeMarkdown(dir: string, stats: AuditStats, issues: AnalyzerIssue[]): void {
     const reporter = new MarkdownReporter();

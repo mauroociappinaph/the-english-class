@@ -27,4 +27,17 @@ export interface AuditStats {
   durationMs: number;
 }
 
+export interface JsonAuditReport {
+  schemaVersion: string;
+  metadata: {
+    generatedAt: string;
+    project: string;
+    environment: string;
+    nodeVersion: string;
+  };
+  stats: AuditStats;
+  issues: AnalyzerIssue[];
+}
+
+
 
