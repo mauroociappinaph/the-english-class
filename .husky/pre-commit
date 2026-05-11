@@ -1,1 +1,3 @@
+node scripts/check-file-size.js
 npm run lint
+
