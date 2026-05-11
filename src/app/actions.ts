@@ -7,48 +7,8 @@ import { withTelemetry } from "@/backend/infrastructure/telemetry";
 
 
 
-/**
- * Interfaces for Type Safety
- */
+import { GroqExample, GroqExpressionResponse } from "@/backend/domain/types";
 
-interface GroqExample {
-  text: string;
-  translation: string;
-  category: string;
-  explanation: string;
-}
-
-interface GroqTense {
-  text: string;
-  translation: string;
-}
-
-interface GroqUsageTips {
-  naturalness: string;
-  commonMistake: string;
-  context: string;
-}
-
-interface GroqExpressionResponse {
-  translation: string;
-  meaning: string;
-  secondaryMeanings: string[];
-  type: string;
-  cefr: string;
-  ipa: string;
-  frequency: number;
-  formality: string;
-  mnemonic: string;
-  imagePrompt: string;
-  usageTips: GroqUsageTips;
-  tenses: {
-    present: GroqTense;
-    past: GroqTense;
-    presentPerfect: GroqTense;
-    future: GroqTense;
-  };
-  examples: GroqExample[];
-}
 
 /**
  * Helper to format expression object consistently
