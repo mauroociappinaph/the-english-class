@@ -20,13 +20,14 @@ export class CircularDepsAnalyzer {
     // 1. Build the Dependency Graph
     this.dependencyGraph.clear();
     sourceFiles.forEach(file => {
-      const filePath = file.getFilePath();
+      const filePath = file.getFilePath().toString();
       const imports = file.getImportDeclarations()
-        .map(imp => imp.getModuleSpecifierSourceFile()?.getFilePath())
+        .map(imp => imp.getModuleSpecifierSourceFile()?.getFilePath()?.toString())
         .filter((fp): fp is string => !!fp && !fp.includes('node_modules'));
       
       this.dependencyGraph.set(filePath, imports);
     });
+
 
     // 2. Detect Cycles using DFS
     const visited = new Set<string>();
@@ -74,14 +75,15 @@ export class CircularDepsAnalyzer {
 
   private checkLayerViolations(file: SourceFile): AnalyzerIssue[] {
     const issues: AnalyzerIssue[] = [];
-    const filePath = file.getFilePath();
+    const filePath = file.getFilePath().toString();
     const imports = file.getImportDeclarations();
 
     imports.forEach(imp => {
       const targetFile = imp.getModuleSpecifierSourceFile();
       if (!targetFile) return;
 
-      const targetPath = targetFile.getFilePath();
+      const targetPath = targetFile.getFilePath().toString();
+
 
       // Rule: Domain/Entities should NEVER import Services or Infrastructure
       if (filePath.includes('/domain/') && (targetPath.includes('/services/') || targetPath.includes('/infrastructure/'))) {
