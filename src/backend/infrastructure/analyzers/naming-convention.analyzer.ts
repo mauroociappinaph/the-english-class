@@ -1,4 +1,6 @@
+import path from 'path';
 import { ParsedFile, ParsedDeclaration } from '../interfaces/parser';
+
 import { AnalyzerIssue } from '../interfaces/analyzer';
 
 /**
