@@ -5,6 +5,7 @@ import { InterfaceLocationAnalyzer } from '../src/backend/infrastructure/analyze
 import { NamingConventionAnalyzer } from '../src/backend/infrastructure/analyzers/naming-convention.analyzer';
 import { UnusedTypesAnalyzer } from '../src/backend/infrastructure/analyzers/unused-types.analyzer';
 import { AnyUsageAnalyzer } from '../src/backend/infrastructure/analyzers/any-usage.analyzer';
+import { CircularDepsAnalyzer } from '../src/backend/infrastructure/analyzers/circular-deps.analyzer';
 import { Project } from 'ts-morph';
 
 
@@ -19,6 +20,7 @@ async function runAudit() {
   const namingAnalyzer = new NamingConventionAnalyzer();
   const unusedAnalyzer = new UnusedTypesAnalyzer();
   const anyAnalyzer = new AnyUsageAnalyzer();
+  const circularAnalyzer = new CircularDepsAnalyzer();
 
   const files = await scanner.scan();
 
@@ -116,6 +118,21 @@ async function runAudit() {
     // Breaking the build for HIGH severity Any violations
     if (issue.severity === 'HIGH') violations++;
   });
+
+  // Phase 4: Dependency Graph Analysis (Circular Dependencies)
+  console.log('\x1b[34m[ArchAudit]\x1b[0m Running Circular Dependency Analysis...');
+  const circularIssues = circularAnalyzer.analyzeProject(parser.project);
+  circularIssues.forEach(issue => {
+    const relativePath = path.relative(projectRoot, issue.file);
+    const tag = issue.severity === 'HIGH' ? '❌ [Circular Dep]' : '⚠️  [Layer Warning]';
+    const color = issue.severity === 'HIGH' ? '\x1b[31m' : '\x1b[33m';
+    
+    console.error(`${color}${tag}:\x1b[0m ${relativePath} - ${issue.explanation}`);
+    console.error(`   👉 ${issue.suggestion}`);
+    
+    if (issue.severity === 'HIGH') violations++;
+  });
+
 
   if (violations > 0) {
 
