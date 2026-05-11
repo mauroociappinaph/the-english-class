@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Sparkles, BookOpen, GraduationCap, ChevronRight, Languages, X } from "lucide-react";
-import { useStudyStore } from "@/store/useStudyStore";
+import { useStudyStore } from "@/frontend/store/useStudyStore";
 import { INITIAL_EXPRESSION } from "@/backend/infrastructure/constants";
 
 import { analyzeExpression, getExpressions, deleteExpression } from "./actions";
-import { InteractiveText } from "@/components/InteractiveText";
-import { TenseTimeline } from "@/components/TenseTimeline";
-import { VisualCard } from "@/components/VisualCard";
+import { InteractiveText } from "@/frontend/components/InteractiveText";
+import { TenseTimeline } from "@/frontend/components/TenseTimeline";
+import { VisualCard } from "@/frontend/components/VisualCard";
+
 
 export default function Home() {
   const [input, setInput] = useState("");
