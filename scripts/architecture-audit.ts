@@ -7,17 +7,15 @@ import { UnusedTypesAnalyzer } from '../src/backend/infrastructure/analyzers/unu
 import { AnyUsageAnalyzer } from '../src/backend/infrastructure/analyzers/any-usage.analyzer';
 import { CircularDepsAnalyzer } from '../src/backend/infrastructure/analyzers/circular-deps.analyzer';
 import { GiantInterfacesAnalyzer } from '../src/backend/infrastructure/analyzers/giant-interfaces.analyzer';
-import { Project } from 'ts-morph';
-
-
-
-
-
+import { ReportGenerator } from '../src/backend/infrastructure/report-generator';
+import { AnalyzerIssue } from '../src/backend/infrastructure/interfaces/analyzer';
 
 async function runAudit() {
   const projectRoot = path.join(__dirname, '..');
   const scanner = new FileScanner({ rootPath: projectRoot });
   const parser = new TSParser();
+  const report = new ReportGenerator();
+  
   const locationAnalyzer = new InterfaceLocationAnalyzer();
   const namingAnalyzer = new NamingConventionAnalyzer();
   const unusedAnalyzer = new UnusedTypesAnalyzer();
@@ -26,17 +24,15 @@ async function runAudit() {
   const giantAnalyzer = new GiantInterfacesAnalyzer();
 
   const files = await scanner.scan();
-
-
   const allFilePaths = files.map(f => f.path);
+  const allIssues: AnalyzerIssue[] = [];
   
-  // Phase 1: Global Loading (Needed for cross-file analysis)
+  // Phase 1: Global Loading
   console.log('\x1b[34m[ArchAudit]\x1b[0m Loading project context for semantic analysis...');
   parser.loadProject(allFilePaths);
 
   let violations = 0;
   console.log('\x1b[34m[ArchAudit]\x1b[0m Starting Semantic Analysis (AST-Powered)...');
-
 
   for (const fileMetadata of files) {
     const analysis = parser.parseFile(fileMetadata.path);
@@ -50,111 +46,123 @@ async function runAudit() {
         imp.module.startsWith('@/backend/infrastructure/')
       );
       if (hasInfraImport) {
-        console.error(`\x1b[31m❌ [Layer Violation]:\x1b[0m ${relativePath} imports directly from infrastructure!`);
+        const issue: AnalyzerIssue = {
+          file: fileMetadata.path,
+          line: 1,
+          severity: 'HIGH',
+          explanation: `Layer Violation: ${relativePath} imports directly from infrastructure!`,
+          suggestion: 'Frontend should only depend on Services or Types.',
+          analyzer: 'LayerIntegrityAnalyzer'
+        };
+        allIssues.push(issue);
+        console.error(`\x1b[31m❌ [Layer Violation]:\x1b[0m ${relativePath}`);
         violations++;
       }
     }
 
-    // RULE 2: Naming Convention (Controllers must end with 'Controller')
+    // RULE 2: Naming Convention (Controllers)
     if (relativePath.includes('src/backend/controllers/')) {
       analysis.declarations
         .filter(d => d.kind === 'Class')
         .forEach(decl => {
           if (!decl.name.endsWith('Controller')) {
-            console.error(`\x1b[31m❌ [Naming Violation]:\x1b[0m Class "${decl.name}" in ${relativePath} must end with "Controller".`);
+            const issue: AnalyzerIssue = {
+              file: fileMetadata.path,
+              line: decl.startLine,
+              severity: 'HIGH',
+              explanation: `Naming Violation: Class "${decl.name}" in ${relativePath} must end with "Controller".`,
+              suggestion: 'Follow the [Domain]Controller naming convention.',
+              analyzer: 'NamingIntegrityAnalyzer'
+            };
+            allIssues.push(issue);
+            console.error(`\x1b[31m❌ [Naming Violation]:\x1b[0m ${decl.name}`);
             violations++;
           }
         });
     }
 
-    // RULE 3: Encapsulation (Services must be exported)
+    // RULE 3: Encapsulation (Services)
     if (relativePath.includes('src/backend/services/')) {
       analysis.declarations
         .filter(d => d.kind === 'Class')
         .forEach(decl => {
           if (!decl.isExported) {
-            console.error(`\x1b[31m❌ [Encapsulation Violation]:\x1b[0m Class "${decl.name}" in ${relativePath} is not exported!`);
+            const issue: AnalyzerIssue = {
+              file: fileMetadata.path,
+              line: decl.startLine,
+              severity: 'HIGH',
+              explanation: `Encapsulation Violation: Class "${decl.name}" in ${relativePath} is not exported!`,
+              suggestion: 'Services must be exported to be consumed by the facade.',
+              analyzer: 'EncapsulationAnalyzer'
+            };
+            allIssues.push(issue);
+            console.error(`\x1b[31m❌ [Encapsulation Violation]:\x1b[0m ${decl.name}`);
             violations++;
           }
         });
     }
 
-    // RULE 4: Contract Location (Interfaces/Types must be in /types or /interfaces)
+    // RULE 4: Contract Location
     const locationIssues = locationAnalyzer.analyze(analysis);
+    allIssues.push(...locationIssues);
     locationIssues.forEach(issue => {
-      console.error(`\x1b[31m❌ [Location Violation]:\x1b[0m ${relativePath}:${issue.line} - ${issue.explanation}`);
-      console.error(`   👉 ${issue.suggestion}`);
+      console.error(`\x1b[31m❌ [Location Violation]:\x1b[0m ${relativePath}:${issue.line}`);
       violations++;
     });
 
-    // RULE 5: Naming Conventions (PascalCase, Suffixes, Prefixes)
+    // RULE 5: Naming Conventions
     const namingIssues = namingAnalyzer.analyze(analysis);
+    allIssues.push(...namingIssues);
     namingIssues.forEach(issue => {
-      console.warn(`\x1b[33m⚠️  [Naming Warning]:\x1b[0m ${relativePath}:${issue.line} - ${issue.explanation}`);
-      console.warn(`   👉 ${issue.suggestion}`);
-      // Severity LOW doesn't break the build by default, but we count it
-      // violations++; // Descomentar si querés que los warnings de nombres también rompan el push
+      console.warn(`\x1b[33m⚠️  [Naming Warning]:\x1b[0m ${relativePath}:${issue.line}`);
     });
   }
 
   // Phase 2: Global Project Analysis (Unused Code)
   console.log('\x1b[34m[ArchAudit]\x1b[0m Running Global Dead Code Analysis...');
   const unusedIssues = unusedAnalyzer.analyzeProject(parser.project);
-
+  allIssues.push(...unusedIssues);
   unusedIssues.forEach(issue => {
     const relativePath = path.relative(projectRoot, issue.file);
-    console.warn(`\x1b[33m⚠️  [Dead Code Warning]:\x1b[0m ${relativePath}:${issue.line} - ${issue.explanation}`);
-    console.warn(`   👉 ${issue.suggestion}`);
+    console.warn(`\x1b[33m⚠️  [Dead Code Warning]:\x1b[0m ${relativePath}:${issue.line}`);
   });
 
   // Phase 3: Type Safety Analysis (Any Usage)
   console.log('\x1b[34m[ArchAudit]\x1b[0m Running Type Safety Audit (Zero-Any)...');
   const anyIssues = anyAnalyzer.analyzeProject(parser.project);
-
+  allIssues.push(...anyIssues);
   anyIssues.forEach(issue => {
     const relativePath = path.relative(projectRoot, issue.file);
     const color = issue.severity === 'HIGH' ? '\x1b[31m' : '\x1b[33m';
-    const tag = issue.severity === 'HIGH' ? '❌ [Type Safety Violation]' : '⚠️  [Type Safety Warning]';
-    
-    console.warn(`${color}${tag}\x1b[0m ${relativePath}:${issue.line} - ${issue.explanation}`);
-    console.warn(`   👉 ${issue.suggestion}`);
-    
-    // Breaking the build for HIGH severity Any violations
+    console.warn(`${color}${issue.severity === 'HIGH' ? '❌' : '⚠️'}\x1b[0m ${relativePath}:${issue.line}`);
     if (issue.severity === 'HIGH') violations++;
   });
 
   // Phase 4: Dependency Graph Analysis (Circular Dependencies)
   console.log('\x1b[34m[ArchAudit]\x1b[0m Running Circular Dependency Analysis...');
   const circularIssues = circularAnalyzer.analyzeProject(parser.project);
+  allIssues.push(...circularIssues);
   circularIssues.forEach(issue => {
     const relativePath = path.relative(projectRoot, issue.file);
-    const tag = issue.severity === 'HIGH' ? '❌ [Circular Dep]' : '⚠️  [Layer Warning]';
-    const color = issue.severity === 'HIGH' ? '\x1b[31m' : '\x1b[33m';
-    
-    console.error(`${color}${tag}:\x1b[0m ${relativePath} - ${issue.explanation}`);
-    console.error(`   👉 ${issue.suggestion}`);
-    
+    console.error(`\x1b[31m❌ [Circular Dep]:\x1b[0m ${relativePath}`);
     if (issue.severity === 'HIGH') violations++;
   });
-
 
   // Phase 5: Cohesion Analysis (Giant Interfaces)
   console.log('\x1b[34m[ArchAudit]\x1b[0m Running Cohesion Analysis (ISP)...');
   const giantIssues = giantAnalyzer.analyzeProject(parser.project);
+  allIssues.push(...giantIssues);
   giantIssues.forEach(issue => {
     const relativePath = path.relative(projectRoot, issue.file);
-    const color = issue.severity === 'HIGH' ? '\x1b[31m' : '\x1b[33m';
-    const tag = issue.severity === 'HIGH' ? '❌ [ISP Violation]' : '⚠️  [Cohesion Warning]';
-    
-    console.warn(`${color}${tag}\x1b[0m ${relativePath}:${issue.line} - ${issue.explanation}`);
-    console.warn(`   👉 ${issue.suggestion}`);
-    
+    console.warn(`\x1b[33m⚠️  [Cohesion Warning]:\x1b[0m ${relativePath}:${issue.line}`);
     if (issue.severity === 'HIGH') violations++;
   });
 
+  // FINAL: Report Generation
+  report.addIssues(allIssues);
+  report.generate();
+
   if (violations > 0) {
-
-
     console.error(`\n\x1b[31m💥 Semantic Audit FAILED with ${violations} violations.\x1b[0m`);
     process.exit(1);
   } else {

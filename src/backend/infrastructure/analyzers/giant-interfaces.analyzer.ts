@@ -91,7 +91,9 @@ export class GiantInterfacesAnalyzer {
       line: node.getStartLineNumber(),
       severity,
       explanation: `Giant Interface Detected: ${metrics.name} (Props: ${metrics.propertyCount}, Nesting: ${metrics.maxNesting}, Complexity: ${metrics.complexity})`,
-      suggestion
+      suggestion,
+      analyzer: 'GiantInterfacesAnalyzer'
     };
+
   }
 }

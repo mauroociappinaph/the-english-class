@@ -87,7 +87,8 @@ export class NamingConventionAnalyzer {
       line: decl.startLine,
       severity: 'LOW',
       explanation: `${explanation}: "${decl.name}"`,
-      suggestion
+      suggestion,
+      analyzer: 'NamingConventionAnalyzer'
     };
   }
 

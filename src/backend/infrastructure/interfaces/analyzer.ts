@@ -7,7 +7,9 @@ export interface AnalyzerIssue {
   severity: 'HIGH' | 'MEDIUM' | 'LOW';
   explanation: string;
   suggestion: string;
+  analyzer: string;
 }
+
 
 export interface InterfaceMetrics {
   name: string;
@@ -15,4 +17,14 @@ export interface InterfaceMetrics {
   maxNesting: number;
   complexity: number;
 }
+
+export interface AuditStats {
+  total: number;
+  criticals: number;
+  warnings: number;
+  suggestions: number;
+  score: number;
+  durationMs: number;
+}
+
 

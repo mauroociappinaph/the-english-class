@@ -84,12 +84,12 @@ export class UnusedTypesAnalyzer {
   private createIssue(file: string, node: Node, type: string): AnalyzerIssue {
     const name = Node.isNameable(node) ? node.getName() : 'anonymous';
     return {
-
       file,
       line: node.getStartLineNumber(),
-      severity: 'LOW',
-      explanation: `${type} "${name}" is declared but never used in the project.`,
-      suggestion: `Remove the unused ${type.toLowerCase()} or ensure it is correctly imported and used.`
+      severity: 'MEDIUM',
+      explanation: `Unused ${node.getKindName()} "${node.getName() || 'anonymous'}" is declared but never used in the project.`,
+      suggestion: `Remove the unused ${node.getKindName().toLowerCase()} or ensure it is correctly imported and used.`,
+      analyzer: 'UnusedTypesAnalyzer'
     };
   }
 }

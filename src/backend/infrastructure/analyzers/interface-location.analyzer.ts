@@ -31,7 +31,8 @@ export class InterfaceLocationAnalyzer {
         line: decl.startLine,
         severity: 'MEDIUM',
         explanation: `Violation: ${decl.kind} "${decl.name}" found in a logic file.`,
-        suggestion: `Move this contract to a dedicated file inside a "/types" or "/interfaces" directory to ensure SRP and modularity.`
+        suggestion: `Move this contract to a dedicated file inside a "/types" or "/interfaces" directory to ensure SRP and modularity.`,
+        analyzer: 'InterfaceLocationAnalyzer'
       });
     });
 

@@ -37,7 +37,7 @@ export class AnyUsageAnalyzer {
     const context = parent ? parent.getText().substring(0, 40) + '...' : 'unknown';
     
     let severity: 'HIGH' | 'MEDIUM' | 'LOW' = 'MEDIUM';
-    let explanation = `Found usage of "any" in: ${context}`;
+    let explanation = `Found usage of "any" in: ${node.getText().substring(0, 50)}...`;
     let suggestion = 'Replace with "unknown", a generic, or a specific interface.';
 
     if (type === 'TYPE_ASSERTION_ANY') {
@@ -51,7 +51,9 @@ export class AnyUsageAnalyzer {
       line: node.getStartLineNumber(),
       severity,
       explanation,
-      suggestion
+      suggestion,
+      analyzer: 'AnyUsageAnalyzer'
     };
+
   }
 }

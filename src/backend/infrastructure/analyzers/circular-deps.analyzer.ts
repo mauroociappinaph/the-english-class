@@ -92,8 +92,10 @@ export class CircularDepsAnalyzer {
           line: imp.getStartLineNumber(),
           severity: 'HIGH',
           explanation: `Architectural Violation: Domain entities should be pure and not depend on services or infrastructure.`,
-          suggestion: `Use Dependency Inversion (Interfaces) or move logic to a service/orchestrator.`
+          suggestion: `Use Dependency Inversion (Interfaces) or move logic to a service/orchestrator.`,
+          analyzer: 'CircularDepsAnalyzer'
         });
+
       }
 
       // Rule: DTOs should not import Services
@@ -103,8 +105,10 @@ export class CircularDepsAnalyzer {
           line: imp.getStartLineNumber(),
           severity: 'MEDIUM',
           explanation: `DTO Violation: Data Transfer Objects should be simple data structures, not depend on services.`,
-          suggestion: `Refactor the DTO to be a pure data structure.`
+          suggestion: `Refactor the DTO to be a pure data structure.`,
+          analyzer: 'CircularDepsAnalyzer'
         });
+
       }
     });
 
@@ -121,7 +125,9 @@ export class CircularDepsAnalyzer {
       line: 1,
       severity: 'HIGH',
       explanation: `Circular Dependency Detected: ${formattedPath}`,
-      suggestion: `Break the cycle by extracting shared logic into a new module or using Dependency Inversion.`
+      suggestion: `Break the cycle by extracting shared logic into a new module or using Dependency Inversion.`,
+      analyzer: 'CircularDepsAnalyzer'
     };
+
   }
 }

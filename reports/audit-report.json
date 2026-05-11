@@ -1,0 +1,61 @@
+{
+  "stats": {
+    "total": 6,
+    "criticals": 0,
+    "warnings": 6,
+    "suggestions": 0,
+    "score": 82,
+    "durationMs": 1277
+  },
+  "issues": [
+    {
+      "file": "/Users/mauroociappina/Desktop/TheEnglishClass/.next/types/routes.d.ts",
+      "line": 17,
+      "severity": "MEDIUM",
+      "explanation": "Unused TypeAliasDeclaration \"ParamsOf\" is declared but never used in the project.",
+      "suggestion": "Remove the unused typealiasdeclaration or ensure it is correctly imported and used.",
+      "analyzer": "UnusedTypesAnalyzer"
+    },
+    {
+      "file": "/Users/mauroociappina/Desktop/TheEnglishClass/src/app/page.tsx",
+      "line": 57,
+      "severity": "MEDIUM",
+      "explanation": "Found usage of \"any\" in: any...",
+      "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
+      "analyzer": "AnyUsageAnalyzer"
+    },
+    {
+      "file": "/Users/mauroociappina/Desktop/TheEnglishClass/src/backend/infrastructure/telemetry.ts",
+      "line": 9,
+      "severity": "MEDIUM",
+      "explanation": "Found usage of \"any\" in: any...",
+      "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
+      "analyzer": "AnyUsageAnalyzer"
+    },
+    {
+      "file": "/Users/mauroociappina/Desktop/TheEnglishClass/src/backend/infrastructure/telemetry.ts",
+      "line": 18,
+      "severity": "MEDIUM",
+      "explanation": "Found usage of \"any\" in: any...",
+      "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
+      "analyzer": "AnyUsageAnalyzer"
+    },
+    {
+      "file": "/Users/mauroociappina/Desktop/TheEnglishClass/src/backend/infrastructure/ts-parser.ts",
+      "line": 31,
+      "severity": "MEDIUM",
+      "explanation": "Found usage of \"any\" in: any...",
+      "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
+      "analyzer": "AnyUsageAnalyzer"
+    },
+    {
+      "file": "/Users/mauroociappina/Desktop/TheEnglishClass/src/backend/infrastructure/ts-parser.ts",
+      "line": 40,
+      "severity": "MEDIUM",
+      "explanation": "Found usage of \"any\" in: any...",
+      "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
+      "analyzer": "AnyUsageAnalyzer"
+    }
+  ],
+  "generatedAt": "2026-05-11T21:54:39.048Z"
+}
