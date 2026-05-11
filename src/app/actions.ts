@@ -1,7 +1,65 @@
 "use server";
-// Triggering re-compile for Prisma client sync
+
 import { prisma } from "@/lib/db";
 import { groq } from "@/lib/groq";
+import { Prisma } from "@prisma/client";
+
+/**
+ * Interfaces for Type Safety
+ */
+
+interface GroqExample {
+  text: string;
+  translation: string;
+  category: string;
+  explanation: string;
+}
+
+interface GroqTense {
+  text: string;
+  translation: string;
+}
+
+interface GroqUsageTips {
+  naturalness: string;
+  commonMistake: string;
+  context: string;
+}
+
+interface GroqExpressionResponse {
+  translation: string;
+  meaning: string;
+  secondaryMeanings: string[];
+  type: string;
+  cefr: string;
+  ipa: string;
+  frequency: number;
+  formality: string;
+  mnemonic: string;
+  imagePrompt: string;
+  usageTips: GroqUsageTips;
+  tenses: {
+    present: GroqTense;
+    past: GroqTense;
+    presentPerfect: GroqTense;
+    future: GroqTense;
+  };
+  examples: GroqExample[];
+}
+
+/**
+ * Helper to format expression object consistently
+ */
+function formatExpression(expression: any) {
+  if (!expression) return null;
+  
+  return {
+    ...expression,
+    secondaryMeanings: JSON.parse(expression.secondaryMeanings || "[]"),
+    usageTips: JSON.parse(expression.usageTips || "{}"),
+    tenses: JSON.parse(expression.tenses || "{}"),
+  };
+}
 
 export async function getExpression(text: string) {
   const normalizedText = text.toLowerCase().trim();
@@ -11,16 +69,7 @@ export async function getExpression(text: string) {
     include: { examples: true },
   });
 
-  if (!expression) return null;
-
-  return {
-    ...expression,
-    secondaryMeanings: JSON.parse(expression.secondaryMeanings || "[]"),
-    usageTips: JSON.parse(expression.usageTips || "{}"),
-    tenses: JSON.parse(expression.tenses || "{}"),
-    mnemonic: expression.mnemonic,
-    imageUrl: expression.imageUrl,
-  };
+  return formatExpression(expression);
 }
 
 export async function analyzeExpression(text: string) {
@@ -88,46 +137,48 @@ Schema:
       temperature: 0.1,
     });
 
-    const result = JSON.parse(completion.choices[0]?.message?.content || "{}");
+    const result: GroqExpressionResponse = JSON.parse(completion.choices[0]?.message?.content || "{}");
 
-    // 3. Save to DB
-    const newExpression = await prisma.expression.create({
-      data: {
-        text: normalizedText,
-        translation: result.translation || "",
-        meaning: result.meaning || "",
-        secondaryMeanings: JSON.stringify(result.secondaryMeanings || []),
-        type: result.type || "expression",
-        cefr: result.cefr || "B1",
-        ipa: result.ipa || "",
-        frequency: result.frequency || 0.5,
-        formality: result.formality || "neutral",
-        mnemonic: result.mnemonic || "",
-        usageTips: JSON.stringify(result.usageTips || {}),
-        tenses: JSON.stringify(result.tenses || {}),
-        examples: {
-          create: (result.examples || []).map((ex: any) => ({
-            text: ex.text,
-            translation: ex.translation, // New field
-            category: ex.category,
-            explanation: ex.explanation
-          }))
-        }
-      },
-      include: { examples: true }
-    });
+    // 3. Save to DB with collision handling (Race Condition Fix)
+    try {
+      const newExpression = await prisma.expression.create({
+        data: {
+          text: normalizedText,
+          translation: result.translation || "",
+          meaning: result.meaning || "",
+          secondaryMeanings: JSON.stringify(result.secondaryMeanings || []),
+          type: result.type || "expression",
+          cefr: result.cefr || "B1",
+          ipa: result.ipa || "",
+          frequency: result.frequency || 0.5,
+          formality: result.formality || "neutral",
+          mnemonic: result.mnemonic || "",
+          usageTips: JSON.stringify(result.usageTips || {}),
+          tenses: JSON.stringify(result.tenses || {}),
+          examples: {
+            create: (result.examples || []).map((ex: GroqExample) => ({
+              text: ex.text,
+              translation: ex.translation,
+              category: ex.category,
+              explanation: ex.explanation
+            }))
+          }
+        },
+        include: { examples: true }
+      });
 
-    return {
-      ...newExpression,
-      secondaryMeanings: JSON.parse(newExpression.secondaryMeanings || "[]"),
-      usageTips: JSON.parse(newExpression.usageTips || "{}"),
-      tenses: JSON.parse(newExpression.tenses || "{}"),
-      mnemonic: newExpression.mnemonic,
-      imageUrl: newExpression.imageUrl
-    };
+      return formatExpression(newExpression);
+    } catch (dbError) {
+      // Handle Unique Constraint (P2002) - Someone else created it first
+      if (dbError instanceof Prisma.PrismaClientKnownRequestError && dbError.code === 'P2002') {
+        console.warn(`Expression "${normalizedText}" already created by another request.`);
+        return getExpression(normalizedText);
+      }
+      throw dbError; // Rethrow other DB errors
+    }
 
   } catch (error) {
-    console.error("Analysis failed:", error);
+    console.error(`Analysis failed for "${text}":`, error);
     return null;
   }
 }
@@ -138,23 +189,14 @@ export async function getExpressions() {
     orderBy: { createdAt: "desc" },
   });
 
-  return expressions.map(ex => ({
-    ...ex,
-    secondaryMeanings: JSON.parse(ex.secondaryMeanings || "[]"),
-    usageTips: JSON.parse(ex.usageTips || "{}"),
-    tenses: JSON.parse(ex.tenses || "{}"),
-    mnemonic: ex.mnemonic,
-    imageUrl: ex.imageUrl,
-  }));
+  return expressions.map(formatExpression);
 }
 
 export async function deleteExpression(id: string) {
-  // First delete related examples
-  await prisma.example.deleteMany({
-    where: { expressionId: id },
-  });
-
-  await prisma.expression.delete({
-    where: { id },
-  });
+  // Use a transaction to ensure both are deleted (Atomic delete)
+  await prisma.$transaction([
+    prisma.example.deleteMany({ where: { expressionId: id } }),
+    prisma.expression.delete({ where: { id } })
+  ]);
 }
+
