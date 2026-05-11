@@ -1,133 +1,144 @@
-import { Project, SourceFile, Node } from 'ts-morph';
-import { AnalyzerIssue } from '../interfaces/analyzer';
+import { Project, SourceFile } from 'ts-morph';
+import { Issue, Analyzer, AnalysisContext, AnalyzerResult } from '../types/analyzer.types';
 import path from 'path';
 
 /**
  * CircularDepsAnalyzer: Guardian of modularity.
  * Detects circular dependencies and architectural layer violations.
  */
-export class CircularDepsAnalyzer {
+export class CircularDepsAnalyzer implements Analyzer {
+  public readonly name = 'Circular Dependency Analyzer';
   private dependencyGraph: Map<string, string[]> = new Map();
   private projectRoot: string = process.cwd();
+
+  public analyze(context: AnalysisContext): AnalyzerResult {
+    const startTime = Date.now();
+    const issues = this.analyzeProject(context.project);
+    
+    return {
+      analyzerName: this.name,
+      issues,
+      executionTimeMs: Date.now() - startTime
+    };
+  }
 
   /**
    * Main entry point for dependency analysis
    */
-  public analyzeProject(project: Project): AnalyzerIssue[] {
-    const issues: AnalyzerIssue[] = [];
-    const sourceFiles = project.getSourceFiles();
+  public analyzeProject(project: Project): Issue[] {
+    const issues: Issue[] = [];
+    const sourceFiles = project.getSourceFiles().filter(sf => {
+      const path = sf.getFilePath();
+      return !path.includes('node_modules') && !path.endsWith('.d.ts') && !path.endsWith('.d.mts');
+    });
 
-    // 1. Build the Dependency Graph
+    // 1. Build Dependency Graph
+    this.buildGraph(sourceFiles);
+
+
+
+    // 2. Detect Cycles
+    sourceFiles.forEach(sourceFile => {
+      const cycle = this.findCycle(sourceFile.getFilePath());
+      if (cycle) {
+        issues.push({
+          file: sourceFile.getFilePath(),
+          line: 1,
+          severity: 'HIGH',
+          explanation: `Circular Dependency Detected: ${cycle.join(' -> ')}`,
+          suggestion: 'Break the cycle by extracting shared logic to a common module or using dependency injection.',
+          analyzer: 'CircularDepsAnalyzer'
+        });
+      }
+    });
+
+    // 3. Layer Integrity Check (Domain vs Infra)
+    issues.push(...this.checkLayerIntegrity(sourceFiles));
+
+    return issues;
+  }
+
+  private buildGraph(sourceFiles: SourceFile[]) {
     this.dependencyGraph.clear();
-    sourceFiles.forEach(file => {
-      const filePath = file.getFilePath().toString();
-      const imports = file.getImportDeclarations()
-        .map(imp => imp.getModuleSpecifierSourceFile()?.getFilePath()?.toString())
-        .filter((fp): fp is string => !!fp && !fp.includes('node_modules'));
+    sourceFiles.forEach(sourceFile => {
+      const filePath = sourceFile.getFilePath();
+      const imports = sourceFile.getImportDeclarations()
+        .map(imp => imp.getModuleSpecifierSourceFile()?.getFilePath())
+        .filter((fp): fp is string => !!fp);
       
       this.dependencyGraph.set(filePath, imports);
     });
+  }
 
-
-    // 2. Detect Cycles using DFS
+  private findCycle(startNode: string): string[] | null {
     const visited = new Set<string>();
-    const recStack = new Set<string>();
+    const stack = new Set<string>();
+    const pathTrace: string[] = [];
 
-    for (const file of this.dependencyGraph.keys()) {
-      const cyclePath: string[] = [];
-      if (this.hasCycle(file, visited, recStack, cyclePath)) {
-        issues.push(this.createCycleIssue(cyclePath));
-        // Reset recStack for next search to find different cycles
-        recStack.clear();
+    const visit = (node: string): string[] | null => {
+      if (stack.has(node)) {
+        const cycleIndex = pathTrace.indexOf(node);
+        return [...pathTrace.slice(cycleIndex), node];
       }
-    }
+      if (visited.has(node)) return null;
 
-    // 3. Layer Violation Audit
-    sourceFiles.forEach(file => {
-      issues.push(...this.checkLayerViolations(file));
-    });
+      visited.add(node);
+      stack.add(node);
+      pathTrace.push(node);
 
-    return issues;
-  }
-
-  private hasCycle(node: string, visited: Set<string>, recStack: Set<string>, pathStack: string[]): boolean {
-    if (recStack.has(node)) {
-      pathStack.push(node);
-      return true;
-    }
-    if (visited.has(node)) return false;
-
-    visited.add(node);
-    recStack.add(node);
-    pathStack.push(node);
-
-    const neighbors = this.dependencyGraph.get(node) || [];
-    for (const neighbor of neighbors) {
-      if (this.hasCycle(neighbor, visited, recStack, pathStack)) {
-        return true;
-      }
-    }
-
-    recStack.delete(node);
-    pathStack.pop();
-    return false;
-  }
-
-  private checkLayerViolations(file: SourceFile): AnalyzerIssue[] {
-    const issues: AnalyzerIssue[] = [];
-    const filePath = file.getFilePath().toString();
-    const imports = file.getImportDeclarations();
-
-    imports.forEach(imp => {
-      const targetFile = imp.getModuleSpecifierSourceFile();
-      if (!targetFile) return;
-
-      const targetPath = targetFile.getFilePath().toString();
-
-
-      // Rule: Domain/Entities should NEVER import Services or Infrastructure
-      if (filePath.includes('/domain/') && (targetPath.includes('/services/') || targetPath.includes('/infrastructure/'))) {
-        issues.push({
-          file: filePath,
-          line: imp.getStartLineNumber(),
-          severity: 'HIGH',
-          explanation: `Architectural Violation: Domain entities should be pure and not depend on services or infrastructure.`,
-          suggestion: `Use Dependency Inversion (Interfaces) or move logic to a service/orchestrator.`,
-          analyzer: 'CircularDepsAnalyzer'
-        });
-
+      const neighbors = this.dependencyGraph.get(node) || [];
+      for (const neighbor of neighbors) {
+        const cycle = visit(neighbor);
+        if (cycle) return cycle;
       }
 
-      // Rule: DTOs should not import Services
-      if (filePath.includes('/dto/') && targetPath.includes('/services/')) {
-        issues.push({
-          file: filePath,
-          line: imp.getStartLineNumber(),
-          severity: 'MEDIUM',
-          explanation: `DTO Violation: Data Transfer Objects should be simple data structures, not depend on services.`,
-          suggestion: `Refactor the DTO to be a pure data structure.`,
-          analyzer: 'CircularDepsAnalyzer'
-        });
-
-      }
-    });
-
-    return issues;
-  }
-
-  private createCycleIssue(cycle: string[]): AnalyzerIssue {
-    const formattedPath = cycle
-      .map(p => path.relative(this.projectRoot, p))
-      .join(' -> ');
-
-    return {
-      file: cycle[0],
-      line: 1,
-      severity: 'HIGH',
-      explanation: `Circular Dependency Detected: ${formattedPath}`,
-      suggestion: `Break the cycle by extracting shared logic into a new module or using Dependency Inversion.`,
-      analyzer: 'CircularDepsAnalyzer'
+      stack.delete(node);
+      pathTrace.pop();
+      return null;
     };
 
+    return visit(startNode);
+  }
+
+  private checkLayerIntegrity(sourceFiles: SourceFile[]): Issue[] {
+    const issues: Issue[] = [];
+    sourceFiles.forEach(sourceFile => {
+      const filePath = sourceFile.getFilePath();
+      const relativePath = path.relative(this.projectRoot, filePath);
+
+      // Rule: Domain should never import from Infrastructure
+      if (relativePath.includes('/domain/')) {
+        const imports = sourceFile.getImportDeclarations();
+        imports.forEach(imp => {
+          const modulePath = imp.getModuleSpecifierValue();
+          if (modulePath.includes('/infrastructure/') || modulePath.includes('@/infrastructure')) {
+            issues.push({
+              file: filePath,
+              line: imp.getStartLineNumber(),
+              severity: 'HIGH',
+              explanation: `Architectural Violation: Domain layer "${relativePath}" imports from Infrastructure!`,
+              suggestion: 'Ensure the Domain layer remains pure. Use interfaces and dependency injection.',
+              analyzer: 'CircularDepsAnalyzer'
+            });
+          }
+        });
+      }
+
+      // Rule: DTOs should be leaf nodes (minimal dependencies)
+      if (relativePath.includes('.dto.ts') || relativePath.includes('/dtos/')) {
+        const imports = sourceFile.getImportDeclarations();
+        if (imports.length > 5) {
+          issues.push({
+            file: filePath,
+            line: 1,
+            severity: 'MEDIUM',
+            explanation: `DTO Complexity Warning: "${relativePath}" has too many dependencies (${imports.length}).`,
+            suggestion: 'DTOs should be simple data structures. Consider flattening the object.',
+            analyzer: 'CircularDepsAnalyzer'
+          });
+        }
+      }
+    });
+    return issues;
   }
 }

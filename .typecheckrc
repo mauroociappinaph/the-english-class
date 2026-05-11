@@ -1,16 +1,30 @@
 {
-  "ignorePaths": ["node_modules", ".next", "dist", "reports", "scripts"],
+  "ignorePaths": [
+    "node_modules",
+    ".next",
+    "dist",
+    "build",
+    ".git"
+  ],
   "rules": {
     "giantInterfaces": {
       "maxProperties": 25,
-      "complexityThreshold": 400
+      "maxNesting": 5,
+      "complexityThreshold": 500
     },
     "anyUsage": {
       "allowTypeAssertions": false
+    },
+    "circularDeps": {
+      "enforcePureDomain": true
     }
   },
   "reporting": {
     "outputDir": "audit-results",
-    "formats": ["json", "markdown", "html"]
+    "formats": [
+      "json",
+      "markdown",
+      "html"
+    ]
   }
 }

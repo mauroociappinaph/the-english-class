@@ -1,19 +1,28 @@
 import { Project, InterfaceDeclaration, TypeAliasDeclaration, Node, Type, Symbol } from 'ts-morph';
-import { AnalyzerIssue, InterfaceMetrics } from '../interfaces/analyzer';
-import { auditConfig } from '../config';
+import { Issue, Analyzer, AnalysisContext, AnalyzerResult } from '../types/analyzer.types';
+import { InterfaceMetrics } from '../interfaces/analyzer';
 
 /**
  * GiantInterfacesAnalyzer: Enforcement of the Interface Segregation Principle (ISP).
  * Detects interfaces that are too complex, deeply nested, or have too many responsibilities.
  */
-export class GiantInterfacesAnalyzer {
-  private readonly MAX_PROPERTIES = auditConfig.rules.giantInterfaces.maxProperties;
-  private readonly MAX_NESTING = auditConfig.rules.giantInterfaces.maxNesting;
-  private readonly COMPLEXITY_THRESHOLD = auditConfig.rules.giantInterfaces.complexityThreshold;
+export class GiantInterfacesAnalyzer implements Analyzer {
+  public readonly name = 'Interface Cohesion Analyzer (ISP)';
 
+  public analyze(context: AnalysisContext): AnalyzerResult {
+    const startTime = Date.now();
+    const issues = this.analyzeProject(context.project, context.giantInterfaceRules);
 
-  public analyzeProject(project: Project): AnalyzerIssue[] {
-    const issues: AnalyzerIssue[] = [];
+    
+    return {
+      analyzerName: this.name,
+      issues,
+      executionTimeMs: Date.now() - startTime
+    };
+  }
+
+  public analyzeProject(project: Project, thresholds: AnalysisContext['rules']['giantInterfaces']): Issue[] {
+    const issues: Issue[] = [];
     const sourceFiles = project.getSourceFiles();
 
     sourceFiles.forEach(sourceFile => {
@@ -23,8 +32,8 @@ export class GiantInterfacesAnalyzer {
       // Analyze Interfaces
       sourceFile.getInterfaces().forEach(node => {
         const metrics = this.calculateMetrics(node);
-        if (this.isGiant(metrics)) {
-          issues.push(this.createIssue(sourceFile.getFilePath(), node, metrics));
+        if (this.isGiant(metrics, thresholds)) {
+          issues.push(this.createIssue(sourceFile.getFilePath(), node, metrics, thresholds));
         }
       });
 
@@ -32,8 +41,8 @@ export class GiantInterfacesAnalyzer {
       sourceFile.getTypeAliases().forEach(node => {
         if (node.getType().isObject()) {
           const metrics = this.calculateMetrics(node);
-          if (this.isGiant(metrics)) {
-            issues.push(this.createIssue(sourceFile.getFilePath(), node, metrics));
+          if (this.isGiant(metrics, thresholds)) {
+            issues.push(this.createIssue(sourceFile.getFilePath(), node, metrics, thresholds));
           }
         }
       });
@@ -46,7 +55,6 @@ export class GiantInterfacesAnalyzer {
     const properties = node.getType().getProperties();
     const propertyCount = properties.length;
     
-    // Calculate max nesting level
     let maxNesting = 0;
     const checkNesting = (type: Type, level: number) => {
       maxNesting = Math.max(maxNesting, level);
@@ -62,30 +70,32 @@ export class GiantInterfacesAnalyzer {
     };
     
     checkNesting(node.getType(), 1);
-
-    // Calculate total AST nodes as a proxy for complexity
     const complexity = node.getDescendants().length;
 
-    return { properties: propertyCount, maxNesting, complexity, name: node.getName() || 'anonymous' };
+    return { 
+      name: node.getName() || 'anonymous', 
+      properties: propertyCount, 
+      maxNesting, 
+      complexity 
+    };
   }
 
-  private isGiant(metrics: InterfaceMetrics): boolean {
+  private isGiant(metrics: InterfaceMetrics, t: AnalysisContext['rules']['giantInterfaces']): boolean {
     return (
-      metrics.properties > this.MAX_PROPERTIES ||
-      metrics.maxNesting > this.MAX_NESTING ||
-      metrics.complexity > this.COMPLEXITY_THRESHOLD
+      metrics.properties > t.maxProperties ||
+      metrics.maxNesting > t.maxNesting ||
+      metrics.complexity > t.complexityThreshold
     );
   }
 
-  private createIssue(file: string, node: Node, metrics: InterfaceMetrics): AnalyzerIssue {
-    const severity = metrics.properties > 25 || metrics.maxNesting > 4 || metrics.complexity > 500 ? 'HIGH' : 'MEDIUM';
+  private createIssue(file: string, node: Node, metrics: InterfaceMetrics, t: AnalysisContext['rules']['giantInterfaces']): Issue {
+    const severity = metrics.properties > t.maxProperties * 1.5 || metrics.maxNesting > t.maxNesting + 1 ? 'HIGH' : 'MEDIUM';
     
     let suggestion = `Interface "${metrics.name}" is too large. `;
-    if (metrics.properties > this.MAX_PROPERTIES) {
-
+    if (metrics.properties > t.maxProperties) {
       suggestion += `Split it into smaller, specialized interfaces using composition. `;
     }
-    if (metrics.maxNesting > this.MAX_NESTING) {
+    if (metrics.maxNesting > t.maxNesting) {
       suggestion += `Flatten the structure or extract nested objects into their own named types. `;
     }
 
@@ -94,10 +104,8 @@ export class GiantInterfacesAnalyzer {
       line: node.getStartLineNumber(),
       severity,
       explanation: `Giant Interface Detected: ${metrics.name} (Props: ${metrics.properties}, Nesting: ${metrics.maxNesting}, Complexity: ${metrics.complexity})`,
-
       suggestion,
       analyzer: 'GiantInterfacesAnalyzer'
     };
-
   }
 }

@@ -6,7 +6,7 @@ import { prisma } from "./db";
 export async function withTelemetry<T>(
   actionName: string,
   fn: () => Promise<T>,
-  metadata?: any
+  metadata?: unknown
 ): Promise<T> {
   const start = performance.now();
   let success = true;
@@ -15,10 +15,11 @@ export async function withTelemetry<T>(
   try {
     const result = await fn();
     return result;
-  } catch (error: any) {
+  } catch (error: unknown) {
     success = false;
-    errorMsg = error.message || String(error);
+    errorMsg = error instanceof Error ? error.message : String(error);
     throw error;
+
   } finally {
     const end = performance.now();
     const duration = Math.round(end - start);

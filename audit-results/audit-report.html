@@ -7,7 +7,7 @@
       <style>
         body { font-family: -apple-system, system-ui, sans-serif; line-height: 1.6; color: #1f2937; max-width: 1200px; margin: 40px auto; padding: 0 20px; background: #f9fafb; }
         .card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 24px; }
-        .score-badge { font-size: 48px; font-weight: 800; color: #eab308; }
+        .score-badge { font-size: 48px; font-weight: 800; color: #22c55e; }
         .tag { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
         .tag-high { background: #fee2e2; color: #991b1b; }
         .tag-medium { background: #fef9c3; color: #854d0e; }
@@ -22,185 +22,17 @@
     <body>
       <div class="card" style="text-align: center">
         <h1>Architecture Audit Result</h1>
-        <div class="score-badge">52</div>
+        <div class="score-badge">100</div>
         <p>Quality Score</p>
       </div>
       
       <div class="card">
         <h2>Executive Summary</h2>
         <div style="display: flex; justify-content: space-around; text-align: center">
-          <div><h3>16</h3><p>Total Issues</p></div>
+          <div><h3>0</h3><p>Total Issues</p></div>
           <div style="color: #991b1b"><h3>0</h3><p>Critical</p></div>
-          <div style="color: #854d0e"><h3>16</h3><p>Warnings</p></div>
-          <div><h3>1368ms</h3><p>Analysis Time</p></div>
+          <div style="color: #854d0e"><h3>0</h3><p>Warnings</p></div>
+          <div><h3>1430ms</h3><p>Analysis Time</p></div>
         </div>
       </div>
-    <h2 class="analyzer-title">UnusedTypesAnalyzer</h2><table>
-        <thead>
-          <tr>
-            <th>Severity</th>
-            <th>File</th>
-            <th>Line</th>
-            <th>Explanation</th>
-            <th>Suggestion</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>routes.d.ts</code></td>
-            <td>17</td>
-            <td>Unused TypeAliasDeclaration "anonymous" is declared but never used in the project.</td>
-            <td>Remove the unused typealiasdeclaration or ensure it is correctly imported and used.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>analyzer.ts</code></td>
-            <td>18</td>
-            <td>Unused TypeAliasDeclaration "anonymous" is declared but never used in the project.</td>
-            <td>Remove the unused typealiasdeclaration or ensure it is correctly imported and used.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>analyzer.types.ts</code></td>
-            <td>54</td>
-            <td>Unused InterfaceDeclaration "anonymous" is declared but never used in the project.</td>
-            <td>Remove the unused interfacedeclaration or ensure it is correctly imported and used.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>analyzer.types.ts</code></td>
-            <td>62</td>
-            <td>Unused InterfaceDeclaration "anonymous" is declared but never used in the project.</td>
-            <td>Remove the unused interfacedeclaration or ensure it is correctly imported and used.</td>
-          </tr>
-        </tbody></table><h2 class="analyzer-title">AnyUsageAnalyzer</h2><table>
-        <thead>
-          <tr>
-            <th>Severity</th>
-            <th>File</th>
-            <th>Line</th>
-            <th>Explanation</th>
-            <th>Suggestion</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>page.tsx</code></td>
-            <td>57</td>
-            <td>Found usage of "any" in: any...</td>
-            <td>Replace with "unknown", a generic, or a specific interface.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>index.ts</code></td>
-            <td>111</td>
-            <td>Found usage of "any" in: any...</td>
-            <td>Replace with "unknown", a generic, or a specific interface.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>index.ts</code></td>
-            <td>114</td>
-            <td>Found usage of "any" in: any...</td>
-            <td>Replace with "unknown", a generic, or a specific interface.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>index.ts</code></td>
-            <td>130</td>
-            <td>Found usage of "any" in: any...</td>
-            <td>Replace with "unknown", a generic, or a specific interface.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>index.ts</code></td>
-            <td>134</td>
-            <td>Found usage of "any" in: any...</td>
-            <td>Replace with "unknown", a generic, or a specific interface.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>index.ts</code></td>
-            <td>135</td>
-            <td>Found usage of "any" in: any...</td>
-            <td>Replace with "unknown", a generic, or a specific interface.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>telemetry.ts</code></td>
-            <td>9</td>
-            <td>Found usage of "any" in: any...</td>
-            <td>Replace with "unknown", a generic, or a specific interface.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>telemetry.ts</code></td>
-            <td>18</td>
-            <td>Found usage of "any" in: any...</td>
-            <td>Replace with "unknown", a generic, or a specific interface.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>ts-parser.ts</code></td>
-            <td>31</td>
-            <td>Found usage of "any" in: any...</td>
-            <td>Replace with "unknown", a generic, or a specific interface.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>ts-parser.ts</code></td>
-            <td>40</td>
-            <td>Found usage of "any" in: any...</td>
-            <td>Replace with "unknown", a generic, or a specific interface.</td>
-          </tr>
-        </tbody></table><h2 class="analyzer-title">GiantInterfacesAnalyzer</h2><table>
-        <thead>
-          <tr>
-            <th>Severity</th>
-            <th>File</th>
-            <th>Line</th>
-            <th>Explanation</th>
-            <th>Suggestion</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>analyzer.types.ts</code></td>
-            <td>45</td>
-            <td>Giant Interface Detected: AnalysisContext (Props: 3, Nesting: 4, Complexity: 25)</td>
-            <td>Interface "AnalysisContext" is too large. Flatten the structure or extract nested objects into their own named types. </td>
-          </tr>
-        </tbody></table><h2 class="analyzer-title">InterfaceLocationAnalyzer</h2><table>
-        <thead>
-          <tr>
-            <th>Severity</th>
-            <th>File</th>
-            <th>Line</th>
-            <th>Explanation</th>
-            <th>Suggestion</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>config.ts</code></td>
-            <td>7</td>
-            <td>Violation: Interface "AuditConfig" found in a logic file.</td>
-            <td>Move this contract to a dedicated file inside a "/types" or "/interfaces" directory to ensure SRP and modularity.</td>
-          </tr>
-        </tbody></table></body></html>
+    </body></html>

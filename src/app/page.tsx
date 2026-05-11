@@ -54,10 +54,11 @@ export default function Home() {
     removeExpression(id);
   };
 
-  const handleViewDetail = (ex: any) => {
+  const handleViewDetail = (ex: Expression) => {
     setCurrentAnalysis(ex);
     setActiveTab("search");
   };
+
 
   return (
     <div className="flex flex-col items-center gap-12 w-full max-w-4xl mx-auto pt-12">

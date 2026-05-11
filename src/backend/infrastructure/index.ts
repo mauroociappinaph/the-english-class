@@ -1,11 +1,11 @@
 import path from 'path';
-import { Project } from 'ts-morph';
 import { FileScanner } from './file-scanner';
 import { TSParser } from './ts-parser';
 import { ReportGenerator } from './report-generator';
 import { auditConfig } from './config';
-import { AnalysisContext, Issue } from './types/analyzer.types';
+import { Issue, Analyzer, AnalysisContext } from './types/analyzer.types';
 import { logger } from './logger';
+import { ParsedFile, ParsedDeclaration } from './interfaces/parser';
 
 // Analyzers
 import { InterfaceLocationAnalyzer } from './analyzers/interface-location.analyzer';
@@ -49,11 +49,21 @@ export class SemanticAuditSuite {
       // 2. Load Project
       this.parser.loadProject(filePaths);
 
+      const context: AnalysisContext = {
+        project: this.parser.project,
+        ignorePaths: auditConfig.ignorePaths,
+        giantInterfaceRules: auditConfig.rules.giantInterfaces,
+        anyUsageRules: auditConfig.rules.anyUsage,
+        circularDepRules: auditConfig.rules.circularDeps,
+        startTime
+      };
+
+
       // 3. Execute Analyzers
       const allIssues: Issue[] = [];
       
       // Dedicated Project-Wide Analyzers
-      const projectAnalyzers = [
+      const projectAnalyzers: Analyzer[] = [
         new UnusedTypesAnalyzer(),
         new AnyUsageAnalyzer(),
         new CircularDepsAnalyzer(),
@@ -61,9 +71,9 @@ export class SemanticAuditSuite {
       ];
 
       projectAnalyzers.forEach(analyzer => {
-        logger.info(`🔍 Running ${analyzer.constructor.name}...`);
-        const issues = analyzer.analyzeProject(this.parser.project);
-        allIssues.push(...issues);
+        logger.info(`🔍 Running ${analyzer.name}...`);
+        const result = analyzer.analyze(context);
+        allIssues.push(...result.issues);
       });
 
       // File-by-File Analyzers & Inline Rules
@@ -74,16 +84,11 @@ export class SemanticAuditSuite {
         const analysis = this.parser.parseFile(fileMetadata.path);
         if (!analysis) return;
 
-        // 1. Layer Integrity
         this.checkLayerIntegrity(fileMetadata.path, analysis, allIssues);
-
-        // 2. Controller Naming
         this.checkControllerNaming(fileMetadata.path, analysis, allIssues);
-
-        // 3. Interface Location
+        
+        // These will be refactored to Analyzer interface later if needed
         allIssues.push(...locationAnalyzer.analyze(analysis));
-
-        // 4. Naming Conventions
         allIssues.push(...namingAnalyzer.analyze(analysis));
       });
 
@@ -94,24 +99,21 @@ export class SemanticAuditSuite {
       // 5. Final Summary
       this.showSummary(allIssues, startTime);
 
-      // Exit logic
       const criticals = allIssues.filter(i => i.severity === 'HIGH').length;
-      if (criticals > 0) {
-        process.exit(1);
-      } else {
-        process.exit(0);
-      }
+      process.exit(criticals > 0 ? 1 : 0);
 
     } catch (error) {
-      logger.error('❌ Global Audit Error:', error as Error);
+      const err = error as Error;
+      logger.error('❌ Global Audit Error:', { message: err.message, stack: err.stack });
       process.exit(1);
     }
+
   }
 
-  private checkLayerIntegrity(filePath: string, analysis: any, issues: Issue[]): void {
+  private checkLayerIntegrity(filePath: string, analysis: ParsedFile, issues: Issue[]): void {
     const relativePath = path.relative(this.projectRoot, filePath);
     if (relativePath.includes('src/frontend/')) {
-      const hasInfraImport = analysis.imports.some((imp: any) => 
+      const hasInfraImport = analysis.imports.some((imp) => 
         imp.module.startsWith('@/backend/infrastructure/')
       );
       if (hasInfraImport) {
@@ -127,12 +129,12 @@ export class SemanticAuditSuite {
     }
   }
 
-  private checkControllerNaming(filePath: string, analysis: any, issues: Issue[]): void {
+  private checkControllerNaming(filePath: string, analysis: ParsedFile, issues: Issue[]): void {
     const relativePath = path.relative(this.projectRoot, filePath);
     if (relativePath.includes('src/backend/controllers/')) {
       analysis.declarations
-        .filter((d: any) => d.kind === 'Class')
-        .forEach((decl: any) => {
+        .filter((d: ParsedDeclaration) => d.kind === 'Class')
+        .forEach((decl: ParsedDeclaration) => {
           if (!decl.name.endsWith('Controller')) {
             issues.push({
               file: filePath,
@@ -162,7 +164,6 @@ export class SemanticAuditSuite {
   }
 }
 
-// CLI Entrypoint
 if (require.main === module) {
   const suite = new SemanticAuditSuite();
   suite.run();

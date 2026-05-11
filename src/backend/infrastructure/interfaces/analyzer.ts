@@ -15,5 +15,5 @@ export * from '../types/analyzer.types';
 
 export type AnalyzerIssue = Issue;
 export type { AuditStats as GlobalAuditStats };
-export type JsonAuditReport = Report;
+
 

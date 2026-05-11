@@ -1,96 +1,69 @@
-import { Project, Node, InterfaceDeclaration, TypeAliasDeclaration, EnumDeclaration } from 'ts-morph';
-import { AnalyzerIssue } from '../interfaces/analyzer';
-
+import { Project, SyntaxKind } from 'ts-morph';
+import { Issue, Analyzer, AnalysisContext, AnalyzerResult } from '../types/analyzer.types';
 
 /**
- * UnusedTypesAnalyzer: Specialist in dead code elimination.
- * Identifies interfaces, types, and enums that are declared but never consumed.
+ * UnusedTypesAnalyzer: Clean Code Guardian.
+ * Detects exported types, interfaces, and enums that are never imported elsewhere.
  */
-export class UnusedTypesAnalyzer {
-  // Files that act as entry points where exports are required by the framework
-  private readonly ENTRY_POINTS = ['page.tsx', 'layout.tsx', 'actions.ts', 'route.ts', 'loading.tsx', 'error.tsx'];
+export class UnusedTypesAnalyzer implements Analyzer {
+  public readonly name = 'Dead Type Analyzer';
 
-  /**
-   * Performs a global analysis of the project to find unused symbols
-   * Note: This requires the project to be fully loaded via TSParser.loadProject()
-   */
-  public analyzeProject(project: Project): AnalyzerIssue[] {
-    const issues: AnalyzerIssue[] = [];
+  public analyze(context: AnalysisContext): AnalyzerResult {
+    const startTime = Date.now();
+    const issues = this.analyzeProject(context.project);
+    
+    return {
+      analyzerName: this.name,
+      issues,
+      executionTimeMs: Date.now() - startTime
+    };
+  }
+
+  public analyzeProject(project: Project): Issue[] {
+    const issues: Issue[] = [];
     const sourceFiles = project.getSourceFiles();
 
     sourceFiles.forEach(sourceFile => {
       const filePath = sourceFile.getFilePath();
-      const fileName = sourceFile.getBaseName();
-      
-      // Skip node_modules and entry points
-      if (filePath.includes('node_modules') || this.ENTRY_POINTS.includes(fileName)) return;
+      // Skip generated or external files
+      if (filePath.includes('node_modules') || filePath.includes('.next') || filePath.endsWith('.d.ts')) return;
 
+      const declarations = [
+        ...sourceFile.getInterfaces(),
+        ...sourceFile.getTypeAliases(),
+        ...sourceFile.getEnums(),
+        ...sourceFile.getClasses()
+      ];
 
-      // 1. Check Interfaces
-      sourceFile.getInterfaces().forEach(node => {
-        if (this.isUnused(node)) {
-          issues.push(this.createIssue(sourceFile.getFilePath(), node, 'Unused Interface'));
-        }
-      });
+      declarations.forEach(decl => {
+        // Skip if not exported or if it's a known entry point
+        if (!decl.isExported() || decl.getName() === 'default') return;
 
-      // 2. Check Type Aliases
-      sourceFile.getTypeAliases().forEach(node => {
-        if (this.isUnused(node)) {
-          issues.push(this.createIssue(sourceFile.getFilePath(), node, 'Unused Type Alias'));
-        }
-      });
+        const nameNode = decl.getNameNode();
+        if (!nameNode) return;
 
-      // 3. Check Enums
-      sourceFile.getEnums().forEach(node => {
-        if (this.isUnused(node)) {
-          issues.push(this.createIssue(sourceFile.getFilePath(), node, 'Unused Enum'));
+        const name = nameNode.getText();
+
+        // Use ts-morph's native reference finder (more accurate and faster)
+        const references = nameNode.findReferencesAsNodes();
+
+        // If the only reference is the declaration itself, it's unused
+        // (ts-morph sometimes returns the name node itself as a reference)
+        const externalReferences = references.filter(ref => ref !== nameNode);
+
+        if (externalReferences.length === 0) {
+          issues.push({
+            file: filePath,
+            line: decl.getStartLineNumber(),
+            severity: 'MEDIUM',
+            explanation: `Unused ${decl.getKindName()} "${name}" is declared but never used in the project.`,
+            suggestion: `Remove the unused ${decl.getKindName().toLowerCase()} or ensure it is correctly imported and used.`,
+            analyzer: 'UnusedTypesAnalyzer'
+          });
         }
       });
     });
 
     return issues;
-  }
-
-  /**
-   * Heuristic to determine if a node is unused in the entire project
-   */
-  private isUnused(node: Node): boolean {
-    // ts-morph helper to find all references safely
-    let references: Node[] = [];
-    if (Node.isInterfaceDeclaration(node) || Node.isTypeAliasDeclaration(node) || Node.isEnumDeclaration(node)) {
-       references = node.findReferencesAsNodes();
-    }
-
-
-    
-    // If there are zero references, it's definitely unused
-    if (references.length === 0) return true;
-
-    // If there are references, check if they are all within the same declaration
-    const externalReferences = references.filter((ref: Node) => {
-      const nodeStart = node.getStart();
-      const nodeEnd = node.getEnd();
-      const refStart = ref.getStart();
-      const refEnd = ref.getEnd();
-      
-      // If the reference is outside the start/end of the declaration, it's an external usage
-      return refStart < nodeStart || refEnd > nodeEnd;
-    });
-
-
-    return externalReferences.length === 0;
-  }
-
-  private createIssue(file: string, node: Node, type: string): AnalyzerIssue {
-    const name = Node.isNameable(node) ? node.getName() : 'anonymous';
-    return {
-      file,
-      line: node.getStartLineNumber(),
-      severity: 'MEDIUM',
-      explanation: `Unused ${node.getKindName()} "${name}" is declared but never used in the project.`,
-
-      suggestion: `Remove the unused ${node.getKindName().toLowerCase()} or ensure it is correctly imported and used.`,
-      analyzer: 'UnusedTypesAnalyzer'
-    };
   }
 }

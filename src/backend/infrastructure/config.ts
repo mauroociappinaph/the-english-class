@@ -1,30 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-
-/**
- * AuditConfig: Centralized configuration for the Semantic Audit Suite.
- */
-export interface AuditConfig {
-  ignorePaths: string[];
-  severityOverrides: Record<string, 'HIGH' | 'MEDIUM' | 'LOW'>;
-  rules: {
-    giantInterfaces: {
-      maxProperties: number;
-      maxNesting: number;
-      complexityThreshold: number;
-    };
-    anyUsage: {
-      allowTypeAssertions: boolean;
-    };
-    circularDeps: {
-      enforcePureDomain: boolean;
-    };
-  };
-  reporting: {
-    outputDir: string;
-    formats: ('json' | 'markdown' | 'html')[];
-  };
-}
+import { AuditConfig, Severity } from './types/analyzer.types';
 
 const DEFAULT_CONFIG: AuditConfig = {
   ignorePaths: ['node_modules', '.next', 'dist', 'build'],
@@ -69,7 +45,7 @@ export class ConfigLoader {
       DEFAULT_CONFIG as unknown as Record<string, unknown>, 
       fileConfig as unknown as Record<string, unknown>
     ) as unknown as AuditConfig;
-
+    
     return this.applyEnvOverrides(config);
   }
 

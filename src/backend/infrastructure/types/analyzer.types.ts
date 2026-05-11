@@ -1,10 +1,53 @@
 import { Project } from 'ts-morph';
-import { AuditConfig } from '../config';
 
 /**
  * Severity levels for architectural violations.
  */
 export type Severity = 'HIGH' | 'MEDIUM' | 'LOW';
+
+export interface GiantInterfaceRules {
+  maxProperties: number;
+  maxNesting: number;
+  complexityThreshold: number;
+}
+
+export interface AnyUsageRules {
+  allowTypeAssertions: boolean;
+}
+
+export interface CircularDepRules {
+  enforcePureDomain: boolean;
+}
+
+/**
+ * AuditConfig: Centralized configuration for the Semantic Audit Suite.
+ */
+export interface AuditConfig {
+  ignorePaths: string[];
+  severityOverrides: Record<string, Severity>;
+  rules: {
+    giantInterfaces: GiantInterfaceRules;
+    anyUsage: AnyUsageRules;
+    circularDeps: CircularDepRules;
+  };
+  reporting: {
+    outputDir: string;
+    formats: ('json' | 'markdown' | 'html')[];
+  };
+}
+
+/**
+ * Context provided to analyzers during execution.
+ * Fully flattened to comply with ISP.
+ */
+export interface AnalysisContext {
+  project: Project;
+  ignorePaths: string[];
+  giantInterfaceRules: GiantInterfaceRules;
+  anyUsageRules: AnyUsageRules;
+  circularDepRules: CircularDepRules;
+  startTime: number;
+}
 
 /**
  * Represents a single violation or suggestion found during analysis.
@@ -40,31 +83,11 @@ export interface AuditStats {
 }
 
 /**
- * Context provided to analyzers during execution.
- */
-export interface AnalysisContext {
-  project: Project;
-  config: AuditConfig;
-  startTime: number;
-}
-
-/**
  * Contract for all semantic analyzers.
  */
 export interface Analyzer {
   name: string;
   analyze(context: AnalysisContext): AnalyzerResult;
-}
-
-/**
- * Represents an architectural rule to be enforced.
- */
-export interface Rule {
-  id: string;
-  name: string;
-  description: string;
-  defaultSeverity: Severity;
-  enabled: boolean;
 }
 
 /**

@@ -1,64 +1,67 @@
-import { Project, Node, SyntaxKind } from 'ts-morph';
-import { AnalyzerIssue } from '../interfaces/analyzer';
-import { auditConfig } from '../config';
+import { Project, SyntaxKind } from 'ts-morph';
+import { Issue, Analyzer, AnalysisContext, AnalyzerResult } from '../types/analyzer.types';
 
 /**
- * AnyUsageAnalyzer: Specialist in Type Safety enforcement.
- * Detects and discourages the use of 'any', promoting 'unknown' or strong typing.
+ * AnyUsageAnalyzer: Enforcement of the "Zero-Any" policy.
+ * Detects usage of 'any', 'as any', and unhandled types that break type safety.
  */
-export class AnyUsageAnalyzer {
-  private readonly ALLOW_ASSERTIONS = auditConfig.rules.anyUsage.allowTypeAssertions;
+export class AnyUsageAnalyzer implements Analyzer {
+  public readonly name = 'Zero-Any Analyzer';
 
-  
-  public analyzeProject(project: Project): AnalyzerIssue[] {
-    const issues: AnalyzerIssue[] = [];
+  public analyze(context: AnalysisContext): AnalyzerResult {
+    const startTime = Date.now();
+    const issues = this.analyzeProject(context.project, context.anyUsageRules.allowTypeAssertions);
+
+    
+    return {
+      analyzerName: this.name,
+      issues,
+      executionTimeMs: Date.now() - startTime
+    };
+  }
+
+  public analyzeProject(project: Project, allowAssertions: boolean = false): Issue[] {
+    const issues: Issue[] = [];
     const sourceFiles = project.getSourceFiles();
 
     sourceFiles.forEach(sourceFile => {
       const filePath = sourceFile.getFilePath();
       if (filePath.includes('node_modules')) return;
 
-      // 1. Find all explicit 'any' type references
+      // 1. Detect explicit 'any' type references
       sourceFile.getDescendantsOfKind(SyntaxKind.AnyKeyword).forEach(node => {
-        // Avoid duplicates if multiple nodes point to the same usage
-        issues.push(this.createIssue(filePath, node, 'EXPLICIT_ANY'));
-      });
-
-      // 2. Find Type Assertions using 'any' (as any)
-      sourceFile.getDescendantsOfKind(SyntaxKind.AsExpression).forEach(node => {
-        if (this.ALLOW_ASSERTIONS) return;
-        if (node.getType().getText() === 'any') {
-          issues.push(this.createIssue(filePath, node, 'TYPE_ASSERTION_ANY'));
+        // Skip if inside a type assertion and they are allowed
+        if (allowAssertions && node.getFirstAncestorByKind(SyntaxKind.AsExpression)) {
+          return;
         }
+
+        issues.push({
+          file: filePath,
+          line: node.getStartLineNumber(),
+          severity: 'MEDIUM',
+          explanation: `Found usage of "any" in: ${node.getParent()?.getText().substring(0, 50)}...`,
+          suggestion: 'Replace with "unknown", a generic, or a specific interface.',
+          analyzer: 'AnyUsageAnalyzer'
+        });
       });
 
+      // 2. Detect 'as any' type assertions
+      if (!allowAssertions) {
+        sourceFile.getDescendantsOfKind(SyntaxKind.AsExpression).forEach(node => {
+          if (node.getType().isAny()) {
+            issues.push({
+              file: filePath,
+              line: node.getStartLineNumber(),
+              severity: 'HIGH',
+              explanation: `Critical Type Safety Breach: "as any" assertion detected.`,
+              suggestion: 'Avoid unsafe casting. If necessary, use "as unknown as Type" with a proper explanation.',
+              analyzer: 'AnyUsageAnalyzer'
+            });
+          }
+        });
+      }
     });
 
     return issues;
-  }
-
-  private createIssue(file: string, node: Node, type: 'EXPLICIT_ANY' | 'TYPE_ASSERTION_ANY'): AnalyzerIssue {
-    const parent = node.getParent();
-    const context = parent ? parent.getText().substring(0, 40) + '...' : 'unknown';
-    
-    let severity: 'HIGH' | 'MEDIUM' | 'LOW' = 'MEDIUM';
-    let explanation = `Found usage of "any" in: ${node.getText().substring(0, 50)}...`;
-    let suggestion = 'Replace with "unknown", a generic, or a specific interface.';
-
-    if (type === 'TYPE_ASSERTION_ANY') {
-      severity = 'HIGH';
-      explanation = `Dangerous type assertion "as any" detected: ${context}`;
-      suggestion = 'Avoid "as any". Refactor code to use proper type guards or intermediate interfaces.';
-    }
-
-    return {
-      file,
-      line: node.getStartLineNumber(),
-      severity,
-      explanation,
-      suggestion,
-      analyzer: 'AnyUsageAnalyzer'
-    };
-
   }
 }
