@@ -1,7 +1,7 @@
-import { Expression } from './store';
+import { Expression, StudyState } from './store';
 
 export interface AnalysisResultProps {
-  currentAnalysis: Expression | any;
+  currentAnalysis: Expression | null;
   getCefrStyle: (level: string) => { bg: string; glow: string };
 }
 
@@ -9,8 +9,9 @@ export interface ExpressionLibraryProps {
   expressions: Expression[];
   getCefrStyle: (level: string) => { bg: string; glow: string };
   onDelete: (id: string) => Promise<void>;
-  onViewDetail: (ex: any) => void;
+  onViewDetail: (ex: Expression) => void;
 }
+
 
 export interface InteractiveTextProps {
   text: string;

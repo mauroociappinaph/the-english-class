@@ -93,7 +93,8 @@ async function runAudit() {
 
   // Phase 2: Global Project Analysis (Unused Code)
   console.log('\x1b[34m[ArchAudit]\x1b[0m Running Global Dead Code Analysis...');
-  const unusedIssues = unusedAnalyzer.analyzeProject((parser as any).project);
+  const unusedIssues = unusedAnalyzer.analyzeProject(parser.project);
+
   unusedIssues.forEach(issue => {
     const relativePath = path.relative(projectRoot, issue.file);
     console.warn(`\x1b[33m⚠️  [Dead Code Warning]:\x1b[0m ${relativePath}:${issue.line} - ${issue.explanation}`);
@@ -102,7 +103,8 @@ async function runAudit() {
 
   // Phase 3: Type Safety Analysis (Any Usage)
   console.log('\x1b[34m[ArchAudit]\x1b[0m Running Type Safety Audit (Zero-Any)...');
-  const anyIssues = anyAnalyzer.analyzeProject((parser as any).project);
+  const anyIssues = anyAnalyzer.analyzeProject(parser.project);
+
   anyIssues.forEach(issue => {
     const relativePath = path.relative(projectRoot, issue.file);
     const color = issue.severity === 'HIGH' ? '\x1b[31m' : '\x1b[33m';

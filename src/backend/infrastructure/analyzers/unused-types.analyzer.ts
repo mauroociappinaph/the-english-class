@@ -1,5 +1,6 @@
-import { Project, Node, SyntaxKind } from 'ts-morph';
+import { Project, Node, InterfaceDeclaration, TypeAliasDeclaration, EnumDeclaration } from 'ts-morph';
 import { AnalyzerIssue } from '../interfaces/analyzer';
+
 
 /**
  * UnusedTypesAnalyzer: Specialist in dead code elimination.
@@ -54,17 +55,18 @@ export class UnusedTypesAnalyzer {
    * Heuristic to determine if a node is unused in the entire project
    */
   private isUnused(node: Node): boolean {
-    // If it's not exported, check local references
-    // If it is exported, we need to check if anything imports it
-    
-    // ts-morph helper to find all references
-    const references = (node as any).findReferencesAsNodes?.() || [];
+    // ts-morph helper to find all references safely
+    let references: Node[] = [];
+    if (Node.isInterfaceDeclaration(node) || Node.isTypeAliasDeclaration(node) || Node.isEnumDeclaration(node)) {
+       references = node.findReferencesAsNodes();
+    }
+
+
     
     // If there are zero references, it's definitely unused
     if (references.length === 0) return true;
 
     // If there are references, check if they are all within the same declaration
-    // (e.g., self-referencing types or just the declaration itself)
     const externalReferences = references.filter((ref: Node) => {
       const nodeStart = node.getStart();
       const nodeEnd = node.getEnd();
@@ -80,8 +82,9 @@ export class UnusedTypesAnalyzer {
   }
 
   private createIssue(file: string, node: Node, type: string): AnalyzerIssue {
-    const name = (node as any).getName?.() || 'anonymous';
+    const name = Node.isNameable(node) ? node.getName() : 'anonymous';
     return {
+
       file,
       line: node.getStartLineNumber(),
       severity: 'LOW',

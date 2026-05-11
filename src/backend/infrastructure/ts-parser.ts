@@ -4,7 +4,8 @@ import { Project, SourceFile } from 'ts-morph';
 import { ParsedDeclaration, ParsedFile } from './interfaces/parser';
 
 export class TSParser {
-  private project: Project;
+  public project: Project;
+
 
   constructor() {
     this.project = new Project({

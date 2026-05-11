@@ -23,10 +23,11 @@ export interface Expression {
 export interface StudyState {
   expressions: Expression[];
   isAnalyzing: boolean;
-  currentAnalysis: any | null;
+  currentAnalysis: Expression | null;
   setExpressions: (exprs: Expression[]) => void;
   addExpression: (expr: Expression) => void;
   removeExpression: (id: string) => void;
   setAnalyzing: (val: boolean) => void;
-  setCurrentAnalysis: (analysis: any) => void;
+  setCurrentAnalysis: (analysis: Expression | null) => void;
 }
+

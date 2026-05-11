@@ -1,16 +1,13 @@
 import { prisma } from "@/backend/infrastructure/db";
 import { groq } from "@/backend/infrastructure/groq";
-import { Prisma } from "@prisma/client";
+import { Prisma, Expression as PrismaExpression } from "@prisma/client";
 import { GroqExample, GroqExpressionResponse } from "@/backend/domain/types";
+
 
 /**
  * Service to handle Expression business logic
  */
-export class ExpressionService {
-  /**
-   * Helper to format expression object consistently
-   */
-  private static formatExpression(expression: any) {
+  private static formatExpression(expression: PrismaExpression | null) {
     if (!expression) return null;
     
     return {
@@ -20,6 +17,8 @@ export class ExpressionService {
       tenses: JSON.parse(expression.tenses || "{}"),
     };
   }
+
+
 
   static async getExpression(text: string) {
     const normalizedText = text.toLowerCase().trim();

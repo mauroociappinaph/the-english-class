@@ -21,7 +21,7 @@ export default function Home() {
     setCurrentAnalysis(INITIAL_EXPRESSION);
     const fetchLibrary = async () => {
       const library = await getExpressions();
-      setExpressions(library as any);
+      setExpressions(library as Expression[]);
     };
     fetchLibrary();
   }, [setCurrentAnalysis, setExpressions]);
@@ -36,7 +36,8 @@ export default function Home() {
       if (result) {
         setCurrentAnalysis(result);
         if (!expressions.find(e => e.id === result.id)) {
-          addExpression(result as any);
+          addExpression(result as Expression);
+
         }
       }
     } catch (err) {
