@@ -1,36 +1,64 @@
 import path from 'path';
-import fs from 'fs/promises';
 import { FileScanner } from '../src/backend/infrastructure/file-scanner';
+import { TSParser } from '../src/backend/infrastructure/ts-parser';
 
 async function runAudit() {
   const projectRoot = path.join(__dirname, '..');
   const scanner = new FileScanner({ rootPath: projectRoot });
-  const files = await scanner.scan();
+  const parser = new TSParser();
   
+  const files = await scanner.scan();
   let violations = 0;
 
-  console.log('\x1b[34m[ArchAudit]\x1b[0m Checking layer integrity rules...');
+  console.log('\x1b[34m[ArchAudit]\x1b[0m Starting Semantic Analysis (AST-Powered)...');
 
-  for (const file of files) {
-    // Regla: El frontend no puede tocar la infraestructura directamente
-    if (file.path.includes('src/frontend/')) {
-      const content = await fs.readFile(file.path, 'utf8');
-      
-      // Buscamos imports directos a backend/infrastructure
-      if (content.includes('@/backend/infrastructure/')) {
-        const relativePath = path.relative(projectRoot, file.path);
-        console.error(`\x1b[31m❌ [Layer Violation]:\x1b[0m ${relativePath} is importing directly from infrastructure!`);
-        console.error(`   👉 Rule: Frontend must use Services or Controllers, never Infrastructure directly.`);
+  for (const fileMetadata of files) {
+    const analysis = parser.parseFile(fileMetadata.path);
+    if (!analysis) continue;
+
+    const relativePath = path.relative(projectRoot, fileMetadata.path);
+
+    // RULE 1: Layer Integrity (Frontend -> Infrastructure forbidden)
+    if (relativePath.includes('src/frontend/')) {
+      const hasInfraImport = analysis.imports.some(imp => 
+        imp.module.startsWith('@/backend/infrastructure/')
+      );
+      if (hasInfraImport) {
+        console.error(`\x1b[31m❌ [Layer Violation]:\x1b[0m ${relativePath} imports directly from infrastructure!`);
         violations++;
       }
+    }
+
+    // RULE 2: Naming Convention (Controllers must end with 'Controller')
+    if (relativePath.includes('src/backend/controllers/')) {
+      analysis.declarations
+        .filter(d => d.kind === 'Class')
+        .forEach(decl => {
+          if (!decl.name.endsWith('Controller')) {
+            console.error(`\x1b[31m❌ [Naming Violation]:\x1b[0m Class "${decl.name}" in ${relativePath} must end with "Controller".`);
+            violations++;
+          }
+        });
+    }
+
+    // RULE 3: Encapsulation (Services must be exported)
+    if (relativePath.includes('src/backend/services/')) {
+      analysis.declarations
+        .filter(d => d.kind === 'Class')
+        .forEach(decl => {
+          if (!decl.isExported) {
+            console.error(`\x1b[31m❌ [Encapsulation Violation]:\x1b[0m Class "${decl.name}" in ${relativePath} is not exported!`);
+            violations++;
+          }
+        });
     }
   }
 
   if (violations > 0) {
-    console.error(`\n\x1b[31m💥 Architecture Audit FAILED with ${violations} violations.\x1b[0m`);
+    console.error(`\n\x1b[31m💥 Semantic Audit FAILED with ${violations} violations.\x1b[0m`);
     process.exit(1);
   } else {
-    console.log('\x1b[32m✅ Architecture Audit passed. Layer integrity is solid.\x1b[0m\n');
+    console.log('\x1b[32m✅ Semantic Audit passed. Project structure is healthy.\x1b[0m\n');
     process.exit(0);
   }
 }
