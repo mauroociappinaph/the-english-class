@@ -1,1 +1,3 @@
 npx tsc --noEmit
+npx tsx scripts/architecture-audit.ts
+
