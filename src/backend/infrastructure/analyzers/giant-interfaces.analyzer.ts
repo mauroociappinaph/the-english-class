@@ -66,22 +66,23 @@ export class GiantInterfacesAnalyzer {
     // Calculate total AST nodes as a proxy for complexity
     const complexity = node.getDescendants().length;
 
-    return { propertyCount, maxNesting, complexity, name: node.getName() || 'anonymous' };
+    return { properties: propertyCount, maxNesting, complexity, name: node.getName() || 'anonymous' };
   }
 
   private isGiant(metrics: InterfaceMetrics): boolean {
     return (
-      metrics.propertyCount > this.MAX_PROPERTIES ||
+      metrics.properties > this.MAX_PROPERTIES ||
       metrics.maxNesting > this.MAX_NESTING ||
       metrics.complexity > this.COMPLEXITY_THRESHOLD
     );
   }
 
   private createIssue(file: string, node: Node, metrics: InterfaceMetrics): AnalyzerIssue {
-    const severity = metrics.propertyCount > 25 || metrics.maxNesting > 4 || metrics.complexity > 500 ? 'HIGH' : 'MEDIUM';
+    const severity = metrics.properties > 25 || metrics.maxNesting > 4 || metrics.complexity > 500 ? 'HIGH' : 'MEDIUM';
     
     let suggestion = `Interface "${metrics.name}" is too large. `;
-    if (metrics.propertyCount > this.MAX_PROPERTIES) {
+    if (metrics.properties > this.MAX_PROPERTIES) {
+
       suggestion += `Split it into smaller, specialized interfaces using composition. `;
     }
     if (metrics.maxNesting > this.MAX_NESTING) {
@@ -92,7 +93,8 @@ export class GiantInterfacesAnalyzer {
       file,
       line: node.getStartLineNumber(),
       severity,
-      explanation: `Giant Interface Detected: ${metrics.name} (Props: ${metrics.propertyCount}, Nesting: ${metrics.maxNesting}, Complexity: ${metrics.complexity})`,
+      explanation: `Giant Interface Detected: ${metrics.name} (Props: ${metrics.properties}, Nesting: ${metrics.maxNesting}, Complexity: ${metrics.complexity})`,
+
       suggestion,
       analyzer: 'GiantInterfacesAnalyzer'
     };

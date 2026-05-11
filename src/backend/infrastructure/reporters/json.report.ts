@@ -1,4 +1,4 @@
-import { AnalyzerIssue, AuditStats, JsonAuditReport } from '../interfaces/analyzer';
+import { Issue, AuditStats, Report } from '../interfaces/analyzer';
 
 /**
  * JsonReporter: Specialist in machine-readable architectural data.
@@ -7,8 +7,8 @@ import { AnalyzerIssue, AuditStats, JsonAuditReport } from '../interfaces/analyz
 export class JsonReporter {
   private readonly SCHEMA_VERSION = '1.1.0';
 
-  public generate(stats: AuditStats, issues: AnalyzerIssue[]): string {
-    const report: JsonAuditReport = {
+  public generate(stats: AuditStats, issues: Issue[]): string {
+    const report: Report = {
       schemaVersion: this.SCHEMA_VERSION,
       metadata: {
         generatedAt: new Date().toISOString(),
@@ -17,7 +17,8 @@ export class JsonReporter {
         nodeVersion: process.version,
       },
       stats,
-      issues: this.sanitizeIssues(issues),
+      results: [], // Placeholder for future per-analyzer granular results
+      allIssues: this.sanitizeIssues(issues),
     };
 
     return JSON.stringify(report, null, 2);
@@ -26,7 +27,7 @@ export class JsonReporter {
   /**
    * Ensures data is safe for serialization and consistent
    */
-  private sanitizeIssues(issues: AnalyzerIssue[]): AnalyzerIssue[] {
+  private sanitizeIssues(issues: Issue[]): Issue[] {
     return issues.map(issue => ({
       ...issue,
       // Normalize paths to be relative to project root for portability in CI
