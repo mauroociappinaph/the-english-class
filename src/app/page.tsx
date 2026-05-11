@@ -97,146 +97,186 @@ export default function Home() {
       {activeTab === "search" && (
         <>
           {/* Search Section */}
-          <motion.form 
-            onSubmit={handleSearch}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="w-full relative"
-          >
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-              <div className="relative flex items-center bg-black rounded-2xl border border-white/10 p-2 shadow-2xl">
-                <Search className="ml-4 text-zinc-500" />
+          <div className="w-full max-w-2xl mx-auto sticky top-8 z-50">
+            <motion.form 
+              onSubmit={handleSearch}
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="glass-deep rounded-full p-2 flex items-center shadow-2xl"
+            >
+              <div className="flex-1 flex items-center px-6 gap-4">
+                <Search className="text-zinc-500" size={20} />
                 <input 
                   type="text" 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Escribe una palabra o frase..."
-                  className="w-full bg-transparent border-none outline-none px-4 py-4 text-xl text-white placeholder:text-zinc-600"
+                  placeholder="Analyze expression..."
+                  className="bg-transparent border-none outline-none text-white w-full py-3 text-lg placeholder:text-zinc-600 font-medium"
                 />
-                <button 
-                  type="submit"
-                  disabled={isAnalyzing}
-                  className="bg-white text-black font-bold px-8 py-4 rounded-xl hover:bg-zinc-200 transition-colors disabled:opacity-50"
-                >
-                  {isAnalyzing ? "Analizando..." : "Analizar"}
-                </button>
               </div>
-            </div>
-          </motion.form>
+              <button 
+                type="submit"
+                disabled={isAnalyzing}
+                className="bg-white text-black px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest hover:bg-zinc-200 transition-all active:scale-95 disabled:opacity-50"
+              >
+                {isAnalyzing ? "..." : "Analyze"}
+              </button>
+            </motion.form>
+          </div>
 
           {/* Results Section */}
           <AnimatePresence mode="wait">
             {currentAnalysis && !isAnalyzing && (
               <motion.div
                 key={currentAnalysis.text}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -30 }}
-                className="w-full space-y-8"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  visible: { transition: { staggerChildren: 0.1 } },
+                  hidden: {}
+                }}
+                className="w-full relative py-20"
               >
-                {/* Visual Anchors */}
-                <VisualCard 
-                  imageUrl={currentAnalysis.imageUrl} 
-                  mnemonic={currentAnalysis.mnemonic} 
-                  text={currentAnalysis.text} 
+                {/* Background Aura */}
+                <div 
+                  className="glow-aura" 
+                  style={{ '--aura-color': `rgba(${getCefrStyle(currentAnalysis.cefr).glow}, 0.5)` } as any}
                 />
 
-                <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8">
-                {/* Main Info Card */}
-                <div className="md:col-span-2 space-y-6">
-                  <div className="glass rounded-3xl p-8 space-y-6 border-l-4 border-l-cefr-b2">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <span className="text-zinc-500 uppercase tracking-widest text-[10px] font-black">{currentAnalysis.type}</span>
-                        <h2 className="text-5xl font-bold mt-1 tracking-tight">{currentAnalysis.text}</h2>
-                        <p className="text-zinc-400 italic mt-1 font-mono text-sm">{currentAnalysis.ipa}</p>
-                      </div>
-                      <div 
-                        className={`${getCefrStyle(currentAnalysis.cefr).bg} text-white px-5 py-1.5 rounded-full font-black text-xs border border-white/20`}
-                        style={{ boxShadow: `0 0 20px rgba(${getCefrStyle(currentAnalysis.cefr).glow}, 0.3)` }}
-                      >
+                <div className="flex flex-col items-center text-center space-y-12">
+                  {/* Hero Expression */}
+                  <motion.div 
+                    variants={{
+                      hidden: { opacity: 0, scale: 0.8, y: 40 },
+                      visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", damping: 15 } }
+                    }}
+                    className="space-y-4"
+                  >
+                    <span className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-500 opacity-50 block mb-4">
+                      {currentAnalysis.type}
+                    </span>
+                    <h2 className="text-8xl md:text-9xl font-black tracking-tighter text-white text-glow leading-none">
+                      {currentAnalysis.text}
+                    </h2>
+                    <div className="flex items-center justify-center gap-6 mt-6">
+                      <p className="text-zinc-500 italic font-mono text-xl">{currentAnalysis.ipa}</p>
+                      <div className={`w-12 h-12 flex items-center justify-center ${getCefrStyle(currentAnalysis.cefr).bg} rounded-full text-white font-black text-xs shadow-2xl`}>
                         {currentAnalysis.cefr}
                       </div>
                     </div>
+                  </motion.div>
 
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3 text-2xl font-semibold text-blue-400">
-                        <Languages size={24} />
-                        <span>{currentAnalysis.translation}</span>
-                      </div>
-                      <p className="text-zinc-300 text-lg leading-relaxed">
-                        {currentAnalysis.meaning}
-                      </p>
+                  {/* Primary Translation & Meaning */}
+                  <motion.div 
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      visible: { opacity: 1, y: 0 }
+                    }}
+                    className="max-w-2xl space-y-8"
+                  >
+                    <div className="flex items-center justify-center gap-4 text-4xl md:text-5xl font-bold text-white">
+                      <Languages size={40} className="text-blue-500" />
+                      <span className="gradient-text">{currentAnalysis.translation}</span>
                     </div>
+                    <p className="text-zinc-400 text-xl leading-relaxed font-medium">
+                      {currentAnalysis.meaning}
+                    </p>
+                  </motion.div>
 
-                    <div className="grid grid-cols-2 gap-4 pt-4">
-                       <div className="bg-white/5 rounded-2xl p-4">
-                          <span className="text-zinc-500 text-xs font-bold uppercase">Formality</span>
-                          <p className="text-white font-medium">{currentAnalysis.formality}</p>
-                       </div>
-                       <div className="bg-white/5 rounded-2xl p-4">
-                          <span className="text-zinc-500 text-xs font-bold uppercase">Frequency</span>
-                          <div className="flex gap-1 mt-1">
-                            {[1,2,3,4,5].map(i => (
-                              <div key={i} className={`h-1.5 w-full rounded-full ${i <= 4 ? 'bg-blue-500' : 'bg-zinc-700'}`} />
-                            ))}
-                          </div>
-                       </div>
-                    </div>
-                  </div>
+                  {/* Visual Mnemonic Bubble */}
+                  <motion.div 
+                    variants={{
+                      hidden: { opacity: 0, scale: 0.9 },
+                      visible: { opacity: 1, scale: 1 }
+                    }}
+                    className="w-full max-w-4xl"
+                  >
+                    <VisualCard 
+                      mnemonic={currentAnalysis.mnemonic} 
+                      text={currentAnalysis.text} 
+                    />
+                  </motion.div>
 
-                  {/* Tenses Card */}
-                  <div className="glass rounded-3xl p-8 space-y-4">
-                    <div className="flex items-center gap-2 text-zinc-300 font-bold">
-                      <Sparkles size={20} className="text-purple-400" />
-                      <h3>Linguistic Timeline</h3>
-                    </div>
-                    <TenseTimeline tenses={currentAnalysis.tenses} />
-                  </div>
-                </div>
-
-                {/* Sidebar Cards */}
-                <div className="space-y-6">
-                  {/* Examples Card */}
-                  <div className="glass rounded-3xl p-6 space-y-4">
-                     <div className="flex items-center gap-2 text-zinc-300 font-bold">
-                      <BookOpen size={20} className="text-blue-400" />
-                      <h3>Smart Examples</h3>
-                    </div>
-                    <div className="space-y-4">
-                      {currentAnalysis.examples.map((ex: any, i: number) => (
-                        <div key={i} className="space-y-1">
-                          <span className="text-[10px] font-black uppercase text-zinc-500 tracking-tighter">{ex.category}</span>
-                          <div className="block">
-                            <InteractiveText 
-                              text={ex.text} 
-                              translation={ex.translation} 
-                              className="text-sm text-zinc-200 leading-snug" 
-                            />
-                          </div>
-                          {ex.explanation && <p className="text-[10px] text-zinc-500 italic">{ex.explanation}</p>}
+                  {/* Usage & Examples Grid - More organic */}
+                  <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 pt-12">
+                    {/* Left: Examples & Timeline */}
+                    <div className="lg:col-span-8 space-y-12">
+                      <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }} className="space-y-8">
+                        <div className="flex items-center gap-4">
+                          <div className="h-px flex-1 bg-zinc-800" />
+                          <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500">Chronological Context</h3>
+                          <div className="h-px flex-1 bg-zinc-800" />
                         </div>
-                      ))}
-                    </div>
-                  </div>
+                        <TenseTimeline tenses={currentAnalysis.tenses} />
+                      </motion.div>
 
-                  {/* Usage Tips Card */}
-                  <div className="glass rounded-3xl p-6 space-y-4 bg-gradient-to-br from-zinc-900 to-black">
-                     <div className="flex items-center gap-2 text-zinc-300 font-bold">
-                      <GraduationCap size={20} className="text-emerald-400" />
-                      <h3>Quick Tips</h3>
-                    </div>
-                    <div className="space-y-4 text-xs">
-                      <div>
-                        <span className="text-emerald-500 font-bold">Naturalness:</span>
-                        <p className="text-zinc-400">{currentAnalysis.usageTips.naturalness}</p>
+                      <div className="space-y-12">
+                        <div className="flex items-center gap-4">
+                          <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500">Live Scenarios</h3>
+                          <div className="h-px flex-1 bg-zinc-800" />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                          {currentAnalysis.examples.map((ex: any, i: number) => (
+                            <motion.div 
+                              key={i}
+                              variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}
+                              className="space-y-2 p-6 rounded-3xl hover:bg-white/5 transition-colors group border-l border-white/5"
+                            >
+                              <span className="text-[10px] font-black uppercase text-zinc-600 tracking-tighter group-hover:text-blue-500 transition-colors">
+                                {ex.category}
+                              </span>
+                              <div className="block">
+                                <InteractiveText 
+                                  text={ex.text} 
+                                  translation={ex.translation} 
+                                  className="text-lg text-zinc-200 leading-tight font-medium" 
+                                />
+                              </div>
+                              {ex.explanation && <p className="text-xs text-zinc-500 leading-relaxed">{ex.explanation}</p>}
+                            </motion.div>
+                          ))}
+                        </div>
                       </div>
-                      <div className="bg-red-500/10 border border-red-500/20 p-3 rounded-xl">
-                        <span className="text-red-400 font-bold">Common Error:</span>
-                        <p className="text-zinc-400 mt-1">{currentAnalysis.usageTips.commonMistake}</p>
-                      </div>
                     </div>
+
+                    {/* Right: Quick Tips Floating */}
+                    <div className="lg:col-span-4 space-y-6">
+                       <motion.div 
+                        variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}
+                        className="glass-deep p-8 rounded-[2.5rem] space-y-8 text-left animate-float"
+                       >
+                         <div className="flex items-center gap-3 text-emerald-400">
+                           <GraduationCap size={24} />
+                           <h3 className="text-xs font-black uppercase tracking-widest">Mastery Tips</h3>
+                         </div>
+                         
+                         <div className="space-y-6">
+                           <div>
+                             <span className="text-emerald-500/50 text-[10px] font-black uppercase tracking-widest block mb-2">Naturalness</span>
+                             <p className="text-zinc-300 text-sm leading-relaxed">{currentAnalysis.usageTips.naturalness}</p>
+                           </div>
+
+                           <div className="p-6 bg-red-500/5 border border-red-500/10 rounded-2xl">
+                             <span className="text-red-400 text-[10px] font-black uppercase tracking-widest block mb-2">Common Pitfall</span>
+                             <p className="text-zinc-400 text-xs leading-relaxed">{currentAnalysis.usageTips.commonMistake}</p>
+                           </div>
+
+                           <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
+                              <div className="space-y-1">
+                                <span className="text-zinc-600 text-[8px] font-black uppercase tracking-widest">Formality</span>
+                                <p className="text-white text-xs font-bold uppercase">{currentAnalysis.formality}</p>
+                              </div>
+                              <div className="space-y-1 text-right">
+                                <span className="text-zinc-600 text-[8px] font-black uppercase tracking-widest">Frequency</span>
+                                <div className="flex gap-1 mt-1 justify-end">
+                                  {[1,2,3,4,5].map(i => (
+                                    <div key={i} className={`h-1 w-2 rounded-full ${i <= 4 ? 'bg-blue-500/50' : 'bg-zinc-800'}`} />
+                                  ))}
+                                </div>
+                              </div>
+                           </div>
+                         </div>
+                       </motion.div>
                     </div>
                   </div>
                 </div>
