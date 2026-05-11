@@ -97,7 +97,7 @@ export default function Home() {
       {activeTab === "search" && (
         <>
           {/* Search Section */}
-          <div className="w-full max-w-2xl mx-auto sticky top-8 z-50">
+          <div className="w-full max-w-2xl mx-auto sticky top-8 z-50 pt-8">
             <motion.form 
               onSubmit={handleSearch}
               initial={{ y: -20, opacity: 0 }}
@@ -140,7 +140,9 @@ export default function Home() {
                 {/* Background Aura */}
                 <div 
                   className="glow-aura" 
-                  style={{ '--aura-color': `rgba(${getCefrStyle(currentAnalysis.cefr).glow}, 0.5)` } as any}
+                  style={{ 
+                    background: `radial-gradient(circle, rgba(${getCefrStyle(currentAnalysis.cefr).glow}, 0.5) 0%, transparent 70%)`
+                  }}
                 />
 
                 <div className="flex flex-col items-center text-center space-y-12">
