@@ -25,16 +25,9 @@ export function VisualCard({ imageUrl, mnemonic, text }: VisualCardProps) {
             <div className="p-4 rounded-full bg-white/5 text-zinc-600">
               <ImageIcon size={40} />
             </div>
-            <p className="text-zinc-500 text-xs font-medium uppercase tracking-widest italic">
-              Visual Anchor pending...
-            </p>
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-        <div className="absolute bottom-6 left-6 right-6">
-          <h4 className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em] mb-1">Visual Concept</h4>
-          <p className="text-white text-lg font-bold">{text}</p>
-        </div>
       </div>
 
       {/* Mnemonic Section */}
