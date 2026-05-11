@@ -87,7 +87,8 @@ export class UnusedTypesAnalyzer {
       file,
       line: node.getStartLineNumber(),
       severity: 'MEDIUM',
-      explanation: `Unused ${node.getKindName()} "${node.getName() || 'anonymous'}" is declared but never used in the project.`,
+      explanation: `Unused ${node.getKindName()} "${name}" is declared but never used in the project.`,
+
       suggestion: `Remove the unused ${node.getKindName().toLowerCase()} or ensure it is correctly imported and used.`,
       analyzer: 'UnusedTypesAnalyzer'
     };
