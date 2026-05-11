@@ -1,7 +1,6 @@
 import path from 'path';
-import { ParsedFile, ParsedDeclaration } from '../interfaces/parser';
-
-import { AnalyzerIssue } from '../interfaces/analyzer';
+import { ParsedFile, ParsedDeclaration } from '../types/parser';
+import { AnalyzerIssue } from '../types/analyzer';
 
 /**
  * NamingConventionAnalyzer: Enforces linguistic and stylistic discipline.

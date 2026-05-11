@@ -1,6 +1,6 @@
 import path from 'path';
-import { ParsedFile } from '../interfaces/parser';
-import { AnalyzerIssue } from '../interfaces/analyzer';
+import { ParsedFile } from '../types/parser';
+import { AnalyzerIssue } from '../types/analyzer';
 
 /**
  * InterfaceLocationAnalyzer: Enforces structural discipline for data contracts.

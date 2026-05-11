@@ -64,7 +64,7 @@ export class CircularDepsAnalyzer implements Analyzer {
       const filePath = sourceFile.getFilePath();
       const imports = sourceFile.getImportDeclarations()
         .map(imp => imp.getModuleSpecifierSourceFile()?.getFilePath())
-        .filter((fp): fp is string => !!fp);
+        .filter((fp: string | undefined): fp is string => !!fp);
       
       this.dependencyGraph.set(filePath, imports);
     });
