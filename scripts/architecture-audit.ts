@@ -4,7 +4,9 @@ import { TSParser } from '../src/backend/infrastructure/ts-parser';
 import { InterfaceLocationAnalyzer } from '../src/backend/infrastructure/analyzers/interface-location.analyzer';
 import { NamingConventionAnalyzer } from '../src/backend/infrastructure/analyzers/naming-convention.analyzer';
 import { UnusedTypesAnalyzer } from '../src/backend/infrastructure/analyzers/unused-types.analyzer';
+import { AnyUsageAnalyzer } from '../src/backend/infrastructure/analyzers/any-usage.analyzer';
 import { Project } from 'ts-morph';
+
 
 
 
@@ -16,8 +18,10 @@ async function runAudit() {
   const locationAnalyzer = new InterfaceLocationAnalyzer();
   const namingAnalyzer = new NamingConventionAnalyzer();
   const unusedAnalyzer = new UnusedTypesAnalyzer();
+  const anyAnalyzer = new AnyUsageAnalyzer();
 
   const files = await scanner.scan();
+
   const allFilePaths = files.map(f => f.path);
   
   // Phase 1: Global Loading (Needed for cross-file analysis)
@@ -96,7 +100,23 @@ async function runAudit() {
     console.warn(`   👉 ${issue.suggestion}`);
   });
 
+  // Phase 3: Type Safety Analysis (Any Usage)
+  console.log('\x1b[34m[ArchAudit]\x1b[0m Running Type Safety Audit (Zero-Any)...');
+  const anyIssues = anyAnalyzer.analyzeProject((parser as any).project);
+  anyIssues.forEach(issue => {
+    const relativePath = path.relative(projectRoot, issue.file);
+    const color = issue.severity === 'HIGH' ? '\x1b[31m' : '\x1b[33m';
+    const tag = issue.severity === 'HIGH' ? '❌ [Type Safety Violation]' : '⚠️  [Type Safety Warning]';
+    
+    console.warn(`${color}${tag}\x1b[0m ${relativePath}:${issue.line} - ${issue.explanation}`);
+    console.warn(`   👉 ${issue.suggestion}`);
+    
+    // Breaking the build for HIGH severity Any violations
+    if (issue.severity === 'HIGH') violations++;
+  });
+
   if (violations > 0) {
+
     console.error(`\n\x1b[31m💥 Semantic Audit FAILED with ${violations} violations.\x1b[0m`);
     process.exit(1);
   } else {
