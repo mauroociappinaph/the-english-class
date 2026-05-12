@@ -63,28 +63,26 @@ class Logger {
     return `${timestamp} ${label}: ${message}${ctx}`;
   }
 
-  public debug(message: string, context?: unknown): void {
-    if (this.level <= LogLevelEnum.DEBUG) {
-      console.debug(this.formatMessage(LogLevelEnum.DEBUG, message, context));
+  private log(level: LogLevelEnum, method: 'debug' | 'info' | 'warn' | 'error', message: string, context?: unknown): void {
+    if (this.level <= level) {
+      console[method](this.formatMessage(level, message, context));
     }
+  }
+
+  public debug(message: string, context?: unknown): void {
+    this.log(LogLevelEnum.DEBUG, 'debug', message, context);
   }
 
   public info(message: string, context?: unknown): void {
-    if (this.level <= LogLevelEnum.INFO) {
-      console.info(this.formatMessage(LogLevelEnum.INFO, message, context));
-    }
+    this.log(LogLevelEnum.INFO, 'info', message, context);
   }
 
   public warn(message: string, context?: unknown): void {
-    if (this.level <= LogLevelEnum.WARN) {
-      console.warn(this.formatMessage(LogLevelEnum.WARN, message, context));
-    }
+    this.log(LogLevelEnum.WARN, 'warn', message, context);
   }
 
   public error(message: string, context?: unknown): void {
-    if (this.level <= LogLevelEnum.ERROR) {
-      console.error(this.formatMessage(LogLevelEnum.ERROR, message, context));
-    }
+    this.log(LogLevelEnum.ERROR, 'error', message, context);
   }
 
   /**

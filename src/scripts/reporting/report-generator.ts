@@ -4,6 +4,7 @@ import { AnalyzerIssue, AuditStats } from '../types/analyzer';
 import { MarkdownReporter } from './markdown.report';
 import { JsonReporter } from './json.report';
 import { QualityScoreCalculator } from './quality-score';
+import { IssueUtils } from '../utils/issue-utils';
 
 
 
@@ -25,6 +26,10 @@ export class ReportGenerator {
     this.issues.push(...issues);
   }
 
+  public clearIssues(): void {
+    this.issues = [];
+  }
+
   /**
    * Generates all report formats
    */
@@ -34,8 +39,8 @@ export class ReportGenerator {
     }
 
     const stats = this.calculateStats();
-    const sortedIssues = this.sortIssues(this.issues);
-    const groupedIssues = this.groupByAnalyzer(sortedIssues);
+    const sortedIssues = IssueUtils.sortIssues(this.issues);
+    const groupedIssues = IssueUtils.groupByAnalyzer(sortedIssues);
 
     this.writeJson(outputDir, stats, sortedIssues);
     this.writeMarkdown(outputDir, stats, sortedIssues);
@@ -64,32 +69,24 @@ export class ReportGenerator {
 
   }
 
-  private sortIssues(issues: AnalyzerIssue[]): AnalyzerIssue[] {
-    const severityMap = { HIGH: 0, MEDIUM: 1, LOW: 2 };
-    return [...issues].sort((a, b) => severityMap[a.severity] - severityMap[b.severity]);
-  }
-
-  private groupByAnalyzer(issues: AnalyzerIssue[]): Map<string, AnalyzerIssue[]> {
-    const map = new Map<string, AnalyzerIssue[]>();
-    issues.forEach(issue => {
-      const group = map.get(issue.analyzer) || [];
-      group.push(issue);
-      map.set(issue.analyzer, group);
-    });
-    return map;
+  private writeReport<T extends { generate: (stats: AuditStats, issues: AnalyzerIssue[]) => string }>(
+    ReporterClass: new () => T,
+    stats: AuditStats,
+    issues: AnalyzerIssue[],
+    filename: string,
+    dir: string
+  ): void {
+    const reporter = new ReporterClass();
+    const content = reporter.generate(stats, issues);
+    fs.writeFileSync(path.join(dir, filename), content);
   }
 
   private writeJson(dir: string, stats: AuditStats, issues: AnalyzerIssue[]): void {
-    const reporter = new JsonReporter();
-    const json = reporter.generate(stats, issues);
-    fs.writeFileSync(path.join(dir, 'audit-report.json'), json);
+    this.writeReport(JsonReporter, stats, issues, 'audit-report.json', dir);
   }
 
-
   private writeMarkdown(dir: string, stats: AuditStats, issues: AnalyzerIssue[]): void {
-    const reporter = new MarkdownReporter();
-    const md = reporter.generate(stats, issues);
-    fs.writeFileSync(path.join(dir, 'audit-report.md'), md);
+    this.writeReport(MarkdownReporter, stats, issues, 'audit-report.md', dir);
   }
 
 

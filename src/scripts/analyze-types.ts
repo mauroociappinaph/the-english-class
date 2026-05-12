@@ -8,6 +8,7 @@ import { Issue, Analyzer, AnalysisContext, AuditStats, SummaryStats } from './ty
 import { logger } from './logger';
 import { AuditCache } from './utils/audit-cache';
 import { DependencyGraph } from './utils/dependency-graph';
+import { IssueUtils } from './utils/issue-utils';
 
 // Analyzers
 import { InterfaceLocationAnalyzer } from './analyzers/interface-location.analyzer';
@@ -36,6 +37,7 @@ export class SemanticAuditSuite {
 
   public async run(filesToRefresh?: string[]): Promise<Issue[]> {
     const startTime = Date.now();
+    this.reporter.clearIssues();
     
     // 0. Type Check Gate
     const typeErrors = this.runTypeCheck();
@@ -114,10 +116,10 @@ export class SemanticAuditSuite {
           if (analyzer.isGlobal) {
             allIssues.push(...result.issues);
           } else {
-            result.issues.forEach(issue => {
-              const fileIssues = newIssuesByFile.get(issue.file) || [];
-              fileIssues.push(issue);
-              newIssuesByFile.set(issue.file, fileIssues);
+            const grouped = IssueUtils.groupByFile(result.issues);
+            grouped.forEach((issues, file) => {
+              const existing = newIssuesByFile.get(file) || [];
+              newIssuesByFile.set(file, [...existing, ...issues]);
             });
           }
         }
