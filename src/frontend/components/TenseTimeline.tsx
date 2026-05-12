@@ -18,9 +18,16 @@ export function TenseTimeline({ tenses = {} }: TenseTimelineProps) {
   Object.entries(tenses || {}).forEach(([key, data]) => {
     const k = key.toLowerCase();
     const tenseData = data as { text: string; translation: string };
-    if (k.includes("past")) categories.past.push({ key, ...tenseData });
-    else if (k.includes("future")) categories.future.push({ key, ...tenseData });
-    else categories.present.push({ key, ...tenseData });
+    
+    // Improved categorization
+    if (k.includes("past") || k.includes("used_to") || k.includes("would_past")) {
+      categories.past.push({ key, ...tenseData });
+    } else if (k.includes("future") || k.includes("conditional") || k.includes("reported")) {
+      categories.future.push({ key, ...tenseData });
+    } else {
+      // Defaults to present for things like subjunctive, imperative, modal, etc.
+      categories.present.push({ key, ...tenseData });
+    }
   });
 
 
