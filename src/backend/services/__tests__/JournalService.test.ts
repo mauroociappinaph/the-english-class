@@ -81,8 +81,9 @@ describe('JournalService', () => {
       expect(mockRepository.update).toHaveBeenCalledWith('entry-1', expect.objectContaining({
         cefrLevel: 'A1',
         metadata: expect.objectContaining({
-          vocabularyScore: 40,
-          accuracyScore: 50
+          metrics: mockAnalysis.metrics,
+          suggestedVocab: mockAnalysis.suggestedVocab,
+          feedback: mockAnalysis.feedback
         })
       }));
       expect(result).toBeDefined();
