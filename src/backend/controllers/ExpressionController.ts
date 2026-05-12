@@ -1,18 +1,18 @@
 import { withTelemetry } from "@/backend/infrastructure/telemetry";
-import { ExpressionService } from "@/backend/services/ExpressionService";
+import { expressionService } from "@/backend/infrastructure/registry";
 
 /**
  * Controller to orchestrate Expression actions
  */
 export class ExpressionController {
   static async getOne(text: string) {
-    return withTelemetry("getExpression", () => ExpressionService.getExpression(text), { text });
+    return withTelemetry("getExpression", () => expressionService.getExpression(text), { text });
   }
 
   static async analyze(text: string) {
     return withTelemetry("analyzeExpression", async () => {
       try {
-        return await ExpressionService.analyzeExpression(text);
+        return await expressionService.analyzeExpression(text);
       } catch (error) {
         console.error(`[Controller] Analysis failed for "${text}":`, error);
         return null;
@@ -21,10 +21,10 @@ export class ExpressionController {
   }
 
   static async getAll() {
-    return withTelemetry("getExpressions", () => ExpressionService.getExpressions());
+    return withTelemetry("getExpressions", () => expressionService.getExpressions());
   }
 
   static async delete(id: string) {
-    return withTelemetry("deleteExpression", () => ExpressionService.deleteExpression(id), { id });
+    return withTelemetry("deleteExpression", () => expressionService.deleteExpression(id), { id });
   }
 }
