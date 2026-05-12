@@ -28,24 +28,24 @@ export function AnalysisResult({ currentAnalysis, getCefrStyle }: AnalysisResult
         }}
       />
 
-      <div className="flex flex-col items-center text-center space-y-12">
+      <div className="flex flex-col items-center text-center space-y-24">
         {/* Hero Expression */}
         <motion.div 
           variants={{
             hidden: { opacity: 0, scale: 0.8, y: 40 },
             visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", damping: 15 } }
           }}
-          className="space-y-4"
+          className="space-y-6"
         >
-          <span className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-500 opacity-50 block mb-4">
+          <span className="text-[12px] font-black uppercase tracking-[0.6em] text-zinc-500 opacity-50 block mb-6">
             {currentAnalysis.type}
           </span>
-          <h2 className="text-8xl md:text-9xl font-black tracking-tighter text-white text-glow leading-none">
+          <h2 className="text-8xl md:text-[10rem] font-black tracking-tighter text-white text-glow leading-none">
             {currentAnalysis.text}
           </h2>
-          <div className="flex items-center justify-center gap-6 mt-6">
-            <p className="text-zinc-500 italic font-mono text-xl">{currentAnalysis.ipa}</p>
-            <div className={`w-12 h-12 flex items-center justify-center ${getCefrStyle(currentAnalysis.cefr).bg} rounded-full text-white font-black text-xs shadow-2xl`}>
+          <div className="flex items-center justify-center gap-8 mt-10">
+            <p className="text-zinc-500 italic font-mono text-2xl">{currentAnalysis.ipa}</p>
+            <div className={`w-16 h-16 flex items-center justify-center ${getCefrStyle(currentAnalysis.cefr).bg} rounded-full text-white font-black text-sm shadow-[0_0_40px_rgba(var(--glow-rgb),0.3)]`}>
               {currentAnalysis.cefr}
             </div>
           </div>
@@ -57,13 +57,13 @@ export function AnalysisResult({ currentAnalysis, getCefrStyle }: AnalysisResult
             hidden: { opacity: 0, y: 20 },
             visible: { opacity: 1, y: 0 }
           }}
-          className="max-w-2xl space-y-8"
+          className="max-w-3xl space-y-10"
         >
-          <div className="flex items-center justify-center gap-4 text-4xl md:text-5xl font-bold text-white">
-            <Languages size={40} className="text-blue-500" />
-            <span className="gradient-text">{currentAnalysis.translation}</span>
+          <div className="flex items-center justify-center gap-6 text-5xl md:text-6xl font-bold text-white">
+            <Languages size={56} className="text-blue-500" />
+            <span className="gradient-text tracking-tight">{currentAnalysis.translation}</span>
           </div>
-          <p className="text-zinc-400 text-xl leading-relaxed font-medium">
+          <p className="text-zinc-400 text-2xl leading-relaxed font-medium">
             {currentAnalysis.meaning}
           </p>
         </motion.div>
@@ -71,10 +71,10 @@ export function AnalysisResult({ currentAnalysis, getCefrStyle }: AnalysisResult
         {/* Visual Mnemonic Bubble */}
         <motion.div 
           variants={{
-            hidden: { opacity: 0, scale: 0.9 },
+            hidden: { opacity: 0, scale: 0.95 },
             visible: { opacity: 1, scale: 1 }
           }}
-          className="w-full max-w-4xl"
+          className="w-full max-w-5xl"
         >
           <VisualCard 
             mnemonic={currentAnalysis.mnemonic} 
@@ -82,104 +82,111 @@ export function AnalysisResult({ currentAnalysis, getCefrStyle }: AnalysisResult
           />
         </motion.div>
 
-        {/* Usage & Examples Grid */}
-        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 pt-12">
-          {/* Left: Examples & Timeline */}
-          <div className="lg:col-span-8 space-y-12">
-            <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }} className="space-y-8">
-              <div className="flex items-center gap-4">
-                <div className="h-px flex-1 bg-zinc-800" />
-                <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500">Chronological Context</h3>
-                <div className="h-px flex-1 bg-zinc-800" />
-              </div>
-              <TenseTimeline tenses={currentAnalysis.tenses} />
-            </motion.div>
+        {/* Usage & Examples Section */}
+        <div className="w-full space-y-32 pt-24 border-t border-white/5">
+          {/* Chronological Context */}
+          <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }} className="space-y-16">
+            <div className="flex items-center gap-8">
+              <h3 className="text-sm font-black uppercase tracking-[0.5em] text-zinc-500 whitespace-nowrap">Chronological Context</h3>
+              <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
+            </div>
+            <TenseTimeline tenses={currentAnalysis.tenses} />
+          </motion.div>
 
-            <div className="space-y-12">
-              <div className="flex items-center gap-4">
-                <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500">Live Scenarios</h3>
-                <div className="h-px flex-1 bg-zinc-800" />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-                {currentAnalysis.examples?.map((ex, i) => (
-                  <motion.div 
-                    key={i}
-                    variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}
-                    className="space-y-2 p-6 rounded-3xl hover:bg-white/5 transition-colors group border-l border-white/5"
-                  >
-                    <span className="text-[10px] font-black uppercase text-zinc-600 tracking-tighter group-hover:text-blue-500 transition-colors">
+          {/* Live Scenarios */}
+          <div className="space-y-16">
+            <div className="flex items-center gap-8">
+              <h3 className="text-sm font-black uppercase tracking-[0.5em] text-zinc-500 whitespace-nowrap">Live Scenarios</h3>
+              <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 text-left">
+              {currentAnalysis.examples?.map((ex, i) => (
+                <motion.div 
+                  key={i}
+                  variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                  className="group space-y-6 p-10 rounded-[3rem] bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-700"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+                    <span className="text-[11px] font-black uppercase text-zinc-600 tracking-[0.3em] group-hover:text-blue-400 transition-colors">
                       {ex.category}
                     </span>
-                    <div className="block">
-                      <InteractiveText 
-                        text={ex.text} 
-                        translation={ex.translation || ""} 
-                        className="text-lg text-zinc-200 leading-tight font-medium" 
-                      />
-                    </div>
-                    {ex.explanation && <p className="text-xs text-zinc-500 leading-relaxed">{ex.explanation}</p>}
-                  </motion.div>
-                ))}
-              </div>
+                  </div>
+                  <div className="space-y-4">
+                    <InteractiveText 
+                      text={ex.text} 
+                      translation={ex.translation || ""} 
+                      className="text-2xl text-zinc-100 leading-tight font-bold tracking-tight" 
+                    />
+                    {ex.explanation && (
+                      <p className="text-sm text-zinc-500 leading-relaxed font-medium italic border-l-2 border-white/5 pl-6">
+                        {ex.explanation}
+                      </p>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
 
-          {/* Right: Quick Tips Floating */}
-          <div className="lg:col-span-4 space-y-6">
-             <motion.div 
-              variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}
-              className="glass-deep p-10 rounded-[3rem] space-y-10 text-left animate-float border border-white/5 relative overflow-hidden"
-             >
-               <GraduationCap size={120} className="absolute -bottom-10 -right-10 text-emerald-500 opacity-5" />
+          {/* Mastery Tips (At the end) */}
+          <motion.div 
+            variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0 } }}
+            className="w-full"
+          >
+             <div className="glass-deep p-16 md:p-24 rounded-[5rem] space-y-16 text-left border border-white/10 shadow-3xl overflow-hidden group relative">
+               <GraduationCap size={300} className="absolute -bottom-24 -right-24 text-blue-500 opacity-[0.03] group-hover:opacity-[0.06] transition-all duration-1000 rotate-12" />
 
-               <div className="flex items-center gap-4 text-emerald-400">
-                 <div className="p-3 bg-emerald-500/10 rounded-2xl">
-                   <GraduationCap size={24} />
+               <div className="flex items-center gap-8">
+                 <div className="p-6 bg-blue-500/10 rounded-[2.5rem] text-blue-400">
+                   <GraduationCap size={40} />
                  </div>
-                 <h3 className="text-xs font-black uppercase tracking-[0.3em]">Mastery Tips</h3>
+                 <h3 className="text-xl font-black uppercase tracking-[0.8em] text-white">Mastery Tips</h3>
                </div>
                
-               <div className="space-y-10 relative z-10">
-                 <div className="space-y-3">
-                   <div className="flex items-center gap-2">
-                     <div className="w-1 h-1 rounded-full bg-emerald-500" />
-                     <span className="text-emerald-500/70 text-[9px] font-black uppercase tracking-widest block">Naturalness</span>
-                   </div>
-                   <p className="text-zinc-300 text-base leading-relaxed font-medium pl-3 border-l border-emerald-500/20">
-                     {currentAnalysis.usageTips?.naturalness}
-                   </p>
-                 </div>
-
-                 <div className="p-8 bg-gradient-to-br from-red-500/10 to-transparent border border-red-500/10 rounded-[2rem] space-y-3">
-                   <div className="flex items-center gap-2 text-red-400">
-                     <Sparkles size={16} />
-                     <span className="text-[9px] font-black uppercase tracking-widest">Common Pitfall</span>
-                   </div>
-                   <p className="text-zinc-300 text-sm leading-relaxed font-medium italic">
-                     "{currentAnalysis.usageTips?.commonMistake}"
-                   </p>
-                 </div>
-
-                 <div className="grid grid-cols-2 gap-6 pt-6 border-t border-white/10">
-                    <div className="space-y-2">
-                      <span className="text-zinc-600 text-[9px] font-black uppercase tracking-widest block">Formality</span>
-                      <p className="text-white text-sm font-black uppercase tracking-tighter">{currentAnalysis.formality}</p>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 relative z-10">
+                  <div className="space-y-16">
+                    <div className="space-y-8">
+                      <div className="flex items-center gap-4">
+                        <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
+                        <span className="text-zinc-500 text-sm font-black uppercase tracking-[0.4em] block">Naturalness</span>
+                      </div>
+                      <p className="text-zinc-100 text-3xl leading-relaxed font-bold pl-8 border-l-2 border-white/10">
+                        {currentAnalysis.usageTips?.naturalness}
+                      </p>
                     </div>
-                    <div className="space-y-2 text-right">
-                      <span className="text-zinc-600 text-[9px] font-black uppercase tracking-widest block">Frequency</span>
-                      <div className="flex gap-1.5 mt-2 justify-end">
-                        {[1,2,3,4,5].map(i => (
+
+                    <div className="p-12 bg-white/[0.03] border border-white/5 rounded-[4rem] space-y-8">
+                      <div className="flex items-center gap-4 text-red-400">
+                        <Sparkles size={32} />
+                        <span className="text-sm font-black uppercase tracking-[0.4em]">Common Pitfall</span>
+                      </div>
+                      <p className="text-zinc-400 text-xl leading-relaxed font-medium italic">
+                        "{currentAnalysis.usageTips?.commonMistake}"
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col justify-end gap-16 lg:pl-20 lg:border-l border-white/5">
+                    <div className="space-y-6">
+                      <span className="text-zinc-600 text-sm font-black uppercase tracking-[0.5em] block">Formality</span>
+                      <p className="text-white text-5xl font-black uppercase tracking-tighter text-glow-sm">{currentAnalysis.formality}</p>
+                    </div>
+                    <div className="space-y-8">
+                      <span className="text-zinc-600 text-sm font-black uppercase tracking-[0.5em] block">Frequency</span>
+                      <div className="flex gap-5 mt-4">
+                        {[1, 2, 3, 4, 5].map(i => (
                           <div 
                             key={i} 
-                            className={`h-1.5 w-3 rounded-full transition-all duration-500 ${i <= 4 ? 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'bg-zinc-800'}`} 
+                            className={`h-4 w-12 rounded-full transition-all duration-1000 ${i <= 4 ? 'bg-blue-500 shadow-[0_0_40px_rgba(59,130,246,0.6)]' : 'bg-zinc-800'}`} 
                           />
                         ))}
                       </div>
                     </div>
-                 </div>
-               </div>
-             </motion.div>
-          </div>
+                  </div>
+                </div>
+             </div>
+          </motion.div>
         </div>
       </div>
     </motion.div>
