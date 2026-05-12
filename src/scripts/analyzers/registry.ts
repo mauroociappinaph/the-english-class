@@ -1,14 +1,14 @@
 import { Analyzer } from '../types/analyzer.types';
-import { UnusedTypesAnalyzer } from './unused-types.analyzer';
 import { AnyUsageAnalyzer } from './any-usage.analyzer';
 import { CircularDepsAnalyzer } from './circular-deps.analyzer';
 import { GiantInterfacesAnalyzer } from './giant-interfaces.analyzer';
 import { CouplingMetricsAnalyzer } from './coupling-metrics.analyzer';
 import { ArchitectureBoundaryAnalyzer } from './architecture-boundary.analyzer';
 import { SecurityEnvLeakAnalyzer } from './security-env-leak.analyzer';
+import { DeadCodeAnalyzer } from './dead-code.analyzer';
 
 export const getProjectAnalyzers = (): Analyzer[] => [
-  new UnusedTypesAnalyzer(),
+  new DeadCodeAnalyzer(),
   new AnyUsageAnalyzer(),
   new CircularDepsAnalyzer(),
   new GiantInterfacesAnalyzer(),
