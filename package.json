@@ -10,9 +10,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "analyze:types": "npx tsx src/scripts/analyze-types.ts",
-    "analyze:watch": "npx tsx src/scripts/utils/watch-mode.ts",
-    "fix:types": "npx tsx src/scripts/fix-types.ts",
+    "analyze:types": "npx tsx scripts/analyze-types.ts",
+    "analyze:watch": "npx tsx scripts/utils/watch-mode.ts",
+    "fix:types": "npx tsx scripts/fix-types.ts",
     "clean": "rm -rf .next",
 
     "prepare": "husky"
