@@ -96,7 +96,7 @@ Return ONLY valid JSON in this exact schema:
         { role: "system", content: "Return ONLY a valid JSON object. No markdown, no explanations." },
         { role: "user", content: prompt }
       ],
-      model: "llama-3.3-70b-versatile",
+      model: "llama-3.1-8b-instant",
       response_format: { type: "json_object" },
       temperature: 0.2,
     });
