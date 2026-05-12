@@ -47,17 +47,17 @@ export class FileScanner {
       let results: FileMetadata[];
       
       if (filePaths && filePaths.length > 0) {
-        console.log(`\x1b[34m[FileScanner]\x1b[0m Performing incremental scan of ${filePaths.length} files.`);
+        console.log(`\x1b[90m📡 SCANNER\x1b[0m Performing incremental scan of ${filePaths.length} files...`);
         const tasks = filePaths.map(fp => this.extractMetadata(fp, path.basename(fp)));
         const allResults = await Promise.all(tasks);
         results = allResults.filter((r): r is FileMetadata => r !== null);
       } else {
-        console.log(`\x1b[34m[FileScanner]\x1b[0m Starting full scan at: ${this.config.rootPath}`);
+        console.log(`\x1b[90m📡 SCANNER\x1b[0m Starting full scan at: ${this.config.rootPath}`);
         results = await this.recursiveScan(this.config.rootPath);
       }
       
       const end = performance.now();
-      console.log(`\x1b[32m[FileScanner]\x1b[0m Scan completed. Found ${results.length} relevant files in ${Math.round(end - start)}ms.`);
+      console.log(`\x1b[90m📡 SCANNER\x1b[0m Scan completed. Found ${results.length} files in ${Math.round(end - start)}ms.`);
       return results;
     } catch (error) {
       console.error(`\x1b[31m[FileScanner]\x1b[0m Fatal error during scan:`, error);

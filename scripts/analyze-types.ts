@@ -15,6 +15,7 @@ import { InterfaceLocationAnalyzer } from './analyzers/interface-location.analyz
 import { NamingConventionAnalyzer } from './analyzers/naming-convention.analyzer';
 import { getProjectAnalyzers } from './analyzers/registry';
 import { QualityScoreCalculator } from './reporting/quality-score';
+import { UI, COLORS } from './utils/ui';
 
 /**
  * SemanticAuditSuite: The orchestrator of architectural governance.
@@ -193,14 +194,31 @@ export class SemanticAuditSuite {
   }
 
   private printSummary(stats: SummaryStats): void {
-    console.log('\n' + '='.repeat(50));
-    console.log(`📊 AUDIT SUMMARY (${stats.durationMs}ms)`);
-    console.log('='.repeat(50));
-    console.log(`Quality Score:   ${stats.score}/100`);
-    console.log(`Total Issues:    ${stats.total}`);
-    console.log(`Critical (HIGH): ${stats.criticals}`);
-    console.log(`Warnings (MED):  ${stats.warnings}`);
-    console.log('='.repeat(50) + '\n');
+    const bold = COLORS.BOLD;
+    const reset = COLORS.RESET;
+    const gray = COLORS.GRAY;
+
+    console.log(`\n  ${bold}${gray}┌──────────────────────────────────────────────────┐${reset}`);
+    console.log(`  ${bold}${gray}│${reset}            ${bold}ARCHITECTURAL HEALTH CHECK${reset}            ${bold}${gray}│${reset}`);
+    console.log(`  ${bold}${gray}├──────────────────────────────────────────────────┤${reset}`);
+    
+    const qualityBar = UI.progressBar(stats.score, 100, 24);
+    console.log(`  ${bold}${gray}│${reset}  ${bold}Quality:${reset}  ${qualityBar}${' '.repeat(13 - stats.score.toString().length)}${bold}${gray}│${reset}`);
+    
+    console.log(`  ${bold}${gray}├──────────────────────────────────────────────────┤${reset}`);
+    
+    const critColor = stats.criticals > 0 ? COLORS.ERROR : COLORS.SUCCESS;
+    const warnColor = stats.warnings > 0 ? COLORS.WARN : COLORS.SUCCESS;
+
+    console.log(`  ${bold}${gray}│${reset}  ${gray}Issues:${reset}   ${bold}${stats.total}${reset}${' '.repeat(34 - stats.total.toString().length)}${bold}${gray}│${reset}`);
+    console.log(`  ${bold}${gray}│${reset}  ${gray}Critical:${reset} ${critColor}${stats.criticals}${reset}${' '.repeat(34 - stats.criticals.toString().length)}${bold}${gray}│${reset}`);
+    console.log(`  ${bold}${gray}│${reset}  ${gray}Warnings:${reset} ${warnColor}${stats.warnings}${reset}${' '.repeat(34 - stats.warnings.toString().length)}${bold}${gray}│${reset}`);
+    
+    console.log(`  ${bold}${gray}├──────────────────────────────────────────────────┤${reset}`);
+    
+    const duration = UI.formatDuration(stats.durationMs);
+    console.log(`  ${bold}${gray}│${reset}  ${gray}Engine Latency:${reset} ${duration}${' '.repeat(30 - stats.durationMs.toString().length)}${bold}${gray}│${reset}`);
+    console.log(`  ${bold}${gray}└──────────────────────────────────────────────────┘${reset}\n`);
   }
 
   private runTypeCheck(): Issue[] {

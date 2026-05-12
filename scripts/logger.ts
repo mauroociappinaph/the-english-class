@@ -12,20 +12,13 @@ enum LogLevelEnum {
   ERROR = 3,
 }
 
-const COLORS = {
-  RESET: "\x1b[0m",
-  CYAN: "\x1b[36m",
-  GREEN: "\x1b[32m",
-  YELLOW: "\x1b[33m",
-  RED: "\x1b[31m",
-  GRAY: "\x1b[90m",
-};
+import { COLORS } from './utils/ui';
 
 const LABELS = {
-  [LogLevelEnum.DEBUG]: "DEBUG",
-  [LogLevelEnum.INFO]: "INFO ",
-  [LogLevelEnum.WARN]: "WARN ",
-  [LogLevelEnum.ERROR]: "ERROR",
+  [LogLevelEnum.DEBUG]: "⚙️  DEBUG",
+  [LogLevelEnum.INFO]:  "✨ INFO ",
+  [LogLevelEnum.WARN]:  "⚠️  WARN ",
+  [LogLevelEnum.ERROR]: "❌ ERROR",
 };
 
 
@@ -51,16 +44,16 @@ class Logger {
     let color = COLORS.RESET;
     
     switch (level) {
-      case LogLevelEnum.DEBUG: color = COLORS.CYAN; break;
-      case LogLevelEnum.INFO: color = COLORS.GREEN; break;
-      case LogLevelEnum.WARN: color = COLORS.YELLOW; break;
-      case LogLevelEnum.ERROR: color = COLORS.RED; break;
+      case LogLevelEnum.DEBUG: color = COLORS.INFO; break;
+      case LogLevelEnum.INFO: color = COLORS.SUCCESS; break;
+      case LogLevelEnum.WARN: color = COLORS.WARN; break;
+      case LogLevelEnum.ERROR: color = COLORS.ERROR; break;
     }
 
-    const label = `${color}${LABELS[level]}${COLORS.RESET}`;
+    const label = `${COLORS.BOLD}${color}${LABELS[level]}${COLORS.RESET}`;
     const ctx = context ? `\n${COLORS.GRAY}${JSON.stringify(context, null, 2)}${COLORS.RESET}` : '';
     
-    return `${timestamp} ${label}: ${message}${ctx}`;
+    return `${timestamp}  ${label}  ${message}${ctx}`;
   }
 
   private log(level: LogLevelEnum, method: 'debug' | 'info' | 'warn' | 'error', message: string, context?: unknown): void {

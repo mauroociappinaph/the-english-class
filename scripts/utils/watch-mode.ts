@@ -2,6 +2,7 @@ import { watch } from 'node:fs';
 import { SemanticAuditSuite } from '../analyze-types';
 import { logger } from '../logger';
 import path from 'path';
+import { UI, COLORS } from './ui';
 
 /**
  * WatchMode: Real-time architectural sentinel.
@@ -19,8 +20,9 @@ class WatchMode {
   }
 
   public async start() {
-    console.clear();
-    logger.info('👁️  Architecture Sentinel is watching for changes...');
+    UI.clear();
+    UI.banner('Architecture Sentinel', COLORS.MAGENTA);
+    logger.info('Live system monitoring active...');
     
     // Initial run
     await this.suite.run();
@@ -62,7 +64,7 @@ class WatchMode {
         logger.error('Analysis failed', err);
       } finally {
         this.isRunning = false;
-        logger.info('👁️  Sentinel is watching...');
+        logger.info('Sentinel standing by.');
       }
     }, 200); // 200ms debounce
   }
