@@ -13,11 +13,10 @@ import { AuditCache } from './utils/audit-cache';
 // Analyzers
 import { InterfaceLocationAnalyzer } from './analyzers/interface-location.analyzer';
 import { NamingConventionAnalyzer } from './analyzers/naming-convention.analyzer';
-import { UnusedTypesAnalyzer } from './analyzers/unused-types.analyzer';
-import { AnyUsageAnalyzer } from './analyzers/any-usage.analyzer';
-import { CircularDepsAnalyzer } from './analyzers/circular-deps.analyzer';
-import { GiantInterfacesAnalyzer } from './analyzers/giant-interfaces.analyzer';
-import { CouplingMetricsAnalyzer } from './analyzers/coupling-metrics.analyzer';
+import { getProjectAnalyzers } from './analyzers/registry';
+import { QualityScoreCalculator } from './reporting/quality-score';
+
+
 
 /**
  * SemanticAuditSuite: The orchestrator of architectural governance.
@@ -88,13 +87,8 @@ export class SemanticAuditSuite {
       // 4. Execute Analyzers
       const allIssues: Issue[] = [...cachedIssues];
       
-      const projectAnalyzers: Analyzer[] = [
-        new UnusedTypesAnalyzer(),
-        new AnyUsageAnalyzer(),
-        new CircularDepsAnalyzer(),
-        new GiantInterfacesAnalyzer(),
-        new CouplingMetricsAnalyzer()
-      ];
+      const projectAnalyzers: Analyzer[] = getProjectAnalyzers();
+
 
       // Map to track issues found in this run to update cache
       const newIssuesByFile = new Map<string, Issue[]>();
@@ -213,14 +207,20 @@ export class SemanticAuditSuite {
     const duration = Date.now() - startTime;
     const criticals = issues.filter(i => i.severity === 'HIGH').length;
     const warnings = issues.filter(i => i.severity === 'MEDIUM').length;
+    
+    const calculator = new QualityScoreCalculator();
+    const score = calculator.calculate(issues).total;
+    const scoreColor = score > 90 ? '\x1b[32m' : score > 70 ? '\x1b[33m' : '\x1b[31m';
 
     console.log('\n' + '='.repeat(50));
     console.log(`📊 AUDIT SUMMARY (${duration}ms)`);
     console.log('='.repeat(50));
+    console.log(`Quality Score:   ${scoreColor}${score}/100\x1b[0m`);
     console.log(`Total Issues:    ${issues.length}`);
     console.log(`Critical (HIGH): \x1b[31m${criticals}\x1b[0m`);
     console.log(`Warnings (MED):  \x1b[33m${warnings}\x1b[0m`);
     console.log('='.repeat(50) + '\n');
+
   }
 }
 

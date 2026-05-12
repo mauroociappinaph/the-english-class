@@ -3,6 +3,8 @@ import path from 'path';
 import { AnalyzerIssue, AuditStats } from '../types/analyzer';
 import { MarkdownReporter } from './markdown.report';
 import { JsonReporter } from './json.report';
+import { QualityScoreCalculator } from './quality-score';
+
 
 
 
@@ -48,19 +50,18 @@ export class ReportGenerator {
     const warnings = this.issues.filter(i => i.severity === 'MEDIUM').length;
     const suggestions = this.issues.filter(i => i.severity === 'LOW').length;
     
-    // Quality Score Algorithm (starts at 100)
-    const baseScore = 100;
-    const penalty = (criticals * 10) + (warnings * 3) + (suggestions * 0.5);
-    const score = Math.max(0, Math.min(100, baseScore - penalty));
+    const calculator = new QualityScoreCalculator();
+    const scoreBreakdown = calculator.calculate(this.issues);
 
     return {
       total: this.issues.length,
       criticals,
       warnings,
       suggestions,
-      score: Math.round(score),
+      score: scoreBreakdown.total,
       durationMs: Date.now() - this.startTime
     };
+
   }
 
   private sortIssues(issues: AnalyzerIssue[]): AnalyzerIssue[] {

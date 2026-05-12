@@ -122,4 +122,12 @@ export interface CacheEntry {
   mtime: number;
 }
 
+export interface ScoreBreakdown {
+  typeSafety: number;
+  architecture: number;
+  maintainability: number;
+  total: number;
+}
+
+
 
