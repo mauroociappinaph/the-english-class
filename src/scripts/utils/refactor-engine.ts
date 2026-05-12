@@ -5,6 +5,7 @@ import path from 'path';
 /**
  * RefactorEngine: The automated architect.
  * Handles complex AST transformations for deduplication.
+ * V2: Includes Free Variable Analysis for safe extraction.
  */
 export class RefactorEngine {
   constructor(private project: Project) {}
@@ -18,18 +19,20 @@ export class RefactorEngine {
         return NormalizationEngine.getTemplate(body || n);
       });
 
-      const params = this.identifyParameters(templates);
-      const helperName = `sharedHelper_${templates[0].hash.substring(0, 6).replace(/-/g, '_')}`;
+      // 1. Identify Structural Parameters (where tokens differ)
+      const structuralParams = this.identifyStructuralParameters(templates);
       
-      const files = new Set(nodes.map(n => n.getSourceFile().getFilePath()));
+      // 2. Identify Shared Free Variables (defined outside ALL parent functions)
+      const freeVars = this.identifySharedFreeVariables(nodes);
+      
+      const helperName = `sharedHelper_${templates[0].hash.substring(0, 6).replace(/-/g, '_')}`;
       const filesChanged: string[] = [];
 
-      // 1. Create a "Template Source File" to generate the helper
+      // 3. Create a "Template Source File" to generate the helper
       const firstBody = this.getFunctionBody(nodes[0]) || nodes[0];
       const tempFile = this.project.createSourceFile('temp_refactor.ts', firstBody.getText(), { overwrite: true });
-      const tempNode = tempFile.getChildAtIndex(0);
-
-      const sortedIndices = [...params].sort((a, b) => b - a);
+      
+      const sortedIndices = [...structuralParams].sort((a, b) => b - a);
       sortedIndices.forEach(idx => {
         const token = templates[0].tokens[idx];
         const relativePos = token.pos - firstBody.getStart();
@@ -45,21 +48,29 @@ export class RefactorEngine {
       }
       this.project.removeSourceFile(tempFile);
 
-      const sourceFile = nodes[0].getSourceFile();
-      const paramNames = params.map(idx => `param${idx}`);
+      // 4. Prepare Parameter List
+      const helperParams = [
+        ...freeVars.map(v => ({ name: v, type: 'any' })),
+        ...structuralParams.map(idx => ({ name: `param${idx}`, type: 'any' }))
+      ];
 
-      // 2. Add helper
+      const sourceFile = nodes[0].getSourceFile();
+      
+      // 5. Add helper
       sourceFile.addFunction({
         name: helperName,
-        parameters: paramNames.map(name => ({ name, type: 'any' })), // V1 uses any
+        parameters: helperParams,
         statements: helperBody,
         isExported: false
       });
 
-      // 3. Replace bodies
+      // 6. Replace bodies and update call sites
       nodes.forEach((node, i) => {
         const body = this.getFunctionBody(node);
-        const args = params.map(idx => templates[i].tokens[idx].value);
+        const args = [
+          ...freeVars,
+          ...structuralParams.map(idx => templates[i].tokens[idx].value)
+        ];
         const call = `${helperName}(${args.join(', ')})`;
         
         if (body) {
@@ -70,7 +81,7 @@ export class RefactorEngine {
       });
       
       filesChanged.push(sourceFile.getFilePath());
-      return { success: true, message: `Successfully extracted ${helperName}`, filesChanged };
+      return { success: true, message: `Successfully extracted ${helperName} with ${freeVars.length} free variables`, filesChanged };
     } catch (error: any) {
       return { success: false, message: error.message, filesChanged: [] };
     }
@@ -86,7 +97,7 @@ export class RefactorEngine {
     return undefined;
   }
 
-  private identifyParameters(templates: StructuralTemplate[]): number[] {
+  private identifyStructuralParameters(templates: StructuralTemplate[]): number[] {
     const paramIndices: number[] = [];
     const tokenCount = templates[0].tokens.length;
 
@@ -97,5 +108,69 @@ export class RefactorEngine {
       }
     }
     return paramIndices;
+  }
+
+  private identifySharedFreeVariables(nodes: Node[]): string[] {
+    // A shared free variable must be:
+    // 1. Used in ALL nodes.
+    // 2. Defined outside ALL nodes' parent function scope.
+    
+    const nodeVars = nodes.map(node => this.findFreeVariablesInNode(node));
+    
+    // Intersection of all sets
+    const shared = nodeVars.reduce((acc, current) => {
+      return new Set([...acc].filter(x => current.has(x)));
+    });
+
+    return Array.from(shared);
+  }
+
+  private findFreeVariablesInNode(node: Node): Set<string> {
+    const freeVars = new Set<string>();
+    const body = this.getFunctionBody(node) || node;
+    const identifiers = body.getDescendantsOfKind(SyntaxKind.Identifier);
+    
+    const internalDecls = new Set<string>();
+    body.getDescendants().forEach(desc => {
+      if (Node.isVariableDeclaration(desc) || Node.isParameterDeclaration(desc) || Node.isFunctionDeclaration(desc)) {
+        const name = (desc as any).getName?.();
+        if (name) internalDecls.add(name);
+      }
+    });
+
+    // Parent function parameters are NOT free variables, they are structural context
+    const parentParams = new Set<string>();
+    if (Node.isFunctionLikeDeclaration(node)) {
+      node.getParameters().forEach(p => parentParams.add(p.getName()));
+    }
+
+    identifiers.forEach(id => {
+      const name = id.getText();
+      if (internalDecls.has(name) || parentParams.has(name)) return;
+
+      const parent = id.getParent();
+      if (Node.isPropertyAccessExpression(parent) && parent.getNameNode() === id) return;
+      if (Node.isPropertyAssignment(parent) && parent.getNameNode() === id) return;
+
+      const symbol = id.getSymbol();
+      if (!symbol) {
+        if (/^[a-z_][a-z0-9_]*$/i.test(name) && !['console', 'Math', 'JSON', 'Object', 'Array'].includes(name)) {
+          freeVars.add(name);
+        }
+        return;
+      }
+
+      const declarations = symbol.getDeclarations();
+      const isExternal = declarations.every(decl => {
+        // Must be outside the PARENT function to be a truly "free" variable
+        return decl.getStart() < node.getStart() || decl.getEnd() > node.getEnd();
+      });
+
+      if (isExternal) {
+        freeVars.add(name);
+      }
+    });
+
+    return freeVars;
   }
 }
