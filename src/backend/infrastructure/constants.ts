@@ -23,9 +23,25 @@ export const INITIAL_EXPRESSION: SharedExpression = {
     past: { text: "The stadium was packed with people last night.", translation: "El estadio estaba lleno de gente anoche." },
     presentPerfect: { text: "The stadium has been packed with tourists all week.", translation: "El estadio ha estado lleno de turistas toda la semana." },
     future: { text: "The stadium will be packed with supporters tomorrow.", translation: "El estadio estará lleno de seguidores mañana." },
+    pastPerfect: { text: "The stadium had been packed with people before the rain started.", translation: "El estadio había estado lleno de gente antes de que empezara a llover." },
+    presentContinuous: { text: "The stadium is being packed with more equipment for the concert.", translation: "El estadio se está llenando con más equipos para el concierto." },
+    pastContinuous: { text: "The stadium was being packed with fans as we arrived.", translation: "El estadio se estaba llenando de fans cuando llegamos." },
+    futureContinuous: { text: "The stadium will be being packed with fans at this time tomorrow.", translation: "El estadio se estará llenando de fans a esta hora mañana." },
+    conditional: { text: "The stadium would be packed with fans if the tickets were cheaper.", translation: "El estadio estaría lleno de fans si las entradas fueran más baratas." },
   },
-  wordFamilies: null,
-  phrasalVerbDetails: null,
+  wordFamilies: {
+    noun: ["pack", "package", "packaging", "packet"],
+    verb: ["pack", "repack", "unpack"],
+    adjective: ["packed", "packing"],
+    adverb: []
+  },
+  phrasalVerbDetails: {
+    verb: "is",
+    particle: "packed with",
+    separable: "no",
+    transitive: true,
+    commonCollocations: ["is packed with fans", "is packed with information", "is packed with flavor"]
+  },
   examples: [
     {
       category: "cotidiano",
