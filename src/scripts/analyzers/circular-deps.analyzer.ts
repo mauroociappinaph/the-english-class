@@ -1,39 +1,24 @@
-import { Project, SourceFile } from 'ts-morph';
-import { Issue, Analyzer, AnalysisContext, AnalyzerResult } from '../types/analyzer.types';
-import path from 'path';
+import { Issue, AnalysisContext } from '../types/analyzer.types';
+import { ProjectUtils } from '../utils/project-utils';
+import { BaseAnalyzer } from './base.analyzer';
 
 /**
  * CircularDepsAnalyzer: Guardian of modularity.
  * Detects circular dependencies and architectural layer violations.
  */
-export class CircularDepsAnalyzer implements Analyzer {
+export class CircularDepsAnalyzer extends BaseAnalyzer {
   public readonly name = 'Circular Dependency Analyzer';
   public readonly isGlobal = true;
 
   private projectRoot: string = process.cwd();
 
 
-  public analyze(context: AnalysisContext): AnalyzerResult {
-    const startTime = Date.now();
-    const issues = this.analyzeProject(context);
-
-    
-    return {
-      analyzerName: this.name,
-      issues,
-      executionTimeMs: Date.now() - startTime
-    };
-  }
-
   /**
    * Main entry point for dependency analysis
    */
-  public analyzeProject(context: AnalysisContext): Issue[] {
+  protected runAnalysis(context: AnalysisContext): Issue[] {
     const issues: Issue[] = [];
-    const sourceFiles = context.project.getSourceFiles().filter(sf => {
-      const path = sf.getFilePath();
-      return !path.includes('node_modules') && !path.endsWith('.d.ts') && !path.endsWith('.d.mts');
-    });
+    const sourceFiles = ProjectUtils.getRelevantSourceFiles(context.project);
 
     // Graph is already built by the orchestrator
 

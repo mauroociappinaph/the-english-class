@@ -1,17 +1,19 @@
 import { Node } from 'ts-morph';
-import { Analyzer, AnalysisContext, AnalyzerResult, Issue } from '../types/analyzer.types';
+import { AnalysisContext, Issue, DeduplicationRules } from '../types/analyzer.types';
 import { NormalizationEngine } from '../utils/normalization-engine';
+import { BaseAnalyzer } from './base.analyzer';
 
-export class DuplicateLogicAnalyzer implements Analyzer {
+export class DuplicateLogicAnalyzer extends BaseAnalyzer {
   name = 'Duplicate Logic Detector';
   isGlobal = true;
 
-  analyze(context: AnalysisContext): AnalyzerResult {
+  protected runAnalysis(context: AnalysisContext): Issue[] {
     const startTime = Date.now();
     const issues: Issue[] = [];
     const hashes: Map<string, { file: string; line: number; text: string }[]> = new Map();
 
-    const { minLines } = context.deduplicationRules;
+    const rules: DeduplicationRules = context.deduplicationRules;
+    const { minLines } = rules;
 
     // Scan all source files
     context.project.getSourceFiles().forEach(sourceFile => {
@@ -57,10 +59,6 @@ export class DuplicateLogicAnalyzer implements Analyzer {
       }
     });
 
-    return {
-      analyzerName: this.name,
-      issues,
-      executionTimeMs: Date.now() - startTime
-    };
+    return issues;
   }
 }

@@ -1,35 +1,21 @@
-import { Project, SourceFile } from 'ts-morph';
-import { Issue, Analyzer, AnalysisContext, AnalyzerResult, CouplingMetrics } from '../types/analyzer.types';
+import { Issue, AnalysisContext, CouplingMetrics } from '../types/analyzer.types';
+import { ProjectUtils } from '../utils/project-utils';
+import { BaseAnalyzer } from './base.analyzer';
 import path from 'path';
 
 /**
  * CouplingMetricsAnalyzer: Calculates mathematical coupling and instability.
  * Based on Robert C. Martin's clean architecture metrics.
  */
-export class CouplingMetricsAnalyzer implements Analyzer {
+export class CouplingMetricsAnalyzer extends BaseAnalyzer {
   public readonly name = 'Coupling Metrics Analyzer (Martin)';
   public readonly isGlobal = true;
 
   private projectRoot: string = process.cwd();
 
-  public analyze(context: AnalysisContext): AnalyzerResult {
-    const startTime = Date.now();
-    const issues = this.analyzeProject(context);
-
-    
-    return {
-      analyzerName: this.name,
-      issues,
-      executionTimeMs: Date.now() - startTime
-    };
-  }
-
-  public analyzeProject(context: AnalysisContext): Issue[] {
+  protected runAnalysis(context: AnalysisContext): Issue[] {
     const issues: Issue[] = [];
-    const sourceFiles = context.project.getSourceFiles().filter(sf => {
-      const path = sf.getFilePath();
-      return !path.includes('node_modules') && !path.endsWith('.d.ts') && !path.endsWith('.d.mts');
-    });
+    const sourceFiles = ProjectUtils.getRelevantSourceFiles(context.project);
 
     const HIGH_CE_THRESHOLD = 15; // Too many outgoing dependencies (God Object / Spaghetti)
     const CRITICAL_INSTABILITY_THRESHOLD = 0.9;
