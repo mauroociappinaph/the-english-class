@@ -3,7 +3,8 @@ import {
   Example as SharedExample,
   UsageTips as SharedUsageTips,
   Tense as SharedTense,
-  CreateExpressionDto as SharedCreateExpressionDto
+  CreateExpressionDto as SharedCreateExpressionDto,
+  SlangData
 } from "@/shared/types/expression";
 
 export interface GroqExample extends Omit<SharedExample, 'id' | 'expressionId' | 'createdAt' | 'updatedAt'> {}
@@ -18,6 +19,8 @@ export interface GroqExpressionResponse extends Omit<SharedExpression, 'id' | 'c
   tenses: Record<string, GroqTense>;
   examples: GroqExample[];
 }
+
+export type { SlangData };
 
 export interface ExpressionDetail extends SharedExpression {}
 
