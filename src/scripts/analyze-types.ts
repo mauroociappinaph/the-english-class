@@ -94,6 +94,7 @@ export class SemanticAuditSuite {
         giantInterfaceRules: auditConfig.rules.giantInterfaces,
         anyUsageRules: auditConfig.rules.anyUsage,
         circularDepRules: auditConfig.rules.circularDeps,
+        deduplicationRules: auditConfig.rules.deduplication,
         startTime,
         changedFiles: changedFiles.length > 0 ? changedFiles : undefined,
         graph: new DependencyGraph(this.projectRoot)

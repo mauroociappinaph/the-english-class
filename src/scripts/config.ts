@@ -17,6 +17,11 @@ const DEFAULT_CONFIG: AuditConfig = {
     circularDeps: {
       enforcePureDomain: true,
     },
+    deduplication: {
+      minLines: 5,
+      similarityThreshold: 0.8,
+      ignoreHooks: true,
+    },
   },
   reporting: {
     outputDir: 'reports',

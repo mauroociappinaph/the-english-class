@@ -12,6 +12,12 @@ export interface GiantInterfaceRules {
   complexityThreshold: number;
 }
 
+export interface DeduplicationRules {
+  minLines: number;
+  similarityThreshold: number; // 0.0 to 1.0
+  ignoreHooks: boolean;
+}
+
 interface AnyUsageRules {
   allowTypeAssertions: boolean;
 }
@@ -30,6 +36,7 @@ export interface AuditConfig {
     giantInterfaces: GiantInterfaceRules;
     anyUsage: AnyUsageRules;
     circularDeps: CircularDepRules;
+    deduplication: DeduplicationRules;
   };
   reporting: {
     outputDir: string;
@@ -47,6 +54,7 @@ export interface AnalysisContext {
   giantInterfaceRules: GiantInterfaceRules;
   anyUsageRules: AnyUsageRules;
   circularDepRules: CircularDepRules;
+  deduplicationRules: DeduplicationRules;
   startTime: number;
   changedFiles?: string[]; // Paths of files that changed since last audit
   graph: DependencyGraph;
