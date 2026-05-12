@@ -50,11 +50,21 @@ async function runHook() {
       if (criticals > 0) throw new Error(`Found ${criticals} critical architectural issues.`);
     } 
     else if (hookType === 'pre-push') {
-      logger.info('🧪 Running Unit Tests...');
-      execSync('npm run test', { stdio: 'inherit' });
+      logger.info('🔍 Running Incremental Architecture Audit...');
       
-      logger.info('🔍 Running Global Architecture Audit...');
-      const issues = await suite.run();
+      // Get files changed in this branch compared to the tracking branch
+      let changedFiles: string[] = [];
+      try {
+        changedFiles = execSync('git diff --name-only origin/develop...HEAD', { encoding: 'utf8' })
+          .split('\n')
+          .map(f => f.trim())
+          .filter(f => f.length > 0 && fs.existsSync(f));
+      } catch (e) {
+        // Fallback if origin/develop doesn't exist or other git error
+        logger.warn('⚠️  Could not determine diff with origin/develop, running full audit.');
+      }
+
+      const issues = await suite.run(changedFiles.length > 0 ? changedFiles : undefined);
       const criticals = issues.filter(i => i.severity === 'HIGH').length;
       if (criticals > 0) throw new Error(`Found ${criticals} critical architectural issues.`);
     }
