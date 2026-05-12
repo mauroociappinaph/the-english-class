@@ -13,7 +13,7 @@ RULES:
 - "secondaryMeanings": Provide other meanings in ENGLISH.
 - "usageTips": All descriptions must be in ENGLISH.
 - "tenses": Each tense must have a "text" (ENGLISH example) and a "translation" (SPANISH).
-- "examples": Each example must have a "text" (ENGLISH), "translation" (SPANISH), and "explanation" (ENGLISH).
+- "examples": Each example must have a "text" (ENGLISH), "translation" (SPANISH), and "explanation" (ENGLISH). Provide at least 5 different examples, covering various contexts (e.g. cotidiano, profesional, académico, emprendimiento, ciencia ficción, policial, política, espías, dialectal, etc.).
 
 Expression: "${text}"
 

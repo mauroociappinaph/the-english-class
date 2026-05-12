@@ -8,4 +8,4 @@ if (!apiKey) {
 
 export const gemini = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
-export const GEMINI_MODEL = "gemini-2.0-flash";
+export const GEMINI_MODEL = "gemini-1.5-flash";
