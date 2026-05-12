@@ -6,6 +6,7 @@ import { CouplingMetricsAnalyzer } from './coupling-metrics.analyzer';
 import { ArchitectureBoundaryAnalyzer } from './architecture-boundary.analyzer';
 import { SecurityEnvLeakAnalyzer } from './security-env-leak.analyzer';
 import { DeadCodeAnalyzer } from './dead-code.analyzer';
+import { SecurityOwaspAnalyzer } from './security-owasp.analyzer';
 
 export const getProjectAnalyzers = (): Analyzer[] => [
   new DeadCodeAnalyzer(),
@@ -14,5 +15,6 @@ export const getProjectAnalyzers = (): Analyzer[] => [
   new GiantInterfacesAnalyzer(),
   new CouplingMetricsAnalyzer(),
   new ArchitectureBoundaryAnalyzer(),
-  new SecurityEnvLeakAnalyzer()
+  new SecurityEnvLeakAnalyzer(),
+  new SecurityOwaspAnalyzer()
 ];
