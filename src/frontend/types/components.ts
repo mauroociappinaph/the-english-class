@@ -1,10 +1,5 @@
 import { Expression } from './store';
 
-export interface AnalysisResultProps {
-  currentAnalysis: Expression | null;
-  getCefrStyle: (level: string) => { bg: string; glow: string };
-}
-
 export interface ExpressionLibraryProps {
   expressions: Expression[];
   getCefrStyle: (level: string) => { bg: string; glow: string };
