@@ -1,32 +1,30 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useStudyStore } from "@/frontend/store/useStudyStore";
-import { INITIAL_EXPRESSION } from "@/backend/infrastructure/constants";
-
 import { analyzeExpression, getExpressions, deleteExpression } from "./actions";
-import { Expression } from "@/frontend/types/store";
+import { Expression } from "@/shared/types/expression";
 
 import { SearchBar } from "@/frontend/components/SearchBar";
-import { AnalysisResult } from "@/frontend/components/AnalysisResult";
 import { ExpressionLibrary } from "@/frontend/components/ExpressionLibrary";
 import { StudySection } from "@/frontend/components/StudySection";
 import { getCefrStyle } from "@/frontend/components/cefr-styles";
 
 export default function Home() {
+  const router = useRouter();
   const [input, setInput] = useState("");
   const [activeTab, setActiveTab] = useState<"search" | "library" | "study">("search");
-  const { isAnalyzing, setAnalyzing, currentAnalysis, setCurrentAnalysis, expressions, setExpressions, addExpression, removeExpression } = useStudyStore();
+  const { isAnalyzing, setAnalyzing, setCurrentAnalysis, expressions, setExpressions, addExpression, removeExpression } = useStudyStore();
 
   useEffect(() => {
-    setCurrentAnalysis(INITIAL_EXPRESSION);
     const fetchLibrary = async () => {
       const library = await getExpressions();
       setExpressions(library);
     };
     fetchLibrary();
-  }, [setCurrentAnalysis, setExpressions]);
+  }, [setExpressions]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +38,8 @@ export default function Home() {
         if (!expressions.find(e => e.id === result.id)) {
           addExpression(result);
         }
+        // Navigate to the detail page
+        router.push(`/expression/${result.id}`);
       }
 
     } catch (err) {
@@ -56,7 +56,7 @@ export default function Home() {
 
   const handleViewDetail = (ex: Expression) => {
     setCurrentAnalysis(ex);
-    setActiveTab("search");
+    router.push(`/expression/${ex.id}`);
   };
 
 
@@ -103,13 +103,6 @@ export default function Home() {
           />
 
           <AnimatePresence mode="wait">
-            {currentAnalysis && !isAnalyzing && (
-              <AnalysisResult 
-                currentAnalysis={currentAnalysis} 
-                getCefrStyle={getCefrStyle} 
-              />
-            )}
-
             {isAnalyzing && (
               <motion.div 
                 initial={{ opacity: 0 }}
