@@ -101,7 +101,7 @@ export class SemanticAuditSuite {
         circularDepRules: auditConfig.rules.circularDeps,
         deduplicationRules: auditConfig.rules.deduplication,
         startTime,
-        changedFiles: changedFiles.length > 0 ? changedFiles : undefined,
+        changedFiles: changedFiles.length > 0 ? changedFiles : loadedFilePaths,
         graph: new DependencyGraph(this.projectRoot)
       };
 
@@ -114,7 +114,7 @@ export class SemanticAuditSuite {
 
       projectAnalyzers.forEach(analyzer => {
         // Run global analyzers or if there are changed files for local analyzers
-        if (analyzer.isGlobal || changedFiles.length > 0) {
+        if (analyzer.isGlobal || (context.changedFiles && context.changedFiles.length > 0)) {
           const result = analyzer.analyze(context);
           
           if (analyzer.isGlobal) {
@@ -152,7 +152,8 @@ export class SemanticAuditSuite {
         fileIssues.push(...mapToIssues(locIssues));
         fileIssues.push(...mapToIssues(namingIssues));
 
-        newIssuesByFile.set(fp, fileIssues);
+        const existing = newIssuesByFile.get(fp) || [];
+        newIssuesByFile.set(fp, [...existing, ...fileIssues]);
       });
 
       // 5. Update Cache

@@ -36,7 +36,7 @@ class Logger {
   }
 
   private getTimestamp(): string {
-    return new Date().toISOString().replace('T', ' ').split('.')[0];
+    return new Date().toLocaleTimeString('en-GB', { hour12: false });
   }
 
   private formatMessage(level: LogLevelEnum, message: string, context?: unknown): string {
