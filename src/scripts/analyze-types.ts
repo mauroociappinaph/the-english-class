@@ -3,16 +3,11 @@ import { FileScanner } from './file-scanner';
 import { TSParser } from './ts-parser';
 import { execSync } from 'child_process';
 import { ReportGenerator } from './reporting/report-generator';
-
 import { auditConfig } from './config';
-import { Issue, Analyzer, AnalysisContext } from './types/analyzer.types';
+import { Issue, Analyzer, AnalysisContext, AuditStats, SummaryStats } from './types/analyzer.types';
 import { logger } from './logger';
-import { ParsedFile, ParsedDeclaration } from './types/parser';
 import { AuditCache } from './utils/audit-cache';
 import { DependencyGraph } from './utils/dependency-graph';
-
-
-
 
 // Analyzers
 import { InterfaceLocationAnalyzer } from './analyzers/interface-location.analyzer';
@@ -20,16 +15,16 @@ import { NamingConventionAnalyzer } from './analyzers/naming-convention.analyzer
 import { getProjectAnalyzers } from './analyzers/registry';
 import { QualityScoreCalculator } from './reporting/quality-score';
 
-
-
 /**
  * SemanticAuditSuite: The orchestrator of architectural governance.
  */
+
 export class SemanticAuditSuite {
   private readonly projectRoot: string;
   private readonly scanner: FileScanner;
   private readonly parser: TSParser;
   private readonly reporter: ReportGenerator;
+  private readonly cache: AuditCache;
 
   constructor() {
     this.projectRoot = process.cwd();
@@ -38,9 +33,6 @@ export class SemanticAuditSuite {
     this.reporter = new ReportGenerator();
     this.cache = new AuditCache(this.projectRoot);
   }
-
-  private readonly cache: AuditCache;
-
 
   public async run(filesToRefresh?: string[]): Promise<Issue[]> {
     const startTime = Date.now();
@@ -52,7 +44,6 @@ export class SemanticAuditSuite {
     }
 
     try {
-
       // 1. Scan & Refresh
       if (filesToRefresh) {
         filesToRefresh.forEach(fp => {
@@ -80,8 +71,7 @@ export class SemanticAuditSuite {
       
       this.cache.load();
 
-
-      // 3. Detect Changed Files (for caching logic)
+      // 3. Detect Changed Files
       const changedFiles: string[] = filesToRefresh || [];
       const cachedIssues: Issue[] = [];
 
@@ -109,13 +99,11 @@ export class SemanticAuditSuite {
         graph: new DependencyGraph(this.projectRoot)
       };
 
-      // 3.5 Build Graph
       context.graph.build(this.parser.project);
 
-      // 4. Execute Analyzers
+      // 4. Execute Modern Analyzers
       const allIssues: Issue[] = [...cachedIssues, ...typeErrors];
       const projectAnalyzers: Analyzer[] = getProjectAnalyzers();
-
       const newIssuesByFile = new Map<string, Issue[]>();
 
       projectAnalyzers.forEach(analyzer => {
@@ -134,64 +122,81 @@ export class SemanticAuditSuite {
         }
       });
 
-      // File-by-File Analyzers & Inline Rules
+      // File-by-File Analyzers (Legacy Format)
       const locationAnalyzer = new InterfaceLocationAnalyzer();
       const namingAnalyzer = new NamingConventionAnalyzer();
 
-      changedFiles.forEach(filePath => {
-        const analysis = this.parser.parseFile(filePath);
-        if (!analysis) return;
+      changedFiles.forEach(fp => {
+        const parsedFile = this.parser.parseFile(fp);
+        if (!parsedFile) return;
 
-        const currentFileIssues: Issue[] = [];
-        currentFileIssues.push(...locationAnalyzer.analyze(analysis));
-        currentFileIssues.push(...namingAnalyzer.analyze(analysis));
-
-        const otherIssues = newIssuesByFile.get(filePath) || [];
-        const totalIssues = [...currentFileIssues, ...otherIssues];
-        allIssues.push(...currentFileIssues);
+        const fileIssues: Issue[] = [];
         
-        this.cache.update(filePath, AuditCache.calculateHash(filePath), totalIssues);
+        const locIssues = locationAnalyzer.analyze(parsedFile);
+        const namingIssues = namingAnalyzer.analyze(parsedFile);
+
+        // Map Legacy Issues to Modern Issue Format
+        const mapToIssues = (legacy: Issue[]): Issue[] => legacy.map(l => ({
+          ...l,
+          file: fp,
+          analyzer: l.analyzer || 'LegacyAnalyzer'
+        }));
+
+        fileIssues.push(...mapToIssues(locIssues));
+        fileIssues.push(...mapToIssues(namingIssues));
+
+        newIssuesByFile.set(fp, fileIssues);
       });
 
-      newIssuesByFile.forEach((issues, filePath) => {
-        if (!changedFiles.includes(filePath)) allIssues.push(...issues);
+      // 5. Update Cache
+      newIssuesByFile.forEach((issues, fp) => {
+        const hash = AuditCache.calculateHash(fp);
+        this.cache.update(fp, hash, issues);
+        allIssues.push(...issues);
       });
 
       this.cache.save();
+
+      // 6. Final Report
+      const stats = this.calculateSummaryStats(allIssues, startTime);
+      
       this.reporter.addIssues(allIssues);
-      this.reporter.generate(auditConfig.reporting.outputDir);
-      this.showSummary(allIssues, startTime);
+      this.reporter.generate();
+      
+      this.printSummary(stats);
 
       return allIssues;
     } catch (error) {
-
-      const err = error as Error;
-      logger.error('❌ Global Audit Error:', { message: err.message, stack: err.stack });
-      process.exit(1);
+      logger.error('❌ Global Audit Error:', error);
+      throw error;
     }
   }
 
-
-  private showSummary(issues: Issue[], startTime: number): void {
-
-    const duration = Date.now() - startTime;
+  private calculateSummaryStats(issues: Issue[], startTime: number): SummaryStats {
     const criticals = issues.filter(i => i.severity === 'HIGH').length;
     const warnings = issues.filter(i => i.severity === 'MEDIUM').length;
-    
-    const calculator = new QualityScoreCalculator();
-    const score = calculator.calculate(issues).total;
-    const scoreColor = score > 90 ? '\x1b[32m' : score > 70 ? '\x1b[33m' : '\x1b[31m';
+    const score = new QualityScoreCalculator().calculate(issues).total;
 
-    console.log('\n' + '='.repeat(50));
-    console.log(`📊 AUDIT SUMMARY (${duration}ms)`);
-    console.log('='.repeat(50));
-    console.log(`Quality Score:   ${scoreColor}${score}/100\x1b[0m`);
-    console.log(`Total Issues:    ${issues.length}`);
-    console.log(`Critical (HIGH): \x1b[31m${criticals}\x1b[0m`);
-    console.log(`Warnings (MED):  \x1b[33m${warnings}\x1b[0m`);
-    console.log('='.repeat(50) + '\n');
-
+    return {
+      score,
+      total: issues.length,
+      criticals,
+      warnings,
+      durationMs: Date.now() - startTime
+    };
   }
+
+  private printSummary(stats: SummaryStats): void {
+    console.log('\n' + '='.repeat(50));
+    console.log(`📊 AUDIT SUMMARY (${stats.durationMs}ms)`);
+    console.log('='.repeat(50));
+    console.log(`Quality Score:   ${stats.score}/100`);
+    console.log(`Total Issues:    ${stats.total}`);
+    console.log(`Critical (HIGH): ${stats.criticals}`);
+    console.log(`Warnings (MED):  ${stats.warnings}`);
+    console.log('='.repeat(50) + '\n');
+  }
+
   private runTypeCheck(): Issue[] {
     try {
       execSync('npx tsc --noEmit', { stdio: 'ignore' });
@@ -209,12 +214,7 @@ export class SemanticAuditSuite {
   }
 }
 
-
 if (require.main === module) {
   const suite = new SemanticAuditSuite();
-  suite.run().then(issues => {
-    const criticals = issues.filter(i => i.severity === 'HIGH').length;
-    process.exit(criticals > 0 ? 1 : 0);
-  }).catch(() => process.exit(1));
+  suite.run().catch(() => process.exit(1));
 }
-

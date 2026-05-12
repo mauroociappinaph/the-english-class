@@ -128,3 +128,11 @@ export interface ScoreBreakdown {
   maintainability: number;
   total: number;
 }
+
+export interface SummaryStats {
+  score: number;
+  total: number;
+  criticals: number;
+  warnings: number;
+  durationMs: number;
+}

@@ -1,67 +1,19 @@
 {
   "schemaVersion": "1.1.0",
   "metadata": {
-    "generatedAt": "2026-05-11T21:59:35.813Z",
+    "generatedAt": "2026-05-12T01:59:03.524Z",
     "project": "TheEnglishClass",
     "environment": "development",
     "nodeVersion": "v25.4.0"
   },
   "stats": {
-    "total": 6,
+    "total": 0,
     "criticals": 0,
-    "warnings": 6,
+    "warnings": 0,
     "suggestions": 0,
-    "score": 82,
-    "durationMs": 1284
+    "score": 100,
+    "durationMs": 3236
   },
-  "issues": [
-    {
-      "file": ".next/types/routes.d.ts",
-      "line": 17,
-      "severity": "MEDIUM",
-      "explanation": "Unused TypeAliasDeclaration \"anonymous\" is declared but never used in the project.",
-      "suggestion": "Remove the unused typealiasdeclaration or ensure it is correctly imported and used.",
-      "analyzer": "UnusedTypesAnalyzer"
-    },
-    {
-      "file": "src/app/page.tsx",
-      "line": 57,
-      "severity": "MEDIUM",
-      "explanation": "Found usage of \"any\" in: any...",
-      "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
-      "analyzer": "AnyUsageAnalyzer"
-    },
-    {
-      "file": "src/backend/infrastructure/telemetry.ts",
-      "line": 9,
-      "severity": "MEDIUM",
-      "explanation": "Found usage of \"any\" in: any...",
-      "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
-      "analyzer": "AnyUsageAnalyzer"
-    },
-    {
-      "file": "src/backend/infrastructure/telemetry.ts",
-      "line": 18,
-      "severity": "MEDIUM",
-      "explanation": "Found usage of \"any\" in: any...",
-      "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
-      "analyzer": "AnyUsageAnalyzer"
-    },
-    {
-      "file": "src/backend/infrastructure/ts-parser.ts",
-      "line": 31,
-      "severity": "MEDIUM",
-      "explanation": "Found usage of \"any\" in: any...",
-      "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
-      "analyzer": "AnyUsageAnalyzer"
-    },
-    {
-      "file": "src/backend/infrastructure/ts-parser.ts",
-      "line": 40,
-      "severity": "MEDIUM",
-      "explanation": "Found usage of \"any\" in: any...",
-      "suggestion": "Replace with \"unknown\", a generic, or a specific interface.",
-      "analyzer": "AnyUsageAnalyzer"
-    }
-  ]
+  "results": [],
+  "allIssues": []
 }
