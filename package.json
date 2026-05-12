@@ -13,7 +13,7 @@
     "analyze:types": "npx tsx scripts/analyze-types.ts",
     "analyze:watch": "npx tsx scripts/utils/watch-mode.ts",
     "fix:types": "npx tsx scripts/fix-types.ts",
-    "clean": "rm -rf .next",
+    "clean": "npx tsx scripts/utils/cleaner.ts",
 
     "prepare": "husky"
   },
