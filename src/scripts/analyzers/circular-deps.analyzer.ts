@@ -8,6 +8,8 @@ import path from 'path';
  */
 export class CircularDepsAnalyzer implements Analyzer {
   public readonly name = 'Circular Dependency Analyzer';
+  public readonly isGlobal = true;
+
   private dependencyGraph: Map<string, string[]> = new Map();
   private projectRoot: string = process.cwd();
 

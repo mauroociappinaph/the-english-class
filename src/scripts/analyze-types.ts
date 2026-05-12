@@ -6,6 +6,8 @@ import { auditConfig } from './config';
 import { Issue, Analyzer, AnalysisContext } from './types/analyzer.types';
 import { logger } from './logger';
 import { ParsedFile, ParsedDeclaration } from './types/parser';
+import { AuditCache } from './utils/audit-cache';
+
 
 
 // Analyzers
@@ -31,7 +33,11 @@ export class SemanticAuditSuite {
     this.scanner = new FileScanner({ rootPath: this.projectRoot });
     this.parser = new TSParser();
     this.reporter = new ReportGenerator();
+    this.cache = new AuditCache(this.projectRoot);
   }
+
+  private readonly cache: AuditCache;
+
 
   public async run(): Promise<void> {
     const startTime = Date.now();
@@ -50,6 +56,23 @@ export class SemanticAuditSuite {
 
       // 2. Load Project
       this.parser.loadProject(filePaths);
+      this.cache.load();
+
+      // 3. Detect Changed Files
+      const changedFiles: string[] = [];
+      const cachedIssues: Issue[] = [];
+
+      filePaths.forEach(fp => {
+        const hash = AuditCache.calculateHash(fp);
+        const cached = this.cache.getCachedIssues(fp, hash);
+        if (cached) {
+          cachedIssues.push(...cached);
+        } else {
+          changedFiles.push(fp);
+        }
+      });
+
+      logger.info(`🔄 Incremental: ${changedFiles.length} files changed, ${filePaths.length - changedFiles.length} reused from cache.`);
 
       const context: AnalysisContext = {
         project: this.parser.project,
@@ -57,14 +80,14 @@ export class SemanticAuditSuite {
         giantInterfaceRules: auditConfig.rules.giantInterfaces,
         anyUsageRules: auditConfig.rules.anyUsage,
         circularDepRules: auditConfig.rules.circularDeps,
-        startTime
+        startTime,
+        changedFiles: changedFiles.length > 0 ? changedFiles : undefined
       };
 
 
-      // 3. Execute Analyzers
-      const allIssues: Issue[] = [];
+      // 4. Execute Analyzers
+      const allIssues: Issue[] = [...cachedIssues];
       
-      // Dedicated Project-Wide Analyzers
       const projectAnalyzers: Analyzer[] = [
         new UnusedTypesAnalyzer(),
         new AnyUsageAnalyzer(),
@@ -73,30 +96,64 @@ export class SemanticAuditSuite {
         new CouplingMetricsAnalyzer()
       ];
 
+      // Map to track issues found in this run to update cache
+      const newIssuesByFile = new Map<string, Issue[]>();
+
       projectAnalyzers.forEach(analyzer => {
-        logger.info(`🔍 Running ${analyzer.name}...`);
-        const result = analyzer.analyze(context);
-        allIssues.push(...result.issues);
+        if (analyzer.isGlobal || changedFiles.length > 0) {
+          logger.info(`🔍 Running ${analyzer.name}...`);
+          const result = analyzer.analyze(context);
+          
+          if (analyzer.isGlobal) {
+            allIssues.push(...result.issues);
+          } else {
+            // Local analyzer: record results for cache
+            result.issues.forEach(issue => {
+              const fileIssues = newIssuesByFile.get(issue.file) || [];
+              fileIssues.push(issue);
+              newIssuesByFile.set(issue.file, fileIssues);
+            });
+          }
+        }
       });
 
-      // File-by-File Analyzers & Inline Rules
+      // File-by-File Analyzers & Inline Rules (Only for changed files)
       const locationAnalyzer = new InterfaceLocationAnalyzer();
       const namingAnalyzer = new NamingConventionAnalyzer();
 
-      filteredFiles.forEach(fileMetadata => {
-        const analysis = this.parser.parseFile(fileMetadata.path);
+      changedFiles.forEach(filePath => {
+        const analysis = this.parser.parseFile(filePath);
         if (!analysis) return;
 
-        this.checkLayerIntegrity(fileMetadata.path, analysis, allIssues);
-        this.checkControllerNaming(fileMetadata.path, analysis, allIssues);
+        const currentFileIssues: Issue[] = [];
+        this.checkLayerIntegrity(filePath, analysis, currentFileIssues);
+        this.checkControllerNaming(filePath, analysis, currentFileIssues);
         
-        // These will be refactored to Analyzer interface later if needed
-        allIssues.push(...locationAnalyzer.analyze(analysis));
-        allIssues.push(...namingAnalyzer.analyze(analysis));
+        currentFileIssues.push(...locationAnalyzer.analyze(analysis));
+        currentFileIssues.push(...namingAnalyzer.analyze(analysis));
+
+        // Merge with issues from local project analyzers
+        const otherIssues = newIssuesByFile.get(filePath) || [];
+        const totalIssues = [...currentFileIssues, ...otherIssues];
+        
+        allIssues.push(...currentFileIssues); // Add current loop issues to total
+        
+        // Update Cache for this file
+        this.cache.update(filePath, AuditCache.calculateHash(filePath), totalIssues);
       });
 
-      // 4. Generate Reports
+      // Special case: if a local analyzer found issues but the file wasn't in changedFiles (shouldn't happen with logic above)
+      newIssuesByFile.forEach((issues, filePath) => {
+        if (!changedFiles.includes(filePath)) {
+          allIssues.push(...issues);
+        }
+      });
+
+      this.cache.save();
+
+      // 5. Generate Reports
       this.reporter.addIssues(allIssues);
+
       this.reporter.generate(auditConfig.reporting.outputDir);
 
       // 5. Final Summary

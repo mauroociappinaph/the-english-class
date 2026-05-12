@@ -1,4 +1,5 @@
-import { Project, SyntaxKind } from 'ts-morph';
+import { Project, SyntaxKind, SourceFile } from 'ts-morph';
+
 import { Issue, Analyzer, AnalysisContext, AnalyzerResult } from '../types/analyzer.types';
 
 /**
@@ -7,10 +8,13 @@ import { Issue, Analyzer, AnalysisContext, AnalyzerResult } from '../types/analy
  */
 export class AnyUsageAnalyzer implements Analyzer {
   public readonly name = 'Zero-Any Analyzer';
+  public readonly isGlobal = false;
+
 
   public analyze(context: AnalysisContext): AnalyzerResult {
     const startTime = Date.now();
-    const issues = this.analyzeProject(context.project, context.anyUsageRules.allowTypeAssertions);
+    const issues = this.analyzeProject(context.project, context.anyUsageRules.allowTypeAssertions, context.changedFiles);
+
 
     
     return {
@@ -20,9 +24,13 @@ export class AnyUsageAnalyzer implements Analyzer {
     };
   }
 
-  public analyzeProject(project: Project, allowAssertions: boolean = false): Issue[] {
+  public analyzeProject(project: Project, allowAssertions: boolean = false, filesToAnalyze?: string[]): Issue[] {
     const issues: Issue[] = [];
-    const sourceFiles = project.getSourceFiles();
+    const sourceFiles = filesToAnalyze 
+      ? filesToAnalyze.map(f => project.getSourceFile(f)).filter((sf): sf is SourceFile => !!sf)
+      : project.getSourceFiles();
+
+
 
     sourceFiles.forEach(sourceFile => {
       const filePath = sourceFile.getFilePath();

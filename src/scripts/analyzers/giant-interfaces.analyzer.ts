@@ -1,4 +1,5 @@
-import { Project, InterfaceDeclaration, TypeAliasDeclaration, Node, Type, Symbol } from 'ts-morph';
+import { Project, InterfaceDeclaration, TypeAliasDeclaration, Node, Type, Symbol, SourceFile } from 'ts-morph';
+
 import { Issue, Analyzer, AnalysisContext, AnalyzerResult, GiantInterfaceRules } from '../types/analyzer.types';
 import { InterfaceMetrics } from '../types/analyzer';
 
@@ -9,10 +10,13 @@ import { InterfaceMetrics } from '../types/analyzer';
  */
 export class GiantInterfacesAnalyzer implements Analyzer {
   public readonly name = 'Interface Cohesion Analyzer (ISP)';
+  public readonly isGlobal = false;
+
 
   public analyze(context: AnalysisContext): AnalyzerResult {
     const startTime = Date.now();
-    const issues = this.analyzeProject(context.project, context.giantInterfaceRules);
+    const issues = this.analyzeProject(context.project, context.giantInterfaceRules, context.changedFiles);
+
     
     return {
       analyzerName: this.name,
@@ -21,9 +25,13 @@ export class GiantInterfacesAnalyzer implements Analyzer {
     };
   }
 
-  public analyzeProject(project: Project, thresholds: GiantInterfaceRules): Issue[] {
+  public analyzeProject(project: Project, thresholds: GiantInterfaceRules, filesToAnalyze?: string[]): Issue[] {
     const issues: Issue[] = [];
-    const sourceFiles = project.getSourceFiles();
+    const sourceFiles = filesToAnalyze 
+      ? filesToAnalyze.map(f => project.getSourceFile(f)).filter((sf): sf is SourceFile => !!sf)
+      : project.getSourceFiles();
+
+
 
     sourceFiles.forEach(sourceFile => {
       const filePath = sourceFile.getFilePath();

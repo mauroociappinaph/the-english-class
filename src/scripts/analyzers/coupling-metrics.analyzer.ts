@@ -8,6 +8,8 @@ import path from 'path';
  */
 export class CouplingMetricsAnalyzer implements Analyzer {
   public readonly name = 'Coupling Metrics Analyzer (Martin)';
+  public readonly isGlobal = true;
+
   private projectRoot: string = process.cwd();
 
   public analyze(context: AnalysisContext): AnalyzerResult {

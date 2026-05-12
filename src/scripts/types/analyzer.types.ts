@@ -47,7 +47,9 @@ export interface AnalysisContext {
   anyUsageRules: AnyUsageRules;
   circularDepRules: CircularDepRules;
   startTime: number;
+  changedFiles?: string[]; // Paths of files that changed since last audit
 }
+
 
 /**
  * Represents a single violation or suggestion found during analysis.
@@ -87,8 +89,10 @@ export interface AuditStats {
  */
 export interface Analyzer {
   name: string;
+  isGlobal: boolean; // TRUE: needs whole project. FALSE: can be run incrementally.
   analyze(context: AnalysisContext): AnalyzerResult;
 }
+
 
 /**
  * Final consolidated audit report structure.
@@ -111,4 +115,11 @@ export interface CouplingMetrics {
   ca: number; // Afferent Coupling (incoming dependencies)
   instability: number; // I = Ce / (Ce + Ca)
 }
+
+export interface CacheEntry {
+  hash: string;
+  issues: Issue[];
+  mtime: number;
+}
+
 

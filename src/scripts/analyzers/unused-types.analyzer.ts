@@ -7,6 +7,8 @@ import { Issue, Analyzer, AnalysisContext, AnalyzerResult } from '../types/analy
  */
 export class UnusedTypesAnalyzer implements Analyzer {
   public readonly name = 'Dead Type Analyzer';
+  public readonly isGlobal = true;
+
 
   public analyze(context: AnalysisContext): AnalyzerResult {
     const startTime = Date.now();
