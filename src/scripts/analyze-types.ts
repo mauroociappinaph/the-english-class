@@ -40,41 +40,54 @@ export class SemanticAuditSuite {
   private readonly cache: AuditCache;
 
 
-  public async run(): Promise<Issue[]> {
-
+  public async run(filesToRefresh?: string[]): Promise<Issue[]> {
     const startTime = Date.now();
-    logger.info('🚀 Starting Semantic Architecture Audit...');
-
+    
     try {
-      // 1. Scan & Filter
-      const allFiles = await this.scanner.scan();
-      const filteredFiles = allFiles.filter(f => {
-        const relativePath = path.relative(this.projectRoot, f.path);
-        return !auditConfig.ignorePaths.some(ignore => relativePath.startsWith(ignore));
-      });
+      // 1. Scan & Refresh
+      if (filesToRefresh) {
+        filesToRefresh.forEach(fp => {
+          const sf = this.parser.project.getSourceFile(fp);
+          if (sf) sf.refreshFromFileSystemSync();
+          else this.parser.project.addSourceFileAtPath(fp);
+        });
+      } else {
+        const allFiles = await this.scanner.scan();
+        const filePaths = allFiles
+          .filter(f => {
+            const relativePath = path.relative(this.projectRoot, f.path);
+            return !auditConfig.ignorePaths.some(ignore => relativePath.startsWith(ignore));
+          })
+          .map(f => f.path);
+        
+        this.parser.loadProject(filePaths);
+      }
 
-      const filePaths = filteredFiles.map(f => f.path);
-      logger.info(`📦 Loaded ${filePaths.length} files for analysis.`);
-
-      // 2. Load Project
-      this.parser.loadProject(filePaths);
+      const filePaths = this.parser.project.getSourceFiles()
+        .map(sf => sf.getFilePath())
+        .filter(fp => {
+          return !fp.includes('node_modules') && !fp.endsWith('.d.ts');
+        });
+      
       this.cache.load();
 
-      // 3. Detect Changed Files
-      const changedFiles: string[] = [];
+
+      // 3. Detect Changed Files (for caching logic)
+      const changedFiles: string[] = filesToRefresh || [];
       const cachedIssues: Issue[] = [];
 
       filePaths.forEach(fp => {
+        if (changedFiles.includes(fp)) return;
+        
         const hash = AuditCache.calculateHash(fp);
         const cached = this.cache.getCachedIssues(fp, hash);
-        if (cached) {
-          cachedIssues.push(...cached);
-        } else {
-          changedFiles.push(fp);
-        }
+        if (cached) cachedIssues.push(...cached);
+        else changedFiles.push(fp);
       });
 
-      logger.info(`🔄 Incremental: ${changedFiles.length} files changed, ${filePaths.length - changedFiles.length} reused from cache.`);
+      if (!filesToRefresh) {
+        logger.info(`🔄 Initial Analysis: ${changedFiles.length} files changed, ${filePaths.length - changedFiles.length} reused from cache.`);
+      }
 
       const context: AnalysisContext = {
         project: this.parser.project,
@@ -90,26 +103,18 @@ export class SemanticAuditSuite {
       // 3.5 Build Graph
       context.graph.build(this.parser.project);
 
-
-
       // 4. Execute Analyzers
       const allIssues: Issue[] = [...cachedIssues];
-      
       const projectAnalyzers: Analyzer[] = getProjectAnalyzers();
-
-
-      // Map to track issues found in this run to update cache
       const newIssuesByFile = new Map<string, Issue[]>();
 
       projectAnalyzers.forEach(analyzer => {
         if (analyzer.isGlobal || changedFiles.length > 0) {
-          logger.info(`🔍 Running ${analyzer.name}...`);
           const result = analyzer.analyze(context);
           
           if (analyzer.isGlobal) {
             allIssues.push(...result.issues);
           } else {
-            // Local analyzer: record results for cache
             result.issues.forEach(issue => {
               const fileIssues = newIssuesByFile.get(issue.file) || [];
               fileIssues.push(issue);
@@ -119,7 +124,7 @@ export class SemanticAuditSuite {
         }
       });
 
-      // File-by-File Analyzers & Inline Rules (Only for changed files)
+      // File-by-File Analyzers & Inline Rules
       const locationAnalyzer = new InterfaceLocationAnalyzer();
       const namingAnalyzer = new NamingConventionAnalyzer();
 
@@ -131,31 +136,20 @@ export class SemanticAuditSuite {
         currentFileIssues.push(...locationAnalyzer.analyze(analysis));
         currentFileIssues.push(...namingAnalyzer.analyze(analysis));
 
-        // Merge with issues from local project analyzers
-
         const otherIssues = newIssuesByFile.get(filePath) || [];
         const totalIssues = [...currentFileIssues, ...otherIssues];
+        allIssues.push(...currentFileIssues);
         
-        allIssues.push(...currentFileIssues); // Add current loop issues to total
-        
-        // Update Cache for this file
         this.cache.update(filePath, AuditCache.calculateHash(filePath), totalIssues);
       });
 
-      // Special case: if a local analyzer found issues but the file wasn't in changedFiles (shouldn't happen with logic above)
       newIssuesByFile.forEach((issues, filePath) => {
-        if (!changedFiles.includes(filePath)) {
-          allIssues.push(...issues);
-        }
+        if (!changedFiles.includes(filePath)) allIssues.push(...issues);
       });
 
       this.cache.save();
-
-      // 5. Generate Reports
       this.reporter.addIssues(allIssues);
-
       this.reporter.generate(auditConfig.reporting.outputDir);
-
       this.showSummary(allIssues, startTime);
 
       return allIssues;
@@ -165,7 +159,6 @@ export class SemanticAuditSuite {
       logger.error('❌ Global Audit Error:', { message: err.message, stack: err.stack });
       process.exit(1);
     }
-
   }
 
 

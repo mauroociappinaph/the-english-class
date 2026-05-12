@@ -11,7 +11,9 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "analyze:types": "npx tsx src/scripts/analyze-types.ts",
+    "analyze:watch": "npx tsx src/scripts/utils/watch-mode.ts",
     "clean": "rm -rf .next",
+
     "prepare": "husky"
   },
   "repository": {
