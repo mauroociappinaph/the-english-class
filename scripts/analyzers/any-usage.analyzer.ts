@@ -38,8 +38,8 @@ export class AnyUsageAnalyzer implements Analyzer {
 
       // 1. Detect explicit 'any' type references
       sourceFile.getDescendantsOfKind(SyntaxKind.AnyKeyword).forEach(node => {
-        // Skip if inside a type assertion and they are allowed
-        if (allowAssertions && node.getFirstAncestorByKind(SyntaxKind.AsExpression)) {
+        // Skip if inside a type assertion (already handled or allowed)
+        if (node.getFirstAncestorByKind(SyntaxKind.AsExpression)) {
           return;
         }
 

@@ -47,10 +47,10 @@ export class RefactorEngine {
       }
       this.project.removeSourceFile(tempFile);
 
-      // 2. Prepare Parameter List
+      // 2. Prepare Parameter List (V3+)
       const helperParams = [
-        ...freeVars.map(v => ({ name: v, type: 'any' })),
-        ...structuralParams.map(idx => ({ name: `param${idx}`, type: 'any' }))
+        ...freeVars.map(v => ({ name: v, type: this.inferTypeForVariable(nodes[0], v) })),
+        ...structuralParams.map(idx => ({ name: `param${idx}`, type: this.inferTypeForToken(templates[0].tokens[idx], nodes[0]) }))
       ];
 
       // 3. Add helper to SHARED file (V3)
@@ -92,8 +92,9 @@ export class RefactorEngine {
         message: `Successfully extracted ${helperName} to shared library.`, 
         filesChanged: Array.from(filesChanged) 
       };
-    } catch (error: any) {
-      return { success: false, message: error.message, filesChanged: [] };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return { success: false, message, filesChanged: [] };
     }
   }
 
@@ -164,8 +165,8 @@ export class RefactorEngine {
     
     const internalDecls = new Set<string>();
     body.getDescendants().forEach(desc => {
-      if (Node.isVariableDeclaration(desc) || Node.isParameterDeclaration(desc) || Node.isFunctionDeclaration(desc)) {
-        const name = (desc as any).getName?.();
+      if (Node.isVariableDeclaration(desc) || Node.isParameterDeclaration(desc) || Node.isFunctionDeclaration(desc) || Node.isMethodDeclaration(desc)) {
+        const name = desc.getName();
         if (name) internalDecls.add(name);
       }
     });
@@ -202,5 +203,24 @@ export class RefactorEngine {
     });
 
     return freeVars;
+  }
+
+  private inferTypeForVariable(contextNode: Node, name: string): string {
+    const identifiers = contextNode.getDescendantsOfKind(SyntaxKind.Identifier).filter(id => id.getText() === name);
+    if (identifiers.length > 0) {
+      const type = identifiers[0].getType();
+      const typeText = type.getText(contextNode);
+      if (typeText && !typeText.includes('import(') && typeText !== 'any') {
+        return typeText;
+      }
+    }
+    return 'unknown';
+  }
+
+  private inferTypeForToken(token: { value: unknown }, _contextNode: Node): string {
+    if (typeof token.value === 'string') return 'string';
+    if (typeof token.value === 'number') return 'number';
+    if (typeof token.value === 'boolean') return 'boolean';
+    return 'unknown';
   }
 }

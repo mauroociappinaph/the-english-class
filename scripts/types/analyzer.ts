@@ -6,6 +6,9 @@ export interface InterfaceMetrics {
   properties: number;
   maxNesting: number;
   complexity: number;
+  optionalRatio: number;
+  unionComplexity: number;
+  isRecursive: boolean;
 }
 
 

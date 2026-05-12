@@ -1,23 +1,21 @@
 import { Project, InterfaceDeclaration, TypeAliasDeclaration, Node, Type, Symbol, SourceFile } from 'ts-morph';
-
+import path from 'path';
 import { Issue, Analyzer, AnalysisContext, AnalyzerResult, GiantInterfaceRules } from '../types/analyzer.types';
 import { InterfaceMetrics } from '../types/analyzer';
-
 
 /**
  * GiantInterfacesAnalyzer: Enforcement of the Interface Segregation Principle (ISP).
  * Detects interfaces that are too complex, deeply nested, or have too many responsibilities.
+ * V2: Expanded with complexity metrics (unions, recursion, optionality).
  */
 export class GiantInterfacesAnalyzer implements Analyzer {
   public readonly name = 'Interface Cohesion Analyzer (ISP)';
   public readonly isGlobal = false;
 
-
   public analyze(context: AnalysisContext): AnalyzerResult {
     const startTime = Date.now();
     const issues = this.analyzeProject(context.project, context.giantInterfaceRules, context.changedFiles);
 
-    
     return {
       analyzerName: this.name,
       issues,
@@ -32,7 +30,6 @@ export class GiantInterfacesAnalyzer implements Analyzer {
       : project.getSourceFiles();
 
 
-
     sourceFiles.forEach(sourceFile => {
       const filePath = sourceFile.getFilePath();
       if (filePath.includes('node_modules')) return;
@@ -41,7 +38,11 @@ export class GiantInterfacesAnalyzer implements Analyzer {
       sourceFile.getInterfaces().forEach(node => {
         const metrics = this.calculateMetrics(node);
         if (this.isGiant(metrics, thresholds)) {
-          issues.push(this.createIssue(sourceFile.getFilePath(), node, metrics, thresholds));
+          const issue = this.createIssue(sourceFile.getFilePath(), node, metrics, thresholds);
+          
+          if (!issues.find(i => i.file === issue.file && i.line === issue.line && i.explanation === issue.explanation)) {
+            issues.push(issue);
+          }
         }
       });
 
@@ -60,60 +61,104 @@ export class GiantInterfacesAnalyzer implements Analyzer {
   }
 
   private calculateMetrics(node: InterfaceDeclaration | TypeAliasDeclaration): InterfaceMetrics {
-    const properties = node.getType().getProperties();
+    const name = node.getName() || 'anonymous';
+    const type = node.getType();
+    const properties = type.getApparentProperties();
     const propertyCount = properties.length;
     
+    let optionalCount = 0;
+    let unionComplexity = 0;
+    let isRecursive = false;
     let maxNesting = 0;
-    const checkNesting = (type: Type, level: number) => {
+
+    const checkType = (t: Type, level: number, stack: Set<string>) => {
       maxNesting = Math.max(maxNesting, level);
+      
+      const typeStr = t.getText();
+      const isObject = t.isObject() && !t.isString() && !t.isNumber() && !t.isBoolean() && !t.isEnum();
+      const symbol = t.getSymbol();
+      const isExternal = symbol?.getDeclarations().some(d => d.getSourceFile().getFilePath().includes('node_modules')) ?? false;
+
+      // Exclude built-ins, external types, and large external objects
+      const blacklist = ['Date', 'Function', 'Promise', 'Project', 'Node', 'SourceFile', 'React'];
+      if (isExternal || blacklist.includes(typeStr) || typeStr.startsWith('import(') && blacklist.some(b => typeStr.includes('.' + b))) {
+        return;
+      }
+
+      if (isObject && stack.has(typeStr)) {
+        isRecursive = true;
+        return;
+      }
+
       if (level > 10) return;
 
-      const props = type.getProperties();
+      if (t.isUnion()) {
+        unionComplexity += t.getUnionTypes().length;
+      }
+
+      const nextStack = new Set(stack);
+      if (isObject) nextStack.add(typeStr);
+
+      const props = t.getApparentProperties();
       props.forEach((p: Symbol) => {
-        const propType = p.getTypeAtLocation(node);
-        if (propType.isObject() && !propType.isArray()) {
-          checkNesting(propType, level + 1);
+        if (p.isOptional()) optionalCount++;
+        
+        const propType = p.getTypeAtLocation(node).getNonNullableType();
+        // Check if it's an object-like type (interface, class, or type literal)
+        if (propType.isObject() && !propType.isArray() && !propType.isString() && !propType.isNumber()) {
+          checkType(propType, level + 1, nextStack);
         }
       });
     };
     
-    checkNesting(node.getType(), 1);
+    checkType(type, 1, new Set());
     const complexity = node.getDescendants().length;
+    const optionalRatio = propertyCount > 0 ? optionalCount / propertyCount : 0;
+
 
     return { 
-      name: node.getName() || 'anonymous', 
+      name, 
       properties: propertyCount, 
       maxNesting, 
-      complexity 
+      complexity,
+      optionalRatio,
+      unionComplexity,
+      isRecursive
     };
   }
 
   private isGiant(metrics: InterfaceMetrics, t: GiantInterfaceRules): boolean {
+    if (!t) return false;
     return (
       metrics.properties > t.maxProperties ||
       metrics.maxNesting > t.maxNesting ||
-      metrics.complexity > t.complexityThreshold
+      metrics.complexity > t.complexityThreshold ||
+      metrics.isRecursive ||
+      metrics.unionComplexity > 5
     );
   }
 
   private createIssue(file: string, node: Node, metrics: InterfaceMetrics, t: GiantInterfaceRules): Issue {
-    const severity = metrics.properties > t.maxProperties * 1.5 || metrics.maxNesting > t.maxNesting + 1 ? 'HIGH' : 'MEDIUM';
+    const severity = metrics.properties > t.maxProperties * 1.5 || metrics.isRecursive ? 'HIGH' : 'MEDIUM';
     
-    let suggestion = `Interface "${metrics.name}" is too large. `;
+    let suggestion = `Interface "${metrics.name}" exceeds architectural thresholds. `;
     if (metrics.properties > t.maxProperties) {
-      suggestion += `Split it into smaller, specialized interfaces using composition. `;
+      suggestion += `Split it into smaller, specialized interfaces (Props: ${metrics.properties}). `;
     }
-    if (metrics.maxNesting > t.maxNesting) {
-      suggestion += `Flatten the structure or extract nested objects into their own named types. `;
+    if (metrics.isRecursive) {
+      suggestion += `Recursive types detected. Ensure base cases are simple. `;
+    }
+    if (metrics.unionComplexity > 5) {
+      suggestion += `High union complexity (${metrics.unionComplexity}). `;
     }
 
     return {
       file,
       line: node.getStartLineNumber(),
       severity,
-      explanation: `Giant Interface Detected: ${metrics.name} (Props: ${metrics.properties}, Nesting: ${metrics.maxNesting}, Complexity: ${metrics.complexity})`,
+      explanation: `Complexity Threshold Exceeded: ${metrics.name} [Props: ${metrics.properties}, Nest: ${metrics.maxNesting}, Rec: ${metrics.isRecursive}, Union: ${metrics.unionComplexity}]`,
       suggestion,
-      analyzer: 'GiantInterfacesAnalyzer'
+      analyzer: 'Interface Cohesion Analyzer (ISP)'
     };
   }
 }

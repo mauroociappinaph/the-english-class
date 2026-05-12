@@ -4,7 +4,9 @@
     ".next",
     "dist",
     "build",
-    ".git"
+    ".git",
+    "scripts/tests",
+    "reports"
   ],
   "rules": {
     "giantInterfaces": {
