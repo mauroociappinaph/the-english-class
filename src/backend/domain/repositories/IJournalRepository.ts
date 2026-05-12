@@ -1,4 +1,4 @@
-import { JournalEntry, CreateJournalEntryDto } from "@/shared/types/journal";
+import { JournalEntry, CreateJournalEntryDto, Correction } from "@/shared/types/journal";
 
 export interface IJournalRepository {
   findById(id: string): Promise<JournalEntry | null>;

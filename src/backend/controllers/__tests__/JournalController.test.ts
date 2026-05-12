@@ -46,7 +46,7 @@ describe('JournalController', () => {
 
       const result = await JournalController.analyze('1');
 
-      expect(result.cefrLevel).toBe('B2');
+      expect(result?.cefrLevel).toBe('B2');
       expect(journalService.analyzeEntry).toHaveBeenCalledWith('1');
     });
   });

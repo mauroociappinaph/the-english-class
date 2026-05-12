@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { JournalEditor } from '@/frontend/components/journal/JournalEditor';
 import { FeedbackSummary } from '@/frontend/components/journal/FeedbackSummary';
 import { createJournalEntry, analyzeJournalEntry } from '@/app/actions';
-import { LinguisticAnalysis } from '@/shared/types/journal';
+import { LinguisticAnalysis } from "@/shared/types/journal";
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Sparkles } from 'lucide-react';
 
@@ -46,14 +46,13 @@ export default function JournalPage() {
       // 2. Analyze
       const result = await analyzeJournalEntry(entry.id);
       if (result && result.metadata) {
+        const metadata = result.metadata as Record<string, unknown>;
         setAnalysis({
-          overallLevel: result.cefrLevel || 'B1',
-          vocabularyScore: result.metadata.vocabularyScore,
-          accuracyScore: result.metadata.accuracyScore,
-          corrections: result.corrections,
-          recurringErrors: result.metadata.recurringErrors,
-          feedback: result.metadata.feedback,
-          suggestedVocab: result.metadata.suggestedVocab
+          cefrLevel: result.cefrLevel || 'N/A',
+          metrics: (metadata.metrics as { grammar: number; vocabulary: number; coherence: number }) || { grammar: 0, vocabulary: 0, coherence: 0 },
+          feedback: (metadata.feedback as string) || '',
+          suggestedVocab: (metadata.suggestedVocab as string[]) || [],
+          corrections: result.corrections || []
         });
       }
     } catch (error) {
