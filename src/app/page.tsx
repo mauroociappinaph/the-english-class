@@ -23,7 +23,7 @@ export default function Home() {
     setCurrentAnalysis(INITIAL_EXPRESSION);
     const fetchLibrary = async () => {
       const library = await getExpressions();
-      setExpressions(library as Expression[]);
+      setExpressions(library as unknown as Expression[]);
     };
     fetchLibrary();
   }, [setCurrentAnalysis, setExpressions]);

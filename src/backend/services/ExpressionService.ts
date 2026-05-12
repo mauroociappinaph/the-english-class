@@ -1,154 +1,69 @@
-import { prisma } from "@/backend/infrastructure/db";
-import { groq } from "@/backend/infrastructure/groq";
-import { Prisma, Expression as PrismaExpression } from "@prisma/client";
-import { GroqExample, GroqExpressionResponse } from "@/backend/domain/types";
-
+import { IExpressionRepository } from "../domain/repositories/IExpressionRepository";
+import { ILinguisticAnalyzer } from "../domain/interfaces/ILinguisticAnalyzer";
+import { ExpressionDetail, GroqExample } from "../domain/types";
+import { CollisionError } from "../domain/errors";
 
 /**
  * Service to handle Expression business logic
  */
 export class ExpressionService {
-  private static formatExpression(expression: PrismaExpression | null) {
+  constructor(
+    private repository: IExpressionRepository,
+    private analyzer: ILinguisticAnalyzer
+  ) {}
 
-    if (!expression) return null;
-    
-    return {
-      ...expression,
-      secondaryMeanings: JSON.parse(expression.secondaryMeanings || "[]"),
-      usageTips: JSON.parse(expression.usageTips || "{}"),
-      tenses: JSON.parse(expression.tenses || "{}"),
-    };
-  }
-
-
-
-  static async getExpression(text: string) {
+  async getExpression(text: string): Promise<ExpressionDetail | null> {
     const normalizedText = text.toLowerCase().trim();
-    
-    const expression = await prisma.expression.findUnique({
-      where: { text: normalizedText },
-      include: { examples: true },
-    });
-
-    return this.formatExpression(expression);
+    return this.repository.findByText(normalizedText);
   }
 
-  static async analyzeExpression(text: string) {
+  async analyzeExpression(text: string): Promise<ExpressionDetail> {
     const normalizedText = text.toLowerCase().trim();
     
     // 1. Check if it exists in DB
     const existing = await this.getExpression(normalizedText);
     if (existing) return existing;
 
-    // 2. Call Groq for analysis
-    const prompt = `You are a Senior English Professor and Linguistic Analyst (Cambridge standards). 
-Analyze the provided English expression and return a strictly valid JSON object.
-
-RULES:
-- "translation": Provide a natural Spanish translation of the expression.
-- "meaning": Provide a clear explanation in ENGLISH.
-- "secondaryMeanings": Provide other meanings in ENGLISH.
-- "usageTips": All descriptions must be in ENGLISH.
-- "tenses": Each tense must have a "text" (ENGLISH example) and a "translation" (SPANISH).
-- "examples": Each example must have a "text" (ENGLISH), "translation" (SPANISH), and "explanation" (ENGLISH).
-
-Expression: "${normalizedText}"
-
-Schema:
-{
-  "translation": "Spanish translation",
-  "meaning": "English explanation",
-  "secondaryMeanings": ["English secondary meaning"],
-  "type": "verb | phrasal_verb | idiom | expression | tense",
-  "cefr": "A1 | A2 | B1 | B2 | C1 | C2",
-  "ipa": "/phonetic transcription/",
-  "frequency": 0.0 to 1.0,
-  "formality": "formal | informal | neutral",
-  "mnemonic": "a clever memory trick or mnemonic device in English to remember this expression",
-  "imagePrompt": "a detailed, artistic prompt for an image generator (DALL-E/Midjourney style) that visually represents the core concept of this expression",
-  "usageTips": {
-    "naturalness": "English description",
-    "commonMistake": "English description",
-    "context": "English description"
-  },
-  "tenses": {
-    "present": { "text": "English example", "translation": "Spanish translation" },
-    "past": { "text": "English example", "translation": "Spanish translation" },
-    "presentPerfect": { "text": "English example", "translation": "Spanish translation" },
-    "future": { "text": "English example", "translation": "Spanish translation" }
-  },
-  "examples": [
-    { 
-      "text": "English example", 
-      "translation": "Spanish translation",
-      "category": "cotidiano", 
-      "explanation": "English explanation" 
-    }
-  ]
-}`;
-
-    const completion = await groq.chat.completions.create({
-      messages: [
-        { role: "system", content: "Return ONLY a valid JSON object." },
-        { role: "user", content: prompt }
-      ],
-      model: "llama-3.3-70b-versatile",
-      response_format: { type: "json_object" },
-      temperature: 0.1,
-    });
-
-    const result: GroqExpressionResponse = JSON.parse(completion.choices[0]?.message?.content || "{}");
+    // 2. Call Linguistic Analyzer
+    const result = await this.analyzer.analyzeExpression(normalizedText);
 
     // 3. Save to DB with collision handling
     try {
-      const newExpression = await prisma.expression.create({
-        data: {
-          text: normalizedText,
-          translation: result.translation || "",
-          meaning: result.meaning || "",
-          secondaryMeanings: JSON.stringify(result.secondaryMeanings || []),
-          type: result.type || "expression",
-          cefr: result.cefr || "B1",
-          ipa: result.ipa || "",
-          frequency: result.frequency || 0.5,
-          formality: result.formality || "neutral",
-          mnemonic: result.mnemonic || "",
-          usageTips: JSON.stringify(result.usageTips || {}),
-          tenses: JSON.stringify(result.tenses || {}),
-          examples: {
-            create: (result.examples || []).map((ex: GroqExample) => ({
-              text: ex.text,
-              translation: ex.translation,
-              category: ex.category,
-              explanation: ex.explanation
-            }))
-          }
-        },
-        include: { examples: true }
+      return await this.repository.save({
+        text: normalizedText,
+        translation: result.translation || "",
+        meaning: result.meaning || "",
+        secondaryMeanings: result.secondaryMeanings || [],
+        type: result.type || "expression",
+        cefr: result.cefr || "B1",
+        ipa: result.ipa || "",
+        frequency: result.frequency || 0.5,
+        formality: result.formality || "neutral",
+        mnemonic: result.mnemonic || "",
+        usageTips: (result.usageTips as unknown) as Record<string, unknown> || {},
+        tenses: (result.tenses as unknown) as Record<string, unknown> || {},
+        examples: (result.examples || []).map((ex: GroqExample) => ({
+          text: ex.text,
+          translation: ex.translation,
+          category: ex.category,
+          explanation: ex.explanation
+        }))
       });
-
-      return this.formatExpression(newExpression);
-    } catch (dbError) {
-      if (dbError instanceof Prisma.PrismaClientKnownRequestError && dbError.code === 'P2002') {
-        return this.getExpression(normalizedText);
+    } catch (error: unknown) {
+      if (error instanceof CollisionError) {
+        const existingAfterCollision = await this.getExpression(normalizedText);
+        if (existingAfterCollision) return existingAfterCollision;
       }
-      throw dbError;
+      throw error;
     }
   }
 
-  static async getExpressions() {
-    const expressions = await prisma.expression.findMany({
-      include: { examples: true },
-      orderBy: { createdAt: "desc" },
-    });
-
-    return expressions.map(e => this.formatExpression(e));
+  async getExpressions(): Promise<ExpressionDetail[]> {
+    return this.repository.findAll();
   }
 
-  static async deleteExpression(id: string) {
-    await prisma.$transaction([
-      prisma.example.deleteMany({ where: { expressionId: id } }),
-      prisma.expression.delete({ where: { id } })
-    ]);
+  async deleteExpression(id: string): Promise<void> {
+    return this.repository.delete(id);
   }
 }
+
