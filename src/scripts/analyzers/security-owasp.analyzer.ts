@@ -1,12 +1,9 @@
 import { execSync } from 'child_process';
 import { Issue, Analyzer, AnalysisContext, AnalyzerResult } from '../types/analyzer.types';
-
-interface AuditVulnerability {
-  severity: string;
-  via: Array<{ title: string; url: string }>;
-}
+import { AuditVulnerability } from '../types/security.types';
 
 /**
+
  * SecurityOwaspAnalyzer: The SCA Guardian.
  * Audits project dependencies for known vulnerabilities (CVEs) using npm audit.
  */

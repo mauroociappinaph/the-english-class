@@ -1,12 +1,6 @@
-import { Project, SourceFile } from 'ts-morph';
+import { Project, SourceFile, SyntaxKind } from 'ts-morph';
+import { GraphNode } from '../types/graph.types';
 import path from 'path';
-
-export interface GraphNode {
-  path: string;
-  imports: string[];
-  importedBy: string[];
-  isExternal: boolean;
-}
 
 export class DependencyGraph {
   private nodes: Map<string, GraphNode> = new Map();

@@ -24,7 +24,9 @@ const DEFAULT_CONFIG: AuditConfig = {
   },
 };
 
-export class ConfigLoader {
+
+class ConfigLoader {
+
   private readonly CONFIG_FILE = '.typecheckrc';
 
   public load(): AuditConfig {

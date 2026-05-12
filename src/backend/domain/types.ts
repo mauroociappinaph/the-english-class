@@ -9,12 +9,12 @@ export interface GroqExample {
   explanation: string;
 }
 
-export interface GroqTense {
+interface GroqTense {
   text: string;
   translation: string;
 }
 
-export interface GroqUsageTips {
+interface GroqUsageTips {
   naturalness: string;
   commonMistake: string;
   context: string;
@@ -41,7 +41,7 @@ export interface GroqExpressionResponse {
   examples: GroqExample[];
 }
 
-export interface Example {
+interface Example {
   id: string;
   expressionId: string;
   text: string;
@@ -52,7 +52,7 @@ export interface Example {
   updatedAt: Date;
 }
 
-export interface Expression {
+interface Expression {
   id: string;
   text: string;
   translation: string;

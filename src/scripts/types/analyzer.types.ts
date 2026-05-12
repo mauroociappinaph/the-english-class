@@ -1,21 +1,22 @@
 import { Project } from 'ts-morph';
+import { DependencyGraph } from '../utils/dependency-graph';
 
 /**
  * Severity levels for architectural violations.
  */
 export type Severity = 'HIGH' | 'MEDIUM' | 'LOW';
 
-export interface GiantInterfaceRules {
+interface GiantInterfaceRules {
   maxProperties: number;
   maxNesting: number;
   complexityThreshold: number;
 }
 
-export interface AnyUsageRules {
+interface AnyUsageRules {
   allowTypeAssertions: boolean;
 }
 
-export interface CircularDepRules {
+interface CircularDepRules {
   enforcePureDomain: boolean;
 }
 
@@ -48,10 +49,8 @@ export interface AnalysisContext {
   circularDepRules: CircularDepRules;
   startTime: number;
   changedFiles?: string[]; // Paths of files that changed since last audit
-  graph: any; // Will be typed properly in the implementation
+  graph: DependencyGraph;
 }
-
-
 
 /**
  * Represents a single violation or suggestion found during analysis.
@@ -95,7 +94,6 @@ export interface Analyzer {
   analyze(context: AnalysisContext): AnalyzerResult;
 }
 
-
 /**
  * Final consolidated audit report structure.
  */
@@ -130,6 +128,3 @@ export interface ScoreBreakdown {
   maintainability: number;
   total: number;
 }
-
-
-

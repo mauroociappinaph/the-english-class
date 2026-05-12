@@ -3,7 +3,9 @@
  * Supports leveled logging, colors, and timestamps.
  */
 
-export enum LogLevelEnum {
+
+enum LogLevelEnum {
+
   DEBUG = 0,
   INFO = 1,
   WARN = 2,
@@ -26,7 +28,9 @@ const LABELS = {
   [LogLevelEnum.ERROR]: "ERROR",
 };
 
-export class Logger {
+
+class Logger {
+
   private level: LogLevelEnum;
 
   constructor(level: LogLevelEnum = LogLevelEnum.INFO) {
