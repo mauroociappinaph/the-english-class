@@ -1,4 +1,5 @@
-import { Project } from 'ts-morph';
+import { Project, Node, SyntaxKind, SourceFile, FunctionDeclaration, ArrowFunction, MethodDeclaration } from 'ts-morph';
+export { Project, Node, SyntaxKind, SourceFile, FunctionDeclaration, ArrowFunction, MethodDeclaration };
 import { DependencyGraph } from '../utils/dependency-graph';
 
 /**
@@ -143,4 +144,16 @@ export interface SummaryStats {
   criticals: number;
   warnings: number;
   durationMs: number;
+}
+
+export interface StructuralTemplate {
+  hash: string;
+  structure: string;
+  tokens: { kind: string; value: string; pos: number }[];
+}
+
+export interface RefactorResult {
+  success: boolean;
+  message: string;
+  filesChanged: string[];
 }
