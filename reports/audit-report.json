@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1.0",
   "metadata": {
-    "generatedAt": "2026-05-12T03:00:10.045Z",
+    "generatedAt": "2026-05-12T14:20:09.129Z",
     "project": "TheEnglishClass",
     "environment": "development",
     "nodeVersion": "v25.4.0"
@@ -12,23 +12,23 @@
     "warnings": 2,
     "suggestions": 0,
     "score": 97,
-    "durationMs": 3683
+    "durationMs": 3943
   },
   "results": [],
   "allIssues": [
     {
-      "file": "scripts/tests/duplication-sample.ts",
-      "line": 5,
+      "file": "scripts/analyze-types.ts",
+      "line": 24,
       "severity": "MEDIUM",
-      "explanation": "Dead Export: FunctionDeclaration \"processUser\" is exported but never used outside this module.",
+      "explanation": "Dead Export: ClassDeclaration \"SemanticAuditSuite\" is exported but never used outside this module.",
       "suggestion": "Remove the export or the entire declaration if it's not used locally either.",
       "analyzer": "Dead Code Analyzer"
     },
     {
-      "file": "scripts/tests/duplication-sample.ts",
-      "line": 7,
+      "file": "scripts/types/analyzer.types.ts",
+      "line": 155,
       "severity": "MEDIUM",
-      "explanation": "Dead Export: FunctionDeclaration \"processAdmin\" is exported but never used outside this module.",
+      "explanation": "Dead Export: InterfaceDeclaration \"RefactorResult\" is exported but never used outside this module.",
       "suggestion": "Remove the export or the entire declaration if it's not used locally either.",
       "analyzer": "Dead Code Analyzer"
     }
