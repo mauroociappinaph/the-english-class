@@ -59,6 +59,7 @@ export class PrismaExpressionRepository implements IExpressionRepository {
           tenses: JSON.stringify(expression.tenses),
           wordFamilies: JSON.stringify(expression.wordFamilies),
           phrasalVerbDetails: JSON.stringify(expression.phrasalVerbDetails),
+          slangData: expression.slangData ? JSON.stringify(expression.slangData) : null,
           examples: {
             create: expression.examples.map(ex => ({
               text: ex.text,
@@ -148,6 +149,7 @@ export class PrismaExpressionRepository implements IExpressionRepository {
       tenses: JSON.parse(expression.tenses || "null"),
       wordFamilies: JSON.parse(expression.wordFamilies || "null"),
       phrasalVerbDetails: JSON.parse(expression.phrasalVerbDetails || "null"),
+      slangData: JSON.parse(expression.slangData || "null"),
       createdAt: expression.createdAt,
       updatedAt: expression.updatedAt,
       imageUrl: expression.imageUrl,

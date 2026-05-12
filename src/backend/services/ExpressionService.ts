@@ -1,5 +1,6 @@
 import { IExpressionRepository } from "../domain/repositories/IExpressionRepository";
 import { ILinguisticAnalyzer } from "../domain/interfaces/ILinguisticAnalyzer";
+import { ISlangAnalyzer } from "../domain/interfaces/ISlangAnalyzer";
 import { ExpressionDetail, GroqExample } from "../domain/types";
 import { CollisionError } from "../domain/errors";
 import { StudyPerformance } from "@/shared/types/expression";
@@ -10,7 +11,8 @@ import { StudyPerformance } from "@/shared/types/expression";
 export class ExpressionService {
   constructor(
     private repository: IExpressionRepository,
-    private analyzer: ILinguisticAnalyzer
+    private analyzer: ILinguisticAnalyzer,
+    private slangAnalyzer?: ISlangAnalyzer
   ) {}
 
   async getExpression(text: string): Promise<ExpressionDetail | null> {
@@ -29,8 +31,11 @@ export class ExpressionService {
     const existing = await this.getExpression(normalizedText);
     if (existing) return existing;
 
-    // 2. Call Linguistic Analyzer
-    const result = await this.analyzer.analyzeExpression(normalizedText);
+    // 2. Call analyzers in parallel — main linguistics + slang variants
+    const [result, slangData] = await Promise.all([
+      this.analyzer.analyzeExpression(normalizedText),
+      this.slangAnalyzer?.analyzeSlang(normalizedText) ?? Promise.resolve(null),
+    ]);
 
     // 3. Save to DB with collision handling
     try {
@@ -54,6 +59,7 @@ export class ExpressionService {
         tenses: result.tenses || null,
         wordFamilies: result.wordFamilies || null,
         phrasalVerbDetails: result.phrasalVerbDetails || null,
+        slangData: slangData || null,
         examples: (result.examples || []).map((ex: GroqExample) => ({
           text: ex.text,
           translation: ex.translation,
