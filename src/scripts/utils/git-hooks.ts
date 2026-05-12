@@ -1,5 +1,6 @@
 import { execSync } from 'child_process';
 import { SemanticAuditSuite } from '../analyze-types';
+import { FileScanner } from '../file-scanner';
 import { logger } from '../logger';
 
 async function runHook() {
@@ -11,7 +12,14 @@ async function runHook() {
     const suite = new SemanticAuditSuite();
     
     if (hookType === 'pre-commit') {
-      const issues = await suite.run();
+      const stagedFiles = FileScanner.getStagedFiles();
+      if (stagedFiles.length === 0) {
+        logger.info('✨ No staged files to analyze.');
+        process.exit(0);
+      }
+      
+      logger.info(`🔍 Analyzing ${stagedFiles.length} staged files...`);
+      const issues = await suite.run(stagedFiles);
       const criticals = issues.filter(i => i.severity === 'HIGH').length;
       if (criticals > 0) throw new Error(`Found ${criticals} critical architectural issues.`);
     } 
