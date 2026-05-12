@@ -23,7 +23,7 @@ export default function Home() {
     setCurrentAnalysis(INITIAL_EXPRESSION);
     const fetchLibrary = async () => {
       const library = await getExpressions();
-      setExpressions(library as unknown as Expression[]);
+      setExpressions(library);
     };
     fetchLibrary();
   }, [setCurrentAnalysis, setExpressions]);
@@ -36,9 +36,9 @@ export default function Home() {
     try {
       const result = await analyzeExpression(input.toLowerCase());
       if (result) {
-        setCurrentAnalysis(result as unknown as Expression);
+        setCurrentAnalysis(result);
         if (!expressions.find(e => e.id === result.id)) {
-          addExpression(result as unknown as Expression);
+          addExpression(result);
         }
       }
 

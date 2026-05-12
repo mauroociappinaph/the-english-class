@@ -113,7 +113,7 @@ export function AnalysisResult({ currentAnalysis, getCefrStyle }: AnalysisResult
                     <div className="block">
                       <InteractiveText 
                         text={ex.text} 
-                        translation={ex.translation} 
+                        translation={ex.translation || ""} 
                         className="text-lg text-zinc-200 leading-tight font-medium" 
                       />
                     </div>
