@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
 import { useStudyStore } from "@/frontend/store/useStudyStore";
 import { getCefrStyle } from "@/frontend/components/cefr-styles";
 import { getExpressionById } from "@/app/actions";
@@ -11,14 +11,12 @@ import { Expression } from "@/shared/types/expression";
 
 export default function ExpressionLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ id: string }>;
 }) {
-  const resolvedParams = use(params);
   const pathname = usePathname();
-  const { id } = resolvedParams;
+  const params = useParams();
+  const id = params.id as string;
   const { expressions, setCurrentAnalysis, currentAnalysis } = useStudyStore();
   const [isLoading, setIsLoading] = useState(!currentAnalysis || currentAnalysis.id !== id);
 
@@ -109,18 +107,18 @@ export default function ExpressionLayout({
           </div>
         </motion.div>
 
-        {/* Internal Navigation */}
-        <div className="flex p-1.5 bg-zinc-900/80 rounded-2xl border border-white/10 w-fit mb-24 sticky top-8 backdrop-blur-2xl z-50 shadow-2xl shadow-black/80 ring-1 ring-white/5">
+        {/* Internal Navigation (Back to original spot with Nuclear Visibility) */}
+        <div className="flex p-1.5 bg-zinc-950 rounded-2xl border-2 border-blue-500/50 w-fit mb-24 sticky top-12 backdrop-blur-3xl z-[100] shadow-[0_0_50px_rgba(59,130,246,0.2)]">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 flex items-center justify-center min-w-[100px] ${
+                className={`px-8 py-3 rounded-xl text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center justify-center min-w-[120px] ${
                   isActive 
-                    ? "bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-105" 
-                    : "text-zinc-500 hover:text-zinc-200 hover:bg-white/5"
+                    ? "bg-blue-500 text-white shadow-[0_0_30px_rgba(59,130,246,0.5)] scale-110" 
+                    : "text-zinc-500 hover:text-white hover:bg-white/5"
                 }`}
               >
                 {item.label}
