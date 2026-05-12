@@ -15,17 +15,7 @@ interface GroqUsageTips extends SharedUsageTips {}
 export interface GroqExpressionResponse extends Omit<SharedExpression, 'id' | 'createdAt' | 'updatedAt' | 'examples' | 'usageTips' | 'tenses' | 'imageUrl'> {
   imageUrl: string;
   usageTips: GroqUsageTips;
-  tenses: {
-    present: GroqTense;
-    past: GroqTense;
-    presentPerfect: GroqTense;
-    future: GroqTense;
-    pastPerfect?: GroqTense;
-    presentContinuous?: GroqTense;
-    pastContinuous?: GroqTense;
-    futureContinuous?: GroqTense;
-    conditional?: GroqTense;
-  };
+  tenses: Record<string, GroqTense>;
   examples: GroqExample[];
 }
 

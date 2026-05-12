@@ -40,17 +40,7 @@ export interface Expression {
   mnemonic: string | null;
   imageUrl?: string | null;
   usageTips: UsageTips | null;
-  tenses: {
-    present: Tense;
-    past: Tense;
-    presentPerfect: Tense;
-    future: Tense;
-    pastPerfect?: Tense;
-    presentContinuous?: Tense;
-    pastContinuous?: Tense;
-    futureContinuous?: Tense;
-    conditional?: Tense;
-  } | null;
+  tenses: Record<string, Tense> | null;
   wordFamilies: {
     noun?: string[];
     verb?: string[];
