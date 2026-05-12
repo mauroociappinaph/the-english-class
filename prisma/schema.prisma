@@ -52,3 +52,30 @@ model ActionMetric {
   metadata   String?  // JSON string for additional context
   createdAt  DateTime @default(now())
 }
+
+model JournalEntry {
+  id              String   @id @default(cuid())
+  userId          String   @default("default_user")
+  title           String?
+  content         String
+  mode            String   @default("FREE_WRITING")
+  mood            String?
+  cefrLevel       String?
+  metadata        String?  // JSON string
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  corrections     Correction[]
+}
+
+model Correction {
+  id              String   @id @default(cuid())
+  entryId         String
+  type            String
+  originalText    String
+  suggestedText   String
+  explanation     String
+  rule            String?
+  isFixed         Boolean  @default(false)
+  entry           JournalEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+}
+
