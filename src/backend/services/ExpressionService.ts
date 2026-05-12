@@ -54,6 +54,7 @@ export class ExpressionService {
           future: result.tenses?.future || { text: "", translation: "" }
         },
         wordFamilies: result.wordFamilies || null,
+        phrasalVerbDetails: result.phrasalVerbDetails || null,
         examples: (result.examples || []).map((ex: GroqExample) => ({
           text: ex.text,
           translation: ex.translation,

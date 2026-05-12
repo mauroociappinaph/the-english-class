@@ -52,6 +52,13 @@ export interface Expression {
     adjective?: string[];
     adverb?: string[];
   } | null;
+  phrasalVerbDetails: {
+    verb: string;
+    particle: string;
+    separable: 'no' | 'optional' | 'mandatory';
+    transitive: boolean;
+    commonCollocations: string[];
+  } | null;
   examples: Example[];
   status?: 'pending' | 'learning' | 'mastered' | null;
   difficulty?: number;

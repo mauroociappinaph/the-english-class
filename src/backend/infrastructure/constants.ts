@@ -25,6 +25,7 @@ export const INITIAL_EXPRESSION: SharedExpression = {
     future: { text: "The stadium will be packed with supporters tomorrow.", translation: "El estadio estará lleno de seguidores mañana." },
   },
   wordFamilies: null,
+  phrasalVerbDetails: null,
   examples: [
     {
       category: "cotidiano",

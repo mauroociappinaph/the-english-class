@@ -53,6 +53,13 @@ Schema:
     "verb": ["related verb"],
     "adjective": ["related adjective"],
     "adverb": ["related adverb"]
+  },
+  "phrasalVerbDetails": {
+    "verb": "base verb",
+    "particle": "preposition/adverb",
+    "separable": "no | optional | mandatory",
+    "transitive": true,
+    "commonCollocations": ["word1", "word2"]
   }
 }`;
 

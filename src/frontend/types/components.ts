@@ -43,3 +43,13 @@ export interface WordFamilyListProps {
     adverb?: string[];
   };
 }
+
+export interface PhrasalVerbDetailsProps {
+  details: {
+    verb: string;
+    particle: string;
+    separable: 'no' | 'optional' | 'mandatory';
+    transitive: boolean;
+    commonCollocations: string[];
+  };
+}
