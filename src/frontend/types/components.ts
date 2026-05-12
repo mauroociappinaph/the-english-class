@@ -34,3 +34,12 @@ export interface VisualCardProps {
   mnemonic?: string | null;
   text: string;
 }
+
+export interface WordFamilyListProps {
+  families: {
+    noun?: string[];
+    verb?: string[];
+    adjective?: string[];
+    adverb?: string[];
+  };
+}

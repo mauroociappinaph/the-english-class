@@ -1,15 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { WordFamilyListProps } from "../types/components";
 
-interface WordFamilyListProps {
-  families: {
-    noun?: string[];
-    verb?: string[];
-    adjective?: string[];
-    adverb?: string[];
-  };
-}
 
 const posLabels: Record<string, { label: string; color: string }> = {
   noun: { label: "Noun", color: "text-blue-400 bg-blue-500/10 border-blue-500/20" },

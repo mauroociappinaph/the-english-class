@@ -24,6 +24,7 @@ export const INITIAL_EXPRESSION: SharedExpression = {
     presentPerfect: { text: "The stadium has been packed with tourists all week.", translation: "El estadio ha estado lleno de turistas toda la semana." },
     future: { text: "The stadium will be packed with supporters tomorrow.", translation: "El estadio estará lleno de seguidores mañana." },
   },
+  wordFamilies: null,
   examples: [
     {
       category: "cotidiano",

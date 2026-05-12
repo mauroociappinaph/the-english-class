@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { logger } from '../logger';
 
-export const FORBIDDEN_PATTERNS = [
+const FORBIDDEN_PATTERNS = [
   /\.DS_Store$/,
   /tsconfig\.tsbuildinfo$/,
   /^reports\//,
@@ -11,7 +11,7 @@ export const FORBIDDEN_PATTERNS = [
   /\.audit-cache\.json$/
 ];
 
-export const DIRECTORIES_TO_CLEAN = [
+const DIRECTORIES_TO_CLEAN = [
   '.next',
   'reports',
   'dist',
