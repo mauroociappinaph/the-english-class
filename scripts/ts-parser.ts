@@ -19,7 +19,7 @@ export class TSParser {
    * If files are already loaded, it skips them.
    */
   public loadProject(files: string[]) {
-    const existingPaths = new Set(this.project.getSourceFiles().map(sf => sf.getFilePath()));
+    const existingPaths = new Set<string>(this.project.getSourceFiles().map(sf => sf.getFilePath() as string));
     const newFiles = files.filter(f => !existingPaths.has(f));
     
     if (newFiles.length > 0) {
