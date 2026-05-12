@@ -65,6 +65,7 @@ export default function ExpressionLayout({
     { label: "Chronology", href: `/expression/${id}/chronology` },
     { label: "Scenarios", href: `/expression/${id}/scenarios` },
     { label: "Mastery", href: `/expression/${id}/mastery` },
+    { label: "🌍 Slang", href: `/expression/${id}/slang` },
   ];
 
   return (
