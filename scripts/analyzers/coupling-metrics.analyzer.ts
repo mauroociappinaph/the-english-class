@@ -37,8 +37,8 @@ export class CouplingMetricsAnalyzer extends BaseAnalyzer {
           file: filePath,
           line: 1,
           severity: 'HIGH',
-          explanation: `High Efferent Coupling (Ce=${ce}): Este módulo depende de demasiados componentes internos. Probablemente esté violando el Single Responsibility Principle.`,
-          suggestion: 'Refactorizar extrayendo responsabilidades o usar Facades para reducir dependencias.',
+          explanation: `High Efferent Coupling (Ce=${ce}): This module depends on too many internal components, likely violating the Single Responsibility Principle.`,
+          suggestion: 'Refactor by extracting responsibilities or using Facades to reduce direct dependencies.',
           analyzer: 'CouplingMetricsAnalyzer'
         });
       }
@@ -49,8 +49,8 @@ export class CouplingMetricsAnalyzer extends BaseAnalyzer {
           file: filePath,
           line: 1,
           severity: 'MEDIUM',
-          explanation: `Domain Instability (I=${instability.toFixed(2)}): Este módulo del dominio es altamente inestable porque depende de demasiadas cosas (Ce=${ce}, Ca=${ca}). El dominio debe ser estable.`,
-          suggestion: 'Invertir dependencias usando interfaces. El dominio no debería depender de otros detalles.',
+          explanation: `Domain Instability (I=${instability.toFixed(2)}): This domain module is highly unstable because it depends on too many external abstractions (Ce=${ce}, Ca=${ca}). The core domain should be stable.`,
+          suggestion: 'Invert dependencies using interfaces. The domain should not depend on lower-level details.',
           analyzer: 'CouplingMetricsAnalyzer'
         });
       }
@@ -61,8 +61,8 @@ export class CouplingMetricsAnalyzer extends BaseAnalyzer {
           file: filePath,
           line: 1,
           severity: 'HIGH',
-          explanation: `Architectural Hub Detectado (Ce=${ce}, Ca=${ca}): Este módulo es un cuello de botella. Muchos dependen de él, y él depende de muchos. Modificarlo es altamente riesgoso.`,
-          suggestion: 'Dividir el módulo. Separar las interfaces/tipos (para bajar Ca) de la implementación (para bajar Ce).',
+          explanation: `Architectural Hub Detected (Ce=${ce}, Ca=${ca}): This module is a bottleneck. Many depend on it, and it depends on many. Modifying it is high risk.`,
+          suggestion: 'Split the module. Separate interfaces/types (to lower Ca) from implementations (to lower Ce).',
           analyzer: 'CouplingMetricsAnalyzer'
         });
       }

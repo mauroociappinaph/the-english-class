@@ -37,7 +37,7 @@ async function main() {
   };
 
   const analyzer = new DuplicateLogicAnalyzer();
-  const results = analyzer.analyze(context);
+  const results = await analyzer.analyze(context);
   
   const engine = new RefactorEngine(project);
   
