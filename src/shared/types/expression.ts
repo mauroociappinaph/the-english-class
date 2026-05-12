@@ -45,6 +45,11 @@ export interface Expression {
     past: Tense;
     presentPerfect: Tense;
     future: Tense;
+    pastPerfect?: Tense;
+    presentContinuous?: Tense;
+    pastContinuous?: Tense;
+    futureContinuous?: Tense;
+    conditional?: Tense;
   } | null;
   wordFamilies: {
     noun?: string[];
