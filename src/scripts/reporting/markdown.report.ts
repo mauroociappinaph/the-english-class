@@ -1,5 +1,5 @@
-import path from 'path';
 import { AnalyzerIssue, AuditStats } from '../types/analyzer';
+import { IssueUtils } from '../utils/issue-utils';
 
 
 /**
@@ -14,12 +14,8 @@ export class MarkdownReporter {
   };
 
   public generate(stats: AuditStats, issues: AnalyzerIssue[]): string {
-    const sortedIssues = [...issues].sort((a, b) => {
-      const severityMap = { HIGH: 0, MEDIUM: 1, LOW: 2 };
-      return severityMap[a.severity] - severityMap[b.severity];
-    });
-
-    const groupedByAnalyzer = this.groupByAnalyzer(sortedIssues);
+    const sortedIssues = IssueUtils.sortIssues(issues);
+    const groupedByAnalyzer = IssueUtils.groupByAnalyzer(sortedIssues);
 
     let md = `# 🛡️ Architecture Audit Report\n\n`;
     
@@ -37,7 +33,7 @@ export class MarkdownReporter {
       
       issues.forEach(i => {
         const emoji = this.SEVERITY_EMOJI[i.severity];
-        const fileName = path.basename(i.file);
+        const fileName = i.file.split('/').pop() || i.file;
         // GitHub relative link (heuristic)
         const fileLink = `[\`${fileName}\`](${i.file})`;
         
@@ -90,15 +86,5 @@ export class MarkdownReporter {
     metrics += `| Analysis Duration | \`${stats.durationMs}ms\` | 🚀 High Performance |\n\n`;
     
     return metrics;
-  }
-
-  private groupByAnalyzer(issues: AnalyzerIssue[]): Map<string, AnalyzerIssue[]> {
-    const map = new Map<string, AnalyzerIssue[]>();
-    issues.forEach(issue => {
-      const group = map.get(issue.analyzer) || [];
-      group.push(issue);
-      map.set(issue.analyzer, group);
-    });
-    return map;
   }
 }
