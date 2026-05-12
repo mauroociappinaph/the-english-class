@@ -11,3 +11,4 @@ prisma/migrations
 audit-results/
 
 
+tsconfig.tsbuildinfo
