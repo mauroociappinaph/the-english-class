@@ -15,6 +15,7 @@ import { UnusedTypesAnalyzer } from './analyzers/unused-types.analyzer';
 import { AnyUsageAnalyzer } from './analyzers/any-usage.analyzer';
 import { CircularDepsAnalyzer } from './analyzers/circular-deps.analyzer';
 import { GiantInterfacesAnalyzer } from './analyzers/giant-interfaces.analyzer';
+import { CouplingMetricsAnalyzer } from './analyzers/coupling-metrics.analyzer';
 
 /**
  * SemanticAuditSuite: The orchestrator of architectural governance.
@@ -68,7 +69,8 @@ export class SemanticAuditSuite {
         new UnusedTypesAnalyzer(),
         new AnyUsageAnalyzer(),
         new CircularDepsAnalyzer(),
-        new GiantInterfacesAnalyzer()
+        new GiantInterfacesAnalyzer(),
+        new CouplingMetricsAnalyzer()
       ];
 
       projectAnalyzers.forEach(analyzer => {

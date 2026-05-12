@@ -105,3 +105,10 @@ export interface Report {
   results: AnalyzerResult[];
   allIssues: Issue[];
 }
+
+export interface CouplingMetrics {
+  ce: number; // Efferent Coupling (outgoing dependencies)
+  ca: number; // Afferent Coupling (incoming dependencies)
+  instability: number; // I = Ce / (Ce + Ca)
+}
+
