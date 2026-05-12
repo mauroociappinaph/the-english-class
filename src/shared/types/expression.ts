@@ -18,6 +18,10 @@ export interface Example {
   expressionId?: string;
   text: string;
   translation: string | null;
+  literalTranslation?: string | null;
+  subtitleAdaptation?: string | null;
+  tone?: string | null;
+  register?: string | null;
   category?: string | null;
   explanation?: string | null;
   createdAt?: Date;

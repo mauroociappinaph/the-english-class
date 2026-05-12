@@ -75,22 +75,34 @@ export const INITIAL_EXPRESSION: SharedExpression = {
   },
   examples: [
     {
-      category: "cotidiano",
-      text: "The bus was packed with commuters this morning.",
-      translation: "El colectivo estaba repleto de gente que iba a trabajar esta mañana.",
-      explanation: "A common daily scenario."
+      category: "Medical Drama",
+      text: "The emergency room is packed with flu patients tonight, stat!",
+      translation: "La sala de emergencias está llena de pacientes con gripe esta noche, ¡rápido!",
+      literalTranslation: "La sala de emergencias está empacada con gripe pacientes esta noche, estadístico!",
+      subtitleAdaptation: "¡Urgencias está colapsada de pacientes con gripe, muévanse!",
+      tone: "Urgent, commanding",
+      register: "Medical Slang / Fast-paced",
+      explanation: "Typical high-stress hospital scene."
     },
     {
-      category: "avanzado",
-      text: "The manuscript is packed with intricate metaphors and historical references.",
-      translation: "El manuscrito está lleno de metáforas intrincadas y referencias históricas.",
-      explanation: "Academic/Literary usage."
+      category: "Courtroom Thriller",
+      text: "Your honor, the gallery is packed with the victim's family.",
+      translation: "Su señoría, la galería está repleta de la familia de la víctima.",
+      literalTranslation: "Su honor, la galería está empacada con la víctima familia.",
+      subtitleAdaptation: "Su señoría, la sala está llena de familiares de la víctima.",
+      tone: "Serious, formal tension",
+      register: "Highly Formal / Legal",
+      explanation: "Used to set a tense mood in a legal drama."
     },
     {
-      category: "dialectal",
-      text: "The pub was absolutely Chock-a-block! (British English)",
-      translation: "¡El pub estaba absolutamente hasta las manos! (Inglés británico)",
-      explanation: "Chock-a-block is a common British idiom meaning packed."
+      category: "90s Sitcom",
+      text: "Can't go in there, man. The fridge is packed with Joey's weird sandwiches.",
+      translation: "No podés entrar ahí, viejo. La heladera está llena de los sándwiches raros de Joey.",
+      literalTranslation: "No puedo ir en ahí, hombre. El refrigerador está empacado con de Joey raros sándwiches.",
+      subtitleAdaptation: "Ni entres. La heladera está a tope con los sándwiches raros de Joey.",
+      tone: "Casual, comedic warning",
+      register: "Street Casual / Slang",
+      explanation: "Classic sitcom exaggeration of an everyday problem."
     }
   ]
 };

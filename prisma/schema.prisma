@@ -36,13 +36,17 @@ model Expression {
 }
 
 model Example {
-  id           String     @id @default(cuid())
-  text         String
-  translation  String?    // Added for hover translation
-  category     String     // cotidiano, avanzado, dialectal
-  explanation  String?
-  expressionId String
-  expression   Expression @relation(fields: [expressionId], references: [id])
+  id                 String     @id @default(cuid())
+  text               String
+  translation        String?    // Added for hover translation
+  literalTranslation String?    // Word by word
+  subtitleAdaptation String?    // Localized subtitle
+  tone               String?    // Sarcastic, urgent, etc.
+  register           String?    // Street slang, highly formal
+  category           String     // Medical Drama, Courtroom Thriller
+  explanation        String?
+  expressionId       String
+  expression         Expression @relation(fields: [expressionId], references: [id])
 }
 model ActionMetric {
   id         String   @id @default(cuid())

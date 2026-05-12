@@ -13,7 +13,16 @@ RULES:
 - "secondaryMeanings": Provide other meanings in ENGLISH.
 - "usageTips": All descriptions must be in ENGLISH.
 - "tenses": Each tense must have a "text" (ENGLISH example) and a "translation" (SPANISH).
-- "examples": Each example must have a "text" (ENGLISH), "translation" (SPANISH), and "explanation" (ENGLISH). Provide at least 5 different examples, covering various contexts (e.g. cotidiano, profesional, académico, emprendimiento, ciencia ficción, policial, política, espías, dialectal, etc.).
+- "examples": Act as a Hollywood Script Analyst. Each example MUST have:
+  - "text": English expression used in a sentence.
+  - "translation": Standard Spanish translation.
+  - "literalTranslation": Literal word-by-word Spanish translation.
+  - "subtitleAdaptation": How a professional subtitler would adapt this for Netflix LATAM.
+  - "category": Cinematic Tropes (e.g., "Medical Drama", "90s Sitcom", "Courtroom Thriller", "Sci-Fi", "Spy Movie", "Police Procedural").
+  - "explanation": English explanation of context.
+  - "tone": Delivery/emotion (e.g., "Sarcastic", "Desperate", "Commanding whisper").
+  - "register": Level of formality (e.g., "Street Slang", "Highly Formal", "Casual").
+  Provide at least 5 different cinematic examples.
 
 Expression: "${text}"
 
@@ -82,8 +91,12 @@ Schema:
     { 
       "text": "English example", 
       "translation": "Spanish translation",
-      "category": "cotidiano", 
-      "explanation": "English explanation" 
+      "literalTranslation": "Word by word Spanish translation",
+      "subtitleAdaptation": "Netflix subtitle adaptation",
+      "category": "Medical Drama", 
+      "explanation": "English explanation",
+      "tone": "Sarcastic",
+      "register": "Casual"
     }
   ],
   "wordFamilies": {
