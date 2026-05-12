@@ -10,7 +10,7 @@ export class PrismaExpressionRepository implements IExpressionRepository {
       where: { text },
       include: { examples: true },
     });
-    return this.formatExpression(expression);
+    return expression ? this.formatExpression(expression) : null;
   }
 
   async findAll(): Promise<ExpressionDetail[]> {
@@ -64,13 +64,12 @@ export class PrismaExpressionRepository implements IExpressionRepository {
     ]);
   }
 
-  private formatExpression(expression: import("@prisma/client").Expression | null): ExpressionDetail | null {
-    if (!expression) return null;
+  private formatExpression(expression: import("@prisma/client").Prisma.ExpressionGetPayload<{ include: { examples: true } }>): ExpressionDetail {
     return {
       ...expression,
       secondaryMeanings: JSON.parse(expression.secondaryMeanings || "[]"),
       usageTips: JSON.parse(expression.usageTips || "{}"),
       tenses: JSON.parse(expression.tenses || "{}"),
-    };
+    } as unknown as ExpressionDetail;
   }
 }

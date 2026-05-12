@@ -5,8 +5,8 @@ import { ILinguisticAnalyzer } from '@/backend/domain/interfaces/ILinguisticAnal
 import { ExpressionDetail } from '@/backend/domain/types';
 
 describe('ExpressionService', () => {
-  let mockRepository: vi.Mocked<IExpressionRepository>;
-  let mockAnalyzer: vi.Mocked<ILinguisticAnalyzer>;
+  let mockRepository: IExpressionRepository;
+  let mockAnalyzer: ILinguisticAnalyzer;
   let service: ExpressionService;
 
   beforeEach(() => {
@@ -41,7 +41,7 @@ describe('ExpressionService', () => {
         updatedAt: new Date(),
       } as unknown as ExpressionDetail;
 
-      mockRepository.findByText.mockResolvedValue(mockExpression);
+      (mockRepository.findByText as ReturnType<typeof vi.fn>).mockResolvedValue(mockExpression);
 
       const result = await service.getExpression('is packed with');
 
@@ -52,7 +52,7 @@ describe('ExpressionService', () => {
     });
 
     it('should return null when expression is not found', async () => {
-      mockRepository.findByText.mockResolvedValue(null);
+      (mockRepository.findByText as ReturnType<typeof vi.fn>).mockResolvedValue(null);
 
       const result = await service.getExpression('nonexistent');
 
