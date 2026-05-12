@@ -15,7 +15,7 @@ export class ArchitectureBoundaryAnalyzer implements Analyzer {
   private readonly projectRoot: string = process.cwd();
   private readonly FORBIDDEN_IN_CORE = ['@prisma/client', 'groq-sdk', 'better-sqlite3', 'fs', 'path'];
 
-  public analyze(context: AnalysisContext): AnalyzerResult {
+  public async analyze(context: AnalysisContext): Promise<AnalyzerResult> {
     const startTime = Date.now();
     const issues: Issue[] = [];
 

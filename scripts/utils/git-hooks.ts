@@ -1,4 +1,5 @@
 import { execSync } from 'child_process';
+import fs from 'fs';
 import { SemanticAuditSuite } from '../analyze-types';
 import { FileScanner } from '../file-scanner';
 import { logger } from '../logger';
@@ -10,7 +11,7 @@ async function validateCleanliness() {
     const allStagedFiles = execSync('git diff --cached --name-only', { encoding: 'utf8' })
       .split('\n')
       .map(f => f.trim())
-      .filter(f => f.length > 0);
+      .filter(f => f.length > 0 && fs.existsSync(f));
 
     const forbiddenFiles = Cleaner.check(allStagedFiles);
 

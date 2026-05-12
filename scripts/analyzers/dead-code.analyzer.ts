@@ -20,7 +20,7 @@ export class DeadCodeAnalyzer implements Analyzer {
     'src/scripts/utils/git-hooks.ts'
   ];
 
-  public analyze(context: AnalysisContext): AnalyzerResult {
+  public async analyze(context: AnalysisContext): Promise<AnalyzerResult> {
     const startTime = Date.now();
     const issues: Issue[] = [];
     const projectRoot = process.cwd();

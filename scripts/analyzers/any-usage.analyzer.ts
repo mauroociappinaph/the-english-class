@@ -11,11 +11,9 @@ export class AnyUsageAnalyzer implements Analyzer {
   public readonly isGlobal = false;
 
 
-  public analyze(context: AnalysisContext): AnalyzerResult {
+  public async analyze(context: AnalysisContext): Promise<AnalyzerResult> {
     const startTime = Date.now();
     const issues = this.analyzeProject(context.project, context.anyUsageRules.allowTypeAssertions, context.changedFiles);
-
-
     
     return {
       analyzerName: this.name,

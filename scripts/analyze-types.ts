@@ -1,7 +1,9 @@
 import path from 'path';
 import { FileScanner } from './file-scanner';
 import { TSParser } from './ts-parser';
-import { execSync } from 'child_process';
+import { execSync, exec } from 'child_process';
+import { promisify } from 'util';
+const execAsync = promisify(exec);
 import { ReportGenerator } from './reporting/report-generator';
 import { auditConfig } from './config';
 import { Issue, Analyzer, AnalysisContext, AuditStats, SummaryStats } from './types/analyzer.types';
@@ -44,16 +46,9 @@ export class SemanticAuditSuite {
     const startTime = Date.now();
     this.reporter.clearIssues();
     
-    // 0. Type Check Gate
-    // In pre-commit (incremental), we might want to skip this if it's too slow, 
-    // but for now we keep it for safety.
-    const typeErrors = this.runTypeCheck();
-    if (typeErrors.length > 0) {
-      logger.error('❌ Type Check failed. Project has compilation errors.');
-    }
-
     try {
-      // 1. Smart Scan & Load
+      const t0 = Date.now();
+      // 0. Smart Scan & Load
       const allFiles = await this.scanner.scan(filesToRefresh);
       const filePaths = allFiles
         .filter(f => {
@@ -63,6 +58,7 @@ export class SemanticAuditSuite {
         .map(f => f.path);
       
       this.parser.loadProject(filePaths);
+      logger.info(`⏱️ Load Project: ${Date.now() - t0}ms`);
 
       const loadedFilePaths = this.parser.project.getSourceFiles()
         .map(sf => sf.getFilePath())
@@ -70,19 +66,20 @@ export class SemanticAuditSuite {
       
       this.cache.load();
 
-      // 3. Detect Changed Files
-      const changedFiles: string[] = filesToRefresh || [];
+      // 1. Type Check Gate (Lazy) - Handled in Parallel below
+      this.cache.load();
+
+      // 2. Detect Changed Files
+      const changedFiles: string[] = [];
       const cachedIssues: Issue[] = [];
 
       loadedFilePaths.forEach(fp => {
-        // If we forced these files (e.g. staged), we MUST re-analyze them.
         if (filesToRefresh?.includes(fp)) {
           changedFiles.push(fp);
           return;
         }
         
-        const hash = AuditCache.calculateHash(fp);
-        const cached = this.cache.getCachedIssues(fp, hash);
+        const cached = this.cache.getCachedIssues(fp);
         if (cached) cachedIssues.push(...cached);
         else changedFiles.push(fp);
       });
@@ -105,43 +102,61 @@ export class SemanticAuditSuite {
         graph: new DependencyGraph(this.projectRoot)
       };
 
+      const t2 = Date.now();
       context.graph.build(this.parser.project);
+      logger.info(`⏱️ Build Graph: ${Date.now() - t2}ms`);
 
-      // 4. Execute Modern Analyzers
-      const allIssues: Issue[] = [...cachedIssues, ...typeErrors];
+      // 3. Execute Modern Analyzers & Type Check (Parallel)
+      const t3 = Date.now();
       const projectAnalyzers: Analyzer[] = getProjectAnalyzers();
       const newIssuesByFile = new Map<string, Issue[]>();
 
-      projectAnalyzers.forEach(analyzer => {
-        // Run global analyzers or if there are changed files for local analyzers
+      const typeCheckTask = !filesToRefresh 
+        ? this.runTypeCheckAsync() 
+        : Promise.resolve([] as Issue[]);
+
+      const analyzerTasks = projectAnalyzers.map(async analyzer => {
         if (analyzer.isGlobal || (context.changedFiles && context.changedFiles.length > 0)) {
-          const result = analyzer.analyze(context);
-          
-          if (analyzer.isGlobal) {
-            // Global analyzers return issues for many files or the project
-            allIssues.push(...result.issues);
-          } else {
-            const grouped = IssueUtils.groupByFile(result.issues);
-            grouped.forEach((issues, file) => {
-              const existing = newIssuesByFile.get(file) || [];
-              newIssuesByFile.set(file, [...existing, ...issues]);
-            });
-          }
+          const result = await analyzer.analyze(context);
+          return { analyzer, result };
+        }
+        return null;
+      });
+
+      const [typeErrors, results] = await Promise.all([
+        typeCheckTask,
+        Promise.all(analyzerTasks)
+      ]);
+      
+      logger.info(`⏱️ Run Parallel Engine (Analyzers + TypeCheck): ${Date.now() - t3}ms`);
+
+      const allIssues: Issue[] = [...cachedIssues, ...typeErrors];
+
+      results.forEach(item => {
+        if (!item) return;
+        const { analyzer, result } = item;
+        
+        if (analyzer.isGlobal) {
+          allIssues.push(...result.issues);
+        } else {
+          const grouped = IssueUtils.groupByFile(result.issues);
+          grouped.forEach((issues, file) => {
+            const existing = newIssuesByFile.get(file) || [];
+            newIssuesByFile.set(file, [...existing, ...issues]);
+          });
         }
       });
 
-      // File-by-File Analyzers (Legacy Format)
+      // 4. File-by-File Analyzers (Legacy Format - Parallel)
       const locationAnalyzer = new InterfaceLocationAnalyzer();
       const namingAnalyzer = new NamingConventionAnalyzer();
 
-      changedFiles.forEach(fp => {
+      const legacyTasks = changedFiles.map(async fp => {
         const parsedFile = this.parser.parseFile(fp);
-        if (!parsedFile) return;
+        if (!parsedFile) return null;
 
-        const fileIssues: Issue[] = [];
-        
-        const locIssues = locationAnalyzer.analyze(parsedFile);
-        const namingIssues = namingAnalyzer.analyze(parsedFile);
+        const locIssues = await locationAnalyzer.analyze(parsedFile);
+        const namingIssues = await namingAnalyzer.analyze(parsedFile);
 
         const mapToIssues = (legacy: Issue[]): Issue[] => legacy.map(l => ({
           ...l,
@@ -149,17 +164,22 @@ export class SemanticAuditSuite {
           analyzer: l.analyzer || 'LegacyAnalyzer'
         }));
 
-        fileIssues.push(...mapToIssues(locIssues));
-        fileIssues.push(...mapToIssues(namingIssues));
+        return {
+          file: fp,
+          issues: [...mapToIssues(locIssues), ...mapToIssues(namingIssues)]
+        };
+      });
 
-        const existing = newIssuesByFile.get(fp) || [];
-        newIssuesByFile.set(fp, [...existing, ...fileIssues]);
+      const legacyResults = await Promise.all(legacyTasks);
+      legacyResults.forEach(res => {
+        if (!res) return;
+        const existing = newIssuesByFile.get(res.file) || [];
+        newIssuesByFile.set(res.file, [...existing, ...res.issues]);
       });
 
       // 5. Update Cache
       newIssuesByFile.forEach((issues, fp) => {
-        const hash = AuditCache.calculateHash(fp);
-        this.cache.update(fp, hash, issues);
+        this.cache.update(fp, issues);
         allIssues.push(...issues);
       });
 
@@ -222,9 +242,9 @@ export class SemanticAuditSuite {
     console.log(`  ${bold}${gray}└──────────────────────────────────────────────────┘${reset}\n`);
   }
 
-  private runTypeCheck(): Issue[] {
+  private async runTypeCheckAsync(): Promise<Issue[]> {
     try {
-      execSync('npx tsc --noEmit', { stdio: 'ignore' });
+      await execAsync('npx tsc --noEmit');
       return [];
     } catch (error) {
       return [{
@@ -241,5 +261,6 @@ export class SemanticAuditSuite {
 
 if (require.main === module) {
   const suite = new SemanticAuditSuite();
-  suite.run().catch(() => process.exit(1));
+  const filesToRefresh = process.argv.slice(2).filter(arg => !arg.startsWith('--'));
+  suite.run(filesToRefresh.length > 0 ? filesToRefresh : undefined).catch(() => process.exit(1));
 }

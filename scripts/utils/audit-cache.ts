@@ -32,19 +32,38 @@ export class AuditCache {
     }
   }
 
-  public getCachedIssues(filePath: string, currentHash: string): Issue[] | null {
-    const entry = this.data[filePath];
-    if (entry && entry.hash === currentHash) {
-      return entry.issues;
+  public getCachedIssues(filePath: string): Issue[] | null {
+    try {
+      const entry = this.data[filePath];
+      if (!entry) return null;
+
+      const stats = fs.statSync(filePath);
+      if (entry.mtime === stats.mtimeMs) {
+        return entry.issues;
+      }
+
+      // If mtime changed, we still check the hash as a fallback (content might be same)
+      const currentHash = AuditCache.calculateHash(filePath);
+      if (entry.hash === currentHash) {
+        // Update mtime so next time we skip hash
+        entry.mtime = stats.mtimeMs;
+        return entry.issues;
+      }
+
+      return null;
+    } catch (e) {
+      return null;
     }
-    return null;
   }
 
-  public update(filePath: string, hash: string, issues: Issue[]): void {
+  public update(filePath: string, issues: Issue[]): void {
+    const stats = fs.statSync(filePath);
+    const hash = AuditCache.calculateHash(filePath);
+    
     this.data[filePath] = {
       hash,
       issues,
-      mtime: fs.statSync(filePath).mtimeMs
+      mtime: stats.mtimeMs
     };
   }
 

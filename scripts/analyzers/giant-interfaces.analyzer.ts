@@ -12,7 +12,7 @@ export class GiantInterfacesAnalyzer implements Analyzer {
   public readonly name = 'Interface Cohesion Analyzer (ISP)';
   public readonly isGlobal = false;
 
-  public analyze(context: AnalysisContext): AnalyzerResult {
+  public async analyze(context: AnalysisContext): Promise<AnalyzerResult> {
     const startTime = Date.now();
     const issues = this.analyzeProject(context.project, context.giantInterfaceRules, context.changedFiles);
 

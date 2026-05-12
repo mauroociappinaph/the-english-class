@@ -10,7 +10,7 @@ export class NamingConventionAnalyzer {
   private readonly AMBIGUOUS_NAMES = ['data', 'item', 'temp', 'obj', 'list', 'val'];
   private readonly BOOLEAN_PREFIXES = ['is', 'has', 'can', 'should', 'must', 'did', 'will'];
 
-  public analyze(parsedFile: ParsedFile): AnalyzerIssue[] {
+  public async analyze(parsedFile: ParsedFile): Promise<AnalyzerIssue[]> {
     const issues: AnalyzerIssue[] = [];
 
     parsedFile.declarations.forEach(decl => {

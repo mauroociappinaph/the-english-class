@@ -11,7 +11,7 @@ export class SecurityOwaspAnalyzer implements Analyzer {
   public readonly name = 'Security OWASP SCA Analyzer';
   public readonly isGlobal = true;
 
-  public analyze(context: AnalysisContext): AnalyzerResult {
+  public async analyze(context: AnalysisContext): Promise<AnalyzerResult> {
     const startTime = Date.now();
     const issues: Issue[] = [];
 

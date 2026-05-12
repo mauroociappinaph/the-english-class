@@ -9,7 +9,7 @@ import { AnalyzerIssue } from '../types/analyzer';
 export class InterfaceLocationAnalyzer {
   private readonly ALLOWED_FOLDERS = ['types', 'interfaces', 'domain'];
 
-  public analyze(parsedFile: ParsedFile): AnalyzerIssue[] {
+  public async analyze(parsedFile: ParsedFile): Promise<AnalyzerIssue[]> {
     const issues: AnalyzerIssue[] = [];
     const filePath = parsedFile.filePath.toLowerCase();
     

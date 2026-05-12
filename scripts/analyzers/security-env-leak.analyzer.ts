@@ -20,7 +20,7 @@ export class SecurityEnvLeakAnalyzer implements Analyzer {
     { name: 'Generic Secret Assignment', regex: /(password|secret|token|key|api_key|auth_token)\s*[:=]\s*['"`][a-zA-Z0-9_\-]{12,}['"`]/gi }
   ];
 
-  public analyze(context: AnalysisContext): AnalyzerResult {
+  public async analyze(context: AnalysisContext): Promise<AnalyzerResult> {
     const startTime = Date.now();
     const issues: Issue[] = [];
 

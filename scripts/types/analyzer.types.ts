@@ -100,7 +100,7 @@ export interface AuditStats {
 export interface Analyzer {
   name: string;
   isGlobal: boolean; // TRUE: needs whole project. FALSE: can be run incrementally.
-  analyze(context: AnalysisContext): AnalyzerResult;
+  analyze(context: AnalysisContext): Promise<AnalyzerResult>;
 }
 
 /**
