@@ -12,9 +12,9 @@ export function FeedbackSummary({ analysis }: FeedbackSummaryProps) {
     >
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <StatCard label="CEFR Level" value={analysis.overallLevel} color="blue" />
-        <StatCard label="Vocabulary" value={`${analysis.vocabularyScore}%`} color="purple" />
-        <StatCard label="Accuracy" value={`${analysis.accuracyScore}%`} color="green" />
+        <StatCard label="CEFR Level" value={analysis.cefrLevel} color="blue" />
+        <StatCard label="Vocabulary" value={`${analysis.metrics.vocabulary}%`} color="purple" />
+        <StatCard label="Accuracy" value={`${analysis.metrics.grammar}%`} color="green" />
       </div>
 
       {/* Feedback Section */}

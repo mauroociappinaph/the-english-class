@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { JournalService } from '../JournalService';
 import { IJournalRepository } from '@/backend/domain/repositories/IJournalRepository';
 import { IJournalAnalyzer } from '@/backend/domain/interfaces/IJournalAnalyzer';
-import { JournalEntry } from '@/shared/types/journal';
+import { JournalEntry, Correction, ErrorType } from "@/shared/types/journal";
 
 describe('JournalService', () => {
   let mockRepository: IJournalRepository;
@@ -55,21 +55,20 @@ describe('JournalService', () => {
       } as JournalEntry;
       
       const mockAnalysis = {
-        overallLevel: 'A1',
-        vocabularyScore: 40,
-        accuracyScore: 50,
+        cefrLevel: 'A1',
+        metrics: {
+          grammar: 40,
+          vocabulary: 50,
+          coherence: 60
+        },
         corrections: [
-          { 
-            type: 'GRAMMAR', 
-            originalText: 'has', 
-            suggestedText: 'have', 
-            explanation: 'Con "I" se usa "have".' 
-          }
+          { type: 'GRAMMAR' as ErrorType, originalText: 'cat', suggestedText: 'dog', explanation: 'why' }
         ],
         recurringErrors: [],
-        feedback: 'Keep practicing your verbs!',
+        feedback: 'good',
         suggestedVocab: ['feline']
       };
+
 
       (mockRepository.findById as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(mockEntry);
       (mockAnalyzer.analyze as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(mockAnalysis);

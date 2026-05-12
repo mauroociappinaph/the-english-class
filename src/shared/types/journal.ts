@@ -32,14 +32,18 @@ export interface JournalEntry {
 }
 
 export interface LinguisticAnalysis {
-  overallLevel: string;
-  vocabularyScore: number;
-  accuracyScore: number;
+  cefrLevel: string;
+  metrics: {
+    grammar: number;
+    vocabulary: number;
+    coherence: number;
+  };
   corrections: Omit<Correction, 'id' | 'entryId' | 'isFixed'>[];
   recurringErrors: string[];
   feedback: string;
   suggestedVocab: string[];
 }
+
 
 export interface CreateJournalEntryDto {
   title?: string;

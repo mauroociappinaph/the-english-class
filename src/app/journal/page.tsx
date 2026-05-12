@@ -46,12 +46,13 @@ export default function JournalPage() {
       // 2. Analyze
       const result = await analyzeJournalEntry(entry.id);
       if (result && result.metadata) {
-        const metadata = result.metadata as Record<string, unknown>;
+        const metadata = result.metadata as Record<string, any>;
         setAnalysis({
           cefrLevel: result.cefrLevel || 'N/A',
-          metrics: (metadata.metrics as { grammar: number; vocabulary: number; coherence: number }) || { grammar: 0, vocabulary: 0, coherence: 0 },
-          feedback: (metadata.feedback as string) || '',
-          suggestedVocab: (metadata.suggestedVocab as string[]) || [],
+          metrics: metadata?.metrics || { grammar: 0, vocabulary: 0, coherence: 0 },
+          feedback: metadata?.feedback || '',
+          suggestedVocab: metadata?.suggestedVocab || [],
+          recurringErrors: (metadata?.recurringErrors as string[]) || [],
           corrections: result.corrections || []
         });
       }

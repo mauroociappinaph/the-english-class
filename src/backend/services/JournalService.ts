@@ -27,13 +27,12 @@ export class JournalService {
 
     // 3. Update entry with analysis metadata
     const updated = await this.repository.update(id, {
-      cefrLevel: analysis.overallLevel,
+      cefrLevel: analysis.cefrLevel,
       metadata: {
-        vocabularyScore: analysis.vocabularyScore,
-        accuracyScore: analysis.accuracyScore,
+        metrics: analysis.metrics,
         recurringErrors: analysis.recurringErrors,
-        feedback: analysis.feedback,
-        suggestedVocab: analysis.suggestedVocab
+        suggestedVocab: analysis.suggestedVocab,
+        feedback: analysis.feedback
       }
     });
 

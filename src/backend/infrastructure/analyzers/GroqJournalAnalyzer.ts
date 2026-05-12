@@ -18,9 +18,12 @@ ${text}
 
 Schema:
 {
-  "overallLevel": "CEFR (A1-C2)",
-  "vocabularyScore": 0 to 100,
-  "accuracyScore": 0 to 100,
+  "cefrLevel": "CEFR (A1-C2)",
+  "metrics": {
+    "grammar": 0 to 100,
+    "vocabulary": 0 to 100,
+    "coherence": 0 to 100
+  },
   "corrections": [
     {
       "type": "GRAMMAR | VOCABULARY | SPELLING | PUNCTUATION | STYLE",
@@ -48,9 +51,8 @@ Schema:
     const response = JSON.parse(completion.choices[0]?.message?.content || "{}");
     
     return {
-      overallLevel: response.overallLevel || "B1",
-      vocabularyScore: response.vocabularyScore || 0,
-      accuracyScore: response.accuracyScore || 0,
+      cefrLevel: response.cefrLevel || "B1",
+      metrics: response.metrics || { grammar: 0, vocabulary: 0, coherence: 0 },
       corrections: response.corrections || [],
       recurringErrors: response.recurringErrors || [],
       feedback: response.feedback || "",
