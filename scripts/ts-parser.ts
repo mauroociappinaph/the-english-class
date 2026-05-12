@@ -15,10 +15,31 @@ export class TSParser {
   }
 
   /**
-   * Load all relevant files into the project context for cross-file analysis
+   * Load all relevant files into the project context for cross-file analysis.
+   * If files are already loaded, it skips them.
    */
   public loadProject(files: string[]) {
-    this.project.addSourceFilesAtPaths(files);
+    const existingPaths = new Set(this.project.getSourceFiles().map(sf => sf.getFilePath()));
+    const newFiles = files.filter(f => !existingPaths.has(f));
+    
+    if (newFiles.length > 0) {
+      this.project.addSourceFilesAtPaths(newFiles);
+      this.project.resolveSourceFileDependencies();
+    }
+  }
+
+  /**
+   * Refreshes specific files from the filesystem.
+   */
+  public async refreshFiles(files: string[]) {
+    for (const filePath of files) {
+      const sourceFile = this.project.getSourceFile(filePath);
+      if (sourceFile) {
+        await sourceFile.refreshFromFileSystem();
+      } else {
+        this.project.addSourceFileAtPath(filePath);
+      }
+    }
     this.project.resolveSourceFileDependencies();
   }
 

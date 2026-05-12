@@ -29,6 +29,7 @@ export class SemanticAuditSuite {
   private readonly parser: TSParser;
   private readonly reporter: ReportGenerator;
   private readonly cache: AuditCache;
+  private readonly graph: DependencyGraph;
 
   constructor() {
     this.projectRoot = process.cwd();
@@ -36,6 +37,7 @@ export class SemanticAuditSuite {
     this.parser = new TSParser();
     this.reporter = new ReportGenerator();
     this.cache = new AuditCache(this.projectRoot);
+    this.graph = new DependencyGraph(this.projectRoot);
   }
 
   /**
@@ -48,16 +50,22 @@ export class SemanticAuditSuite {
     
     try {
       const t0 = Date.now();
-      // 0. Smart Scan & Load
-      const allFiles = await this.scanner.scan(filesToRefresh);
-      const filePaths = allFiles
-        .filter(f => {
-          const relativePath = path.relative(this.projectRoot, f.path);
-          return !auditConfig.ignorePaths.some(ignore => relativePath.startsWith(ignore));
-        })
-        .map(f => f.path);
       
-      this.parser.loadProject(filePaths);
+      if (filesToRefresh && filesToRefresh.length > 0) {
+        // Smart refresh
+        await this.parser.refreshFiles(filesToRefresh);
+      } else {
+        // 0. Smart Scan & Load
+        const allFiles = await this.scanner.scan(filesToRefresh);
+        const filePaths = allFiles
+          .filter(f => {
+            const relativePath = path.relative(this.projectRoot, f.path);
+            return !auditConfig.ignorePaths.some(ignore => relativePath.startsWith(ignore));
+          })
+          .map(f => f.path);
+        
+        this.parser.loadProject(filePaths);
+      }
       logger.info(`⏱️ Load Project: ${Date.now() - t0}ms`);
 
       const loadedFilePaths = this.parser.project.getSourceFiles()
@@ -99,11 +107,11 @@ export class SemanticAuditSuite {
         deduplicationRules: auditConfig.rules.deduplication,
         startTime,
         changedFiles: changedFiles.length > 0 ? changedFiles : loadedFilePaths,
-        graph: new DependencyGraph(this.projectRoot)
+        graph: this.graph
       };
 
       const t2 = Date.now();
-      context.graph.build(this.parser.project);
+      this.graph.build(this.parser.project);
       logger.info(`⏱️ Build Graph: ${Date.now() - t2}ms`);
 
       // 3. Execute Modern Analyzers & Type Check (Parallel)
