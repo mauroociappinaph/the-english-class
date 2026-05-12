@@ -40,7 +40,8 @@ export class SemanticAuditSuite {
   private readonly cache: AuditCache;
 
 
-  public async run(): Promise<void> {
+  public async run(): Promise<Issue[]> {
+
     const startTime = Date.now();
     logger.info('🚀 Starting Semantic Architecture Audit...');
 
@@ -155,13 +156,11 @@ export class SemanticAuditSuite {
 
       this.reporter.generate(auditConfig.reporting.outputDir);
 
-      // 5. Final Summary
       this.showSummary(allIssues, startTime);
 
-      const criticals = allIssues.filter(i => i.severity === 'HIGH').length;
-      process.exit(criticals > 0 ? 1 : 0);
-
+      return allIssues;
     } catch (error) {
+
       const err = error as Error;
       logger.error('❌ Global Audit Error:', { message: err.message, stack: err.stack });
       process.exit(1);
@@ -194,5 +193,9 @@ export class SemanticAuditSuite {
 
 if (require.main === module) {
   const suite = new SemanticAuditSuite();
-  suite.run();
+  suite.run().then(issues => {
+    const criticals = issues.filter(i => i.severity === 'HIGH').length;
+    process.exit(criticals > 0 ? 1 : 0);
+  }).catch(() => process.exit(1));
 }
+

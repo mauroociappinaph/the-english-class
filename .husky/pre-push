@@ -1,3 +1,1 @@
-npx tsc --noEmit
-npx tsx scripts/architecture-audit.ts
-
+npx tsx src/scripts/utils/git-hooks.ts pre-push
