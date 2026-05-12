@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1.0",
   "metadata": {
-    "generatedAt": "2026-05-12T02:44:27.002Z",
+    "generatedAt": "2026-05-12T02:49:29.962Z",
     "project": "TheEnglishClass",
     "environment": "development",
     "nodeVersion": "v25.4.0"
@@ -12,12 +12,12 @@
     "warnings": 2,
     "suggestions": 0,
     "score": 97,
-    "durationMs": 1076013
+    "durationMs": 4324
   },
   "results": [],
   "allIssues": [
     {
-      "file": "src/scripts/tests/duplication-sample.ts",
+      "file": "scripts/tests/duplication-sample.ts",
       "line": 5,
       "severity": "MEDIUM",
       "explanation": "Dead Export: FunctionDeclaration \"processUser\" is exported but never used outside this module.",
@@ -25,7 +25,7 @@
       "analyzer": "Dead Code Analyzer"
     },
     {
-      "file": "src/scripts/tests/duplication-sample.ts",
+      "file": "scripts/tests/duplication-sample.ts",
       "line": 7,
       "severity": "MEDIUM",
       "explanation": "Dead Export: FunctionDeclaration \"processAdmin\" is exported but never used outside this module.",

@@ -1,1 +1,1 @@
-npx tsx src/scripts/utils/git-hooks.ts pre-commit
+npx tsx scripts/utils/git-hooks.ts pre-commit

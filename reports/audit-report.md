@@ -4,7 +4,7 @@
 
 > **Audit Status:** ✅ EXCELLENT
 > **Quality Score:** `97/100`
-> **Timestamp:** 5/11/2026, 11:44:27 PM
+> **Timestamp:** 5/11/2026, 11:49:29 PM
 
 ### 📋 Contents
 
@@ -21,7 +21,7 @@
 | Critical Violations | **0** | ✅ Passed |
 | Architectural Warnings | **2** | ⚠️ Technical Debt |
 | Efficiency Suggestions | **0** | 🟢 Optimal |
-| Analysis Duration | `1076013ms` | 🚀 High Performance |
+| Analysis Duration | `4324ms` | 🚀 High Performance |
 
 ---
 
@@ -31,8 +31,8 @@
 
 | Severity | File | Line | Explanation | Suggestion |
 | :---: | :--- | :---: | :--- | :--- |
-| 🟡 **MEDIUM** | [`duplication-sample.ts`](/Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/tests/duplication-sample.ts) | `5` | Dead Export: FunctionDeclaration "processUser" is exported but never used outside this module. | _Remove the export or the entire declaration if it's not used locally either._ |
-| 🟡 **MEDIUM** | [`duplication-sample.ts`](/Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/tests/duplication-sample.ts) | `7` | Dead Export: FunctionDeclaration "processAdmin" is exported but never used outside this module. | _Remove the export or the entire declaration if it's not used locally either._ |
+| 🟡 **MEDIUM** | [`duplication-sample.ts`](/Users/mauroociappina/Desktop/TheEnglishClass/scripts/tests/duplication-sample.ts) | `5` | Dead Export: FunctionDeclaration "processUser" is exported but never used outside this module. | _Remove the export or the entire declaration if it's not used locally either._ |
+| 🟡 **MEDIUM** | [`duplication-sample.ts`](/Users/mauroociappina/Desktop/TheEnglishClass/scripts/tests/duplication-sample.ts) | `7` | Dead Export: FunctionDeclaration "processAdmin" is exported but never used outside this module. | _Remove the export or the entire declaration if it's not used locally either._ |
 
 ---
 *Generated automatically by the Semantic Audit Suite. Quality is not an act, it is a habit.*

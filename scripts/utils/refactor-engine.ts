@@ -8,7 +8,7 @@ import path from 'path';
  * V3: Cross-file extraction and automatic import management.
  */
 export class RefactorEngine {
-  private readonly SHARED_HELPERS_REL_PATH = 'src/scripts/generated/shared-helpers';
+  private readonly SHARED_HELPERS_REL_PATH = 'scripts/generated/shared-helpers';
 
   constructor(private project: Project) {}
 
