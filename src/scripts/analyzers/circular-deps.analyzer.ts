@@ -102,32 +102,56 @@ export class CircularDepsAnalyzer implements Analyzer {
 
   private checkLayerIntegrity(sourceFiles: SourceFile[]): Issue[] {
     const issues: Issue[] = [];
+    const forbiddenExternalInCore = ['@prisma/client', 'groq-sdk', 'better-sqlite3'];
+
     sourceFiles.forEach(sourceFile => {
       const filePath = sourceFile.getFilePath();
       const relativePath = path.relative(this.projectRoot, filePath);
+      const imports = sourceFile.getImportDeclarations();
 
-      // Rule: Domain should never import from Infrastructure
+      // --- Rule: Domain Purity ---
       if (relativePath.includes('/domain/')) {
-        const imports = sourceFile.getImportDeclarations();
         imports.forEach(imp => {
           const modulePath = imp.getModuleSpecifierValue();
-          if (modulePath && (modulePath.includes('/infrastructure/') || modulePath.includes('@/infrastructure'))) {
+          
+          // 1. No Infra or Services in Domain
+          if (modulePath && (modulePath.includes('/infrastructure/') || modulePath.includes('@/infrastructure') || modulePath.includes('/services/') || modulePath.includes('@/services'))) {
+            issues.push(this.createLayerViolation(filePath, imp, 'Domain', 'Infrastructure/Services'));
+          }
 
-            issues.push({
-              file: filePath,
-              line: imp.getStartLineNumber(),
-              severity: 'HIGH',
-              explanation: `Architectural Violation: Domain layer "${relativePath}" imports from Infrastructure!`,
-              suggestion: 'Ensure the Domain layer remains pure. Use interfaces and dependency injection.',
-              analyzer: 'CircularDepsAnalyzer'
-            });
+          // 2. No external implementation libraries in Domain
+          if (forbiddenExternalInCore.some(lib => modulePath.includes(lib))) {
+            issues.push(this.createExternalViolation(filePath, imp, 'Domain', modulePath));
           }
         });
       }
 
-      // Rule: DTOs should be leaf nodes (minimal dependencies)
+      // --- Rule: Service Orchestration ---
+      if (relativePath.includes('/services/')) {
+        imports.forEach(imp => {
+          const modulePath = imp.getModuleSpecifierValue();
+
+          // 1. Services should not depend on Infrastructure directly (Goal: Decoupling)
+          if (modulePath && (modulePath.includes('/infrastructure/') || modulePath.includes('@/infrastructure'))) {
+            issues.push({
+              file: filePath,
+              line: imp.getStartLineNumber(),
+              severity: 'HIGH',
+              explanation: `Architectural Violation: Service layer "${relativePath}" imports directly from Infrastructure!`,
+              suggestion: 'Use the Service Facade pattern or Repository interfaces defined in Domain.',
+              analyzer: 'CircularDepsAnalyzer'
+            });
+          }
+
+          // 2. No external implementation libraries in Services
+          if (forbiddenExternalInCore.some(lib => modulePath.includes(lib))) {
+            issues.push(this.createExternalViolation(filePath, imp, 'Service', modulePath));
+          }
+        });
+      }
+
+      // --- Rule: DTOs Purity ---
       if (relativePath.includes('.dto.ts') || relativePath.includes('/dtos/')) {
-        const imports = sourceFile.getImportDeclarations();
         if (imports.length > 5) {
           issues.push({
             file: filePath,
@@ -141,5 +165,27 @@ export class CircularDepsAnalyzer implements Analyzer {
       }
     });
     return issues;
+  }
+
+  private createLayerViolation(file: string, imp: import('ts-morph').ImportDeclaration, layer: string, target: string): Issue {
+    return {
+      file,
+      line: imp.getStartLineNumber(),
+      severity: 'HIGH',
+      explanation: `Architectural Violation: ${layer} layer imports from ${target}!`,
+      suggestion: `Ensure the ${layer} layer remains pure. Use interfaces and dependency injection.`,
+      analyzer: 'CircularDepsAnalyzer'
+    };
+  }
+
+  private createExternalViolation(file: string, imp: import('ts-morph').ImportDeclaration, layer: string, lib: string): Issue {
+    return {
+      file,
+      line: imp.getStartLineNumber(),
+      severity: 'HIGH',
+      explanation: `Infrastructure Leak: ${layer} layer depends on external library "${lib}"!`,
+      suggestion: `Abstract "${lib}" behind an interface in the Domain layer and implement it in Infrastructure.`,
+      analyzer: 'CircularDepsAnalyzer'
+    };
   }
 }
