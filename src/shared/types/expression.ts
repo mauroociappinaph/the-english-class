@@ -46,6 +46,12 @@ export interface Expression {
     presentPerfect: Tense;
     future: Tense;
   } | null;
+  wordFamilies: {
+    noun?: string[];
+    verb?: string[];
+    adjective?: string[];
+    adverb?: string[];
+  } | null;
   examples: Example[];
   status?: 'pending' | 'learning' | 'mastered' | null;
   difficulty?: number;

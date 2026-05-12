@@ -7,6 +7,7 @@ import { submitReview } from "@/app/actions";
 import { StudyPerformance } from "@/frontend/types/store";
 import { useState } from "react";
 import { getCefrStyle } from "./cefr-styles";
+import { WordFamilyList } from "./WordFamilyList";
 
 const performanceConfig: { value: StudyPerformance; label: string; emoji: string; color: string; sublabel: string }[] = [
   { value: "hard", label: "Hard", emoji: "😤", color: "bg-red-500/20 text-red-400 border-red-500/30 hover:bg-red-500/30", sublabel: "Again soon" },
@@ -114,6 +115,12 @@ export function ReviewSession() {
                   {currentExpression.meaning}
                 </p>
               </div>
+              {currentExpression.wordFamilies && (
+                <>
+                  <div className="w-full h-px bg-white/10" />
+                  <WordFamilyList families={currentExpression.wordFamilies} />
+                </>
+              )}
               {currentExpression.examples.length > 0 && (
                 <>
                   <div className="w-full h-px bg-white/10" />

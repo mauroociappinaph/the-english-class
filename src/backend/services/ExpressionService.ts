@@ -53,6 +53,7 @@ export class ExpressionService {
           presentPerfect: result.tenses?.presentPerfect || { text: "", translation: "" },
           future: result.tenses?.future || { text: "", translation: "" }
         },
+        wordFamilies: result.wordFamilies || null,
         examples: (result.examples || []).map((ex: GroqExample) => ({
           text: ex.text,
           translation: ex.translation,

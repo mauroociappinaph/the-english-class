@@ -47,7 +47,13 @@ Schema:
       "category": "cotidiano", 
       "explanation": "English explanation" 
     }
-  ]
+  ],
+  "wordFamilies": {
+    "noun": ["related noun"],
+    "verb": ["related verb"],
+    "adjective": ["related adjective"],
+    "adverb": ["related adverb"]
+  }
 }`;
 
     const completion = await groq.chat.completions.create({
