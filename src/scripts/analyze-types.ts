@@ -1,7 +1,9 @@
 import path from 'path';
 import { FileScanner } from './file-scanner';
 import { TSParser } from './ts-parser';
+import { execSync } from 'child_process';
 import { ReportGenerator } from './reporting/report-generator';
+
 import { auditConfig } from './config';
 import { Issue, Analyzer, AnalysisContext } from './types/analyzer.types';
 import { logger } from './logger';
@@ -43,7 +45,14 @@ export class SemanticAuditSuite {
   public async run(filesToRefresh?: string[]): Promise<Issue[]> {
     const startTime = Date.now();
     
+    // 0. Type Check Gate
+    const typeErrors = this.runTypeCheck();
+    if (typeErrors.length > 0) {
+      logger.error('❌ Type Check failed. Project has compilation errors.');
+    }
+
     try {
+
       // 1. Scan & Refresh
       if (filesToRefresh) {
         filesToRefresh.forEach(fp => {
@@ -104,8 +113,9 @@ export class SemanticAuditSuite {
       context.graph.build(this.parser.project);
 
       // 4. Execute Analyzers
-      const allIssues: Issue[] = [...cachedIssues];
+      const allIssues: Issue[] = [...cachedIssues, ...typeErrors];
       const projectAnalyzers: Analyzer[] = getProjectAnalyzers();
+
       const newIssuesByFile = new Map<string, Issue[]>();
 
       projectAnalyzers.forEach(analyzer => {
@@ -182,7 +192,23 @@ export class SemanticAuditSuite {
     console.log('='.repeat(50) + '\n');
 
   }
+  private runTypeCheck(): Issue[] {
+    try {
+      execSync('npx tsc --noEmit', { stdio: 'ignore' });
+      return [];
+    } catch (error) {
+      return [{
+        file: 'Project Root',
+        line: 1,
+        severity: 'HIGH',
+        explanation: 'Critical Type Error: The project does not compile. Semantic analysis may be inaccurate.',
+        suggestion: 'Run "npx tsc --noEmit" to identify and fix compilation errors.',
+        analyzer: 'TypeCheckGate'
+      }];
+    }
+  }
 }
+
 
 if (require.main === module) {
   const suite = new SemanticAuditSuite();

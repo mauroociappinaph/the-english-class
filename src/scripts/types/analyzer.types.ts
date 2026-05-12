@@ -6,7 +6,7 @@ import { DependencyGraph } from '../utils/dependency-graph';
  */
 export type Severity = 'HIGH' | 'MEDIUM' | 'LOW';
 
-interface GiantInterfaceRules {
+export interface GiantInterfaceRules {
   maxProperties: number;
   maxNesting: number;
   complexityThreshold: number;

@@ -72,8 +72,11 @@ export class DeadCodeAnalyzer implements Analyzer {
         const name = nameNode.getText();
         if (reservedNames.includes(name)) return;
 
+        if (!Node.isIdentifier(nameNode)) return;
+
         const references = nameNode.findReferencesAsNodes();
-        const externalReferences = references.filter(ref => {
+        const externalReferences = references.filter((ref: Node) => {
+
           const refSourceFile = ref.getSourceFile();
           return refSourceFile.getFilePath() !== filePath;
         });

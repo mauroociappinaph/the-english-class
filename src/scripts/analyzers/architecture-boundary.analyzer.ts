@@ -1,6 +1,7 @@
 import path from 'path';
 import { Issue, Analyzer, AnalysisContext, AnalyzerResult } from '../types/analyzer.types';
-import { GraphNode } from '../utils/dependency-graph';
+import { GraphNode } from '../types/graph.types';
+
 
 
 /**
