@@ -47,12 +47,7 @@ export class ExpressionService {
           commonMistake: result.usageTips?.commonMistake || "",
           context: result.usageTips?.context || ""
         },
-        tenses: {
-          present: result.tenses?.present || { text: "", translation: "" },
-          past: result.tenses?.past || { text: "", translation: "" },
-          presentPerfect: result.tenses?.presentPerfect || { text: "", translation: "" },
-          future: result.tenses?.future || { text: "", translation: "" }
-        },
+        tenses: result.tenses || null,
         wordFamilies: result.wordFamilies || null,
         phrasalVerbDetails: result.phrasalVerbDetails || null,
         examples: (result.examples || []).map((ex: GroqExample) => ({
