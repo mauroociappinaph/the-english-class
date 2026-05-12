@@ -5,9 +5,11 @@ import path from 'path';
 /**
  * RefactorEngine: The automated architect.
  * Handles complex AST transformations for deduplication.
- * V2: Includes Free Variable Analysis for safe extraction.
+ * V3: Cross-file extraction and automatic import management.
  */
 export class RefactorEngine {
+  private readonly SHARED_HELPERS_REL_PATH = 'src/scripts/generated/shared-helpers';
+
   constructor(private project: Project) {}
 
   public async refactorCluster(nodes: Node[]): Promise<RefactorResult> {
@@ -19,16 +21,13 @@ export class RefactorEngine {
         return NormalizationEngine.getTemplate(body || n);
       });
 
-      // 1. Identify Structural Parameters (where tokens differ)
       const structuralParams = this.identifyStructuralParameters(templates);
-      
-      // 2. Identify Shared Free Variables (defined outside ALL parent functions)
       const freeVars = this.identifySharedFreeVariables(nodes);
       
       const helperName = `sharedHelper_${templates[0].hash.substring(0, 6).replace(/-/g, '_')}`;
-      const filesChanged: string[] = [];
+      const filesChanged = new Set<string>();
 
-      // 3. Create a "Template Source File" to generate the helper
+      // 1. Create a "Template Source File" to generate the helper
       const firstBody = this.getFunctionBody(nodes[0]) || nodes[0];
       const tempFile = this.project.createSourceFile('temp_refactor.ts', firstBody.getText(), { overwrite: true });
       
@@ -48,24 +47,27 @@ export class RefactorEngine {
       }
       this.project.removeSourceFile(tempFile);
 
-      // 4. Prepare Parameter List
+      // 2. Prepare Parameter List
       const helperParams = [
         ...freeVars.map(v => ({ name: v, type: 'any' })),
         ...structuralParams.map(idx => ({ name: `param${idx}`, type: 'any' }))
       ];
 
-      const sourceFile = nodes[0].getSourceFile();
-      
-      // 5. Add helper
-      sourceFile.addFunction({
-        name: helperName,
-        parameters: helperParams,
-        statements: helperBody,
-        isExported: false
-      });
+      // 3. Add helper to SHARED file (V3)
+      const sharedFile = this.getSharedHelpersFile();
+      if (!sharedFile.getFunction(helperName)) {
+        sharedFile.addFunction({
+          name: helperName,
+          parameters: helperParams,
+          statements: helperBody,
+          isExported: true
+        });
+        filesChanged.add(sharedFile.getFilePath());
+      }
 
-      // 6. Replace bodies and update call sites
+      // 4. Replace bodies and update call sites in original files
       nodes.forEach((node, i) => {
+        const sourceFile = node.getSourceFile();
         const body = this.getFunctionBody(node);
         const args = [
           ...freeVars,
@@ -73,17 +75,54 @@ export class RefactorEngine {
         ];
         const call = `${helperName}(${args.join(', ')})`;
         
+        // Update imports
+        this.addImportToSourceFile(sourceFile, helperName);
+        
         if (body) {
           body.replaceWithText(`{ ${call}; }`);
         } else {
           node.replaceWithText(call);
         }
+        
+        filesChanged.add(sourceFile.getFilePath());
       });
       
-      filesChanged.push(sourceFile.getFilePath());
-      return { success: true, message: `Successfully extracted ${helperName} with ${freeVars.length} free variables`, filesChanged };
+      return { 
+        success: true, 
+        message: `Successfully extracted ${helperName} to shared library.`, 
+        filesChanged: Array.from(filesChanged) 
+      };
     } catch (error: any) {
       return { success: false, message: error.message, filesChanged: [] };
+    }
+  }
+
+  private getSharedHelpersFile(): SourceFile {
+    const fullPath = path.join(process.cwd(), this.SHARED_HELPERS_REL_PATH + '.ts');
+    return this.project.getSourceFile(fullPath) || this.project.addSourceFileAtPath(fullPath);
+  }
+
+  private addImportToSourceFile(sourceFile: SourceFile, helperName: string) {
+    const sharedPath = path.join(process.cwd(), this.SHARED_HELPERS_REL_PATH);
+    if (sourceFile.getFilePath() === sharedPath + '.ts') return;
+
+    const sourceDir = path.dirname(sourceFile.getFilePath());
+    let relativePath = path.relative(sourceDir, sharedPath);
+    
+    if (!relativePath.startsWith('.')) {
+      relativePath = './' + relativePath;
+    }
+
+    const existingImport = sourceFile.getImportDeclaration(d => d.getModuleSpecifierValue() === relativePath);
+    if (existingImport) {
+      if (!existingImport.getNamedImports().some(n => n.getName() === helperName)) {
+        existingImport.addNamedImport(helperName);
+      }
+    } else {
+      sourceFile.addImportDeclaration({
+        namedImports: [helperName],
+        moduleSpecifier: relativePath
+      });
     }
   }
 
@@ -111,17 +150,10 @@ export class RefactorEngine {
   }
 
   private identifySharedFreeVariables(nodes: Node[]): string[] {
-    // A shared free variable must be:
-    // 1. Used in ALL nodes.
-    // 2. Defined outside ALL nodes' parent function scope.
-    
     const nodeVars = nodes.map(node => this.findFreeVariablesInNode(node));
-    
-    // Intersection of all sets
     const shared = nodeVars.reduce((acc, current) => {
       return new Set([...acc].filter(x => current.has(x)));
     });
-
     return Array.from(shared);
   }
 
@@ -138,7 +170,6 @@ export class RefactorEngine {
       }
     });
 
-    // Parent function parameters are NOT free variables, they are structural context
     const parentParams = new Set<string>();
     if (Node.isFunctionLikeDeclaration(node)) {
       node.getParameters().forEach(p => parentParams.add(p.getName()));
@@ -162,7 +193,6 @@ export class RefactorEngine {
 
       const declarations = symbol.getDeclarations();
       const isExternal = declarations.every(decl => {
-        // Must be outside the PARENT function to be a truly "free" variable
         return decl.getStart() < node.getStart() || decl.getEnd() > node.getEnd();
       });
 

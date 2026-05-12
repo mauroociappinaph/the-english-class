@@ -35,41 +35,37 @@ export class SemanticAuditSuite {
     this.cache = new AuditCache(this.projectRoot);
   }
 
+  /**
+   * Runs the audit.
+   * @param filesToRefresh If provided, performs an incremental audit on these files only.
+   */
   public async run(filesToRefresh?: string[]): Promise<Issue[]> {
     const startTime = Date.now();
     this.reporter.clearIssues();
     
     // 0. Type Check Gate
+    // In pre-commit (incremental), we might want to skip this if it's too slow, 
+    // but for now we keep it for safety.
     const typeErrors = this.runTypeCheck();
     if (typeErrors.length > 0) {
       logger.error('❌ Type Check failed. Project has compilation errors.');
     }
 
     try {
-      // 1. Scan & Refresh
-      if (filesToRefresh) {
-        filesToRefresh.forEach(fp => {
-          const sf = this.parser.project.getSourceFile(fp);
-          if (sf) sf.refreshFromFileSystemSync();
-          else this.parser.project.addSourceFileAtPath(fp);
-        });
-      } else {
-        const allFiles = await this.scanner.scan();
-        const filePaths = allFiles
-          .filter(f => {
-            const relativePath = path.relative(this.projectRoot, f.path);
-            return !auditConfig.ignorePaths.some(ignore => relativePath.startsWith(ignore));
-          })
-          .map(f => f.path);
-        
-        this.parser.loadProject(filePaths);
-      }
+      // 1. Smart Scan & Load
+      const allFiles = await this.scanner.scan(filesToRefresh);
+      const filePaths = allFiles
+        .filter(f => {
+          const relativePath = path.relative(this.projectRoot, f.path);
+          return !auditConfig.ignorePaths.some(ignore => relativePath.startsWith(ignore));
+        })
+        .map(f => f.path);
+      
+      this.parser.loadProject(filePaths);
 
-      const filePaths = this.parser.project.getSourceFiles()
+      const loadedFilePaths = this.parser.project.getSourceFiles()
         .map(sf => sf.getFilePath())
-        .filter(fp => {
-          return !fp.includes('node_modules') && !fp.endsWith('.d.ts');
-        });
+        .filter(fp => !fp.includes('node_modules') && !fp.endsWith('.d.ts'));
       
       this.cache.load();
 
@@ -77,8 +73,12 @@ export class SemanticAuditSuite {
       const changedFiles: string[] = filesToRefresh || [];
       const cachedIssues: Issue[] = [];
 
-      filePaths.forEach(fp => {
-        if (changedFiles.includes(fp)) return;
+      loadedFilePaths.forEach(fp => {
+        // If we forced these files (e.g. staged), we MUST re-analyze them.
+        if (filesToRefresh?.includes(fp)) {
+          changedFiles.push(fp);
+          return;
+        }
         
         const hash = AuditCache.calculateHash(fp);
         const cached = this.cache.getCachedIssues(fp, hash);
@@ -87,7 +87,9 @@ export class SemanticAuditSuite {
       });
 
       if (!filesToRefresh) {
-        logger.info(`🔄 Initial Analysis: ${changedFiles.length} files changed, ${filePaths.length - changedFiles.length} reused from cache.`);
+        logger.info(`🔄 Full Analysis: ${changedFiles.length} files changed/new, ${loadedFilePaths.length - changedFiles.length} reused from cache.`);
+      } else {
+        logger.info(`🚀 Incremental Analysis: Focusing on ${changedFiles.length} files.`);
       }
 
       const context: AnalysisContext = {
@@ -110,10 +112,12 @@ export class SemanticAuditSuite {
       const newIssuesByFile = new Map<string, Issue[]>();
 
       projectAnalyzers.forEach(analyzer => {
+        // Run global analyzers or if there are changed files for local analyzers
         if (analyzer.isGlobal || changedFiles.length > 0) {
           const result = analyzer.analyze(context);
           
           if (analyzer.isGlobal) {
+            // Global analyzers return issues for many files or the project
             allIssues.push(...result.issues);
           } else {
             const grouped = IssueUtils.groupByFile(result.issues);
@@ -138,7 +142,6 @@ export class SemanticAuditSuite {
         const locIssues = locationAnalyzer.analyze(parsedFile);
         const namingIssues = namingAnalyzer.analyze(parsedFile);
 
-        // Map Legacy Issues to Modern Issue Format
         const mapToIssues = (legacy: Issue[]): Issue[] => legacy.map(l => ({
           ...l,
           file: fp,

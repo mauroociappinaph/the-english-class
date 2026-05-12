@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { Stats } from 'fs';
+import { execSync } from 'child_process';
 import { FileMetadata, ScannerConfig } from './types/scanner';
 
 
@@ -35,14 +36,27 @@ export class FileScanner {
     };
   }
 
-  public async scan(): Promise<FileMetadata[]> {
-    console.log(`\x1b[34m[FileScanner]\x1b[0m Starting scan at: ${this.config.rootPath}`);
+  /**
+   * Performs a scan. If filePaths is provided, it only scans those files.
+   * Otherwise, it performs a full recursive scan of the rootPath.
+   */
+  public async scan(filePaths?: string[]): Promise<FileMetadata[]> {
     const start = performance.now();
     
     try {
-      const results = await this.recursiveScan(this.config.rootPath);
-      const end = performance.now();
+      let results: FileMetadata[];
       
+      if (filePaths && filePaths.length > 0) {
+        console.log(`\x1b[34m[FileScanner]\x1b[0m Performing incremental scan of ${filePaths.length} files.`);
+        const tasks = filePaths.map(fp => this.extractMetadata(fp, path.basename(fp)));
+        const allResults = await Promise.all(tasks);
+        results = allResults.filter((r): r is FileMetadata => r !== null);
+      } else {
+        console.log(`\x1b[34m[FileScanner]\x1b[0m Starting full scan at: ${this.config.rootPath}`);
+        results = await this.recursiveScan(this.config.rootPath);
+      }
+      
+      const end = performance.now();
       console.log(`\x1b[32m[FileScanner]\x1b[0m Scan completed. Found ${results.length} relevant files in ${Math.round(end - start)}ms.`);
       return results;
     } catch (error) {
@@ -85,18 +99,22 @@ export class FileScanner {
     return this.config.extensions.includes(path.extname(name));
   }
 
-  private async extractMetadata(fullPath: string, name: string): Promise<FileMetadata> {
-    const stats: Stats = await fs.stat(fullPath);
-    const ext = path.extname(name);
+  private async extractMetadata(fullPath: string, name: string): Promise<FileMetadata | null> {
+    try {
+      const stats: Stats = await fs.stat(fullPath);
+      const ext = path.extname(name);
 
-    return {
-      path: fullPath,
-      name,
-      size: stats.size,
-      extension: ext,
-      modifiedAt: stats.mtime,
-      type: this.determineFileType(ext)
-    };
+      return {
+        path: fullPath,
+        name,
+        size: stats.size,
+        extension: ext,
+        modifiedAt: stats.mtime,
+        type: this.determineFileType(ext)
+      };
+    } catch (e) {
+      return null;
+    }
   }
 
   private determineFileType(ext: string): FileMetadata['type'] {
@@ -104,6 +122,22 @@ export class FileScanner {
       case '.ts': return 'typescript';
       case '.tsx': return 'typescript-react';
       default: return 'other';
+    }
+  }
+
+  /**
+   * Retrieves a list of staged files from Git.
+   */
+  public static getStagedFiles(): string[] {
+    try {
+      const stdout = execSync('git diff --cached --name-only --diff-filter=ACMR', { encoding: 'utf8' });
+      return stdout
+        .split('\n')
+        .map(f => f.trim())
+        .filter(f => f.length > 0 && (f.endsWith('.ts') || f.endsWith('.tsx')))
+        .map(f => path.join(process.cwd(), f));
+    } catch (e) {
+      return [];
     }
   }
 }
