@@ -25,7 +25,7 @@ export interface JournalEntry {
   mode: JournalMode;
   mood: string | null;
   cefrLevel: string | null;
-  metadata: Record<string, any> | null;
+  metadata: Record<string, unknown> | null;
   corrections: Correction[];
   createdAt: Date | string;
   updatedAt: Date | string;

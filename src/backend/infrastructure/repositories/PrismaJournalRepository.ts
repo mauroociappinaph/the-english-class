@@ -1,4 +1,6 @@
 import { prisma } from "../db";
+import { Prisma } from "@prisma/client";
+
 import { IJournalRepository } from "../../domain/repositories/IJournalRepository";
 import { 
   JournalEntry, 
@@ -8,9 +10,10 @@ import {
   Correction
 } from "@/shared/types/journal";
 
-type PrismaJournalWithCorrections = import("@prisma/client").Prisma.JournalEntryGetPayload<{
+type PrismaJournalWithCorrections = Prisma.JournalEntryGetPayload<{
   include: { corrections: true }
 }>;
+
 
 export class PrismaJournalRepository implements IJournalRepository {
   async findById(id: string): Promise<JournalEntry | null> {
@@ -48,10 +51,10 @@ export class PrismaJournalRepository implements IJournalRepository {
     const { corrections, metadata, ...rest } = data;
     
     // Clean data for Prisma
-    const prismaData: any = { ...rest };
-    if (metadata) {
-      prismaData.metadata = JSON.stringify(metadata);
-    }
+    const prismaData: Prisma.JournalEntryUpdateInput = {
+      ...rest,
+      metadata: metadata ? JSON.stringify(metadata) : null,
+    };
 
     const entry = await prisma.journalEntry.update({
       where: { id },

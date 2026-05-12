@@ -5,16 +5,8 @@ import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import Highlight from '@tiptap/extension-highlight';
 import { motion } from 'framer-motion';
-import { Sparkles, Save, Trash2, History } from 'lucide-react';
-
-interface JournalEditorProps {
-  content: string;
-  onChange: (content: string) => void;
-  onSave: () => void;
-  onAnalyze: () => void;
-  isAnalyzing: boolean;
-  isSaving: boolean;
-}
+import { JournalEditorProps } from '@/frontend/types/journal';
+import { Save, History, Sparkles } from 'lucide-react';
 
 export function JournalEditor({ 
   content, 

@@ -1,0 +1,21 @@
+[90m📡 SCANNER[0m Starting full scan at: /Users/mauroociappina/Desktop/TheEnglishClass
+[90m📡 SCANNER[0m Scan completed. Found 91 files in 3ms.
+[90m[17:58:45][0m  [1m[32m✨ INFO [0m  ⏱️ Load Project: 1591ms
+[90m[17:58:45][0m  [1m[32m✨ INFO [0m  🔄 Full Analysis: 0 files changed/new, 87 reused from cache.
+[90m[17:58:46][0m  [1m[32m✨ INFO [0m  ⏱️ Build Graph: 779ms
+[90m[17:58:49][0m  [1m[32m✨ INFO [0m  ⏱️ Run Parallel Engine (Analyzers + TypeCheck): 3694ms
+
+[32m✅ Reports generated in /reports[0m
+
+  [1m[90m┌──────────────────────────────────────────────────┐[0m
+  [1m[90m│[0m            [1mARCHITECTURAL HEALTH CHECK[0m            [1m[90m│[0m
+  [1m[90m├──────────────────────────────────────────────────┤[0m
+  [1m[90m│[0m  [1mQuality:[0m  [[33m███████████████[0m[90m░░░░░░░░░[0m] [33m64%[0m           [1m[90m│[0m
+  [1m[90m├──────────────────────────────────────────────────┤[0m
+  [1m[90m│[0m  [90mIssues:[0m   [1m20[0m                                [1m[90m│[0m
+  [1m[90m│[0m  [90mCritical:[0m [31m7[0m                                 [1m[90m│[0m
+  [1m[90m│[0m  [90mWarnings:[0m [33m13[0m                                [1m[90m│[0m
+  [1m[90m├──────────────────────────────────────────────────┤[0m
+  [1m[90m│[0m  [90mEngine Latency:[0m [33m6090ms[0m                          [1m[90m│[0m
+  [1m[90m└──────────────────────────────────────────────────┘[0m
+

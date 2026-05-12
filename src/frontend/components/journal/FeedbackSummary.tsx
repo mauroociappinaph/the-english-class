@@ -1,11 +1,7 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { LinguisticAnalysis } from '@/shared/types/journal';
-
-interface FeedbackSummaryProps {
-  analysis: LinguisticAnalysis;
-}
+import { FeedbackSummaryProps } from '@/frontend/types/journal';
 
 export function FeedbackSummary({ analysis }: FeedbackSummaryProps) {
   return (
