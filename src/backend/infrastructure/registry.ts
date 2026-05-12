@@ -5,20 +5,31 @@ import { PrismaJournalRepository } from "./repositories/PrismaJournalRepository"
 import { GroqLinguisticAnalyzer } from "./analyzers/GroqLinguisticAnalyzer";
 import { GroqJournalAnalyzer } from "./analyzers/GroqJournalAnalyzer";
 import { GroqSlangAnalyzer } from "./analyzers/GroqSlangAnalyzer";
+import { GeminiLinguisticAnalyzer } from "./analyzers/GeminiLinguisticAnalyzer";
+import { GeminiSlangAnalyzer } from "./analyzers/GeminiSlangAnalyzer";
+import { withFallback } from "./resilience";
 
-// Singleton instances
+// Singleton instances — primary providers
 const expressionRepository = new PrismaExpressionRepository();
 const journalRepository = new PrismaJournalRepository();
-const linguisticAnalyzer = new GroqLinguisticAnalyzer();
 const journalAnalyzer = new GroqJournalAnalyzer();
-const slangAnalyzer = new GroqSlangAnalyzer();
+
+// Resilient analyzers: Groq → Gemini on 429/503
+const linguisticAnalyzer = withFallback(
+  new GroqLinguisticAnalyzer(),
+  new GeminiLinguisticAnalyzer()
+);
+
+const slangAnalyzer = withFallback(
+  new GroqSlangAnalyzer(),
+  new GeminiSlangAnalyzer()
+);
 
 export const expressionService = new ExpressionService(
   expressionRepository,
   linguisticAnalyzer,
   slangAnalyzer
 );
-
 
 export const journalService = new JournalService(
   journalRepository,
