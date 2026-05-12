@@ -1,5 +1,7 @@
 import path from 'path';
 import { Issue, Analyzer, AnalysisContext, AnalyzerResult } from '../types/analyzer.types';
+import { GraphNode } from '../utils/dependency-graph';
+
 
 /**
  * ArchitectureBoundaryAnalyzer: The guardian of Hexagonal/Clean Architecture.
@@ -18,7 +20,8 @@ export class ArchitectureBoundaryAnalyzer implements Analyzer {
 
     const nodes = context.graph.getNodes();
 
-    nodes.forEach(node => {
+    nodes.forEach((node: GraphNode) => {
+
       const filePath = node.path;
       const relativePath = path.relative(this.projectRoot, filePath);
 
@@ -29,7 +32,8 @@ export class ArchitectureBoundaryAnalyzer implements Analyzer {
 
       // 1. Domain Purity Rules
       if (isDomain) {
-        node.imports.forEach(impPath => {
+        node.imports.forEach((impPath: string) => {
+
           const impRelPath = path.relative(this.projectRoot, impPath);
           
           // Domain cannot depend on Application or Infrastructure
@@ -46,7 +50,8 @@ export class ArchitectureBoundaryAnalyzer implements Analyzer {
 
       // 2. Application/Service Isolation Rules
       if (isApplication) {
-        node.imports.forEach(impPath => {
+        node.imports.forEach((impPath: string) => {
+
           const impRelPath = path.relative(this.projectRoot, impPath);
 
           // Services cannot depend on Infrastructure directly (must use interfaces)
@@ -76,7 +81,8 @@ export class ArchitectureBoundaryAnalyzer implements Analyzer {
 
       // 4. Frontend vs Infrastructure Boundary
       if (relativePath.includes('src/frontend/')) {
-        node.imports.forEach(impPath => {
+        node.imports.forEach((impPath: string) => {
+
            if (impPath.includes('/infrastructure/') || impPath.includes('/adapters/')) {
              issues.push({
                file: filePath,
