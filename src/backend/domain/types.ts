@@ -20,6 +20,11 @@ export interface GroqExpressionResponse extends Omit<SharedExpression, 'id' | 'c
     past: GroqTense;
     presentPerfect: GroqTense;
     future: GroqTense;
+    pastPerfect?: GroqTense;
+    presentContinuous?: GroqTense;
+    pastContinuous?: GroqTense;
+    futureContinuous?: GroqTense;
+    conditional?: GroqTense;
   };
   examples: GroqExample[];
 }

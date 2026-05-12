@@ -34,12 +34,17 @@ Schema:
     "commonMistake": "English description",
     "context": "English description"
   },
-  "tenses": {
-    "present": { "text": "English example", "translation": "Spanish translation" },
-    "past": { "text": "English example", "translation": "Spanish translation" },
-    "presentPerfect": { "text": "English example", "translation": "Spanish translation" },
-    "future": { "text": "English example", "translation": "Spanish translation" }
-  },
+    "tenses": {
+      "present": { "text": "English example", "translation": "Spanish translation" },
+      "past": { "text": "English example", "translation": "Spanish translation" },
+      "presentPerfect": { "text": "English example", "translation": "Spanish translation" },
+      "future": { "text": "English example", "translation": "Spanish translation" },
+      "pastPerfect": { "text": "English example", "translation": "Spanish translation" },
+      "presentContinuous": { "text": "English example", "translation": "Spanish translation" },
+      "pastContinuous": { "text": "English example", "translation": "Spanish translation" },
+      "futureContinuous": { "text": "English example", "translation": "Spanish translation" },
+      "conditional": { "text": "English example", "translation": "Spanish translation" }
+    },
   "examples": [
     { 
       "text": "English example", 
