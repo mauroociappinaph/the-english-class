@@ -14,6 +14,14 @@ export class PrismaExpressionRepository implements IExpressionRepository {
     return expression ? this.formatExpression(expression) : null;
   }
 
+  async findById(id: string): Promise<ExpressionDetail | null> {
+    const expression = await prisma.expression.findUnique({
+      where: { id },
+      include: { examples: true },
+    });
+    return expression ? this.formatExpression(expression) : null;
+  }
+
   async findAll(): Promise<ExpressionDetail[]> {
     const expressions = await prisma.expression.findMany({
       include: { examples: true },

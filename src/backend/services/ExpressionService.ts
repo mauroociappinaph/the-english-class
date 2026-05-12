@@ -18,6 +18,10 @@ export class ExpressionService {
     return this.repository.findByText(normalizedText);
   }
 
+  async getExpressionById(id: string): Promise<ExpressionDetail | null> {
+    return this.repository.findById(id);
+  }
+
   async analyzeExpression(text: string): Promise<ExpressionDetail> {
     const normalizedText = text.toLowerCase().trim();
     

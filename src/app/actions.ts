@@ -14,6 +14,10 @@ export async function getExpressions() {
   return ExpressionController.getAll();
 }
 
+export async function getExpressionById(id: string) {
+  return ExpressionController.getById(id);
+}
+
 export async function deleteExpression(id: string) {
   return ExpressionController.delete(id);
 }

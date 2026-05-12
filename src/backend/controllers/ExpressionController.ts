@@ -10,6 +10,10 @@ export class ExpressionController {
     return withTelemetry("getExpression", () => expressionService.getExpression(text), { text });
   }
 
+  static async getById(id: string) {
+    return withTelemetry("getExpressionById", () => expressionService.getExpressionById(id), { id });
+  }
+
   static async analyze(text: string) {
     return withTelemetry("analyzeExpression", async () => {
       try {
