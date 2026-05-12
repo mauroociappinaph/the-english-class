@@ -41,7 +41,7 @@ export class PrismaExpressionRepository implements IExpressionRepository {
             create: expression.examples.map(ex => ({
               text: ex.text,
               translation: ex.translation,
-              category: ex.category,
+              category: ex.category || "cotidiano",
               explanation: ex.explanation,
             })),
           },
@@ -68,8 +68,12 @@ export class PrismaExpressionRepository implements IExpressionRepository {
     return {
       ...expression,
       secondaryMeanings: JSON.parse(expression.secondaryMeanings || "[]"),
-      usageTips: JSON.parse(expression.usageTips || "{}"),
-      tenses: JSON.parse(expression.tenses || "{}"),
-    } as unknown as ExpressionDetail;
+      usageTips: JSON.parse(expression.usageTips || "null"),
+      tenses: JSON.parse(expression.tenses || "null"),
+      createdAt: expression.createdAt,
+      updatedAt: expression.updatedAt,
+      imageUrl: expression.imageUrl,
+      status: expression.status as 'pending' | 'learning' | 'mastered'
+    };
   }
 }

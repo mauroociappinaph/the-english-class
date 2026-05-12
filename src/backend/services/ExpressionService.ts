@@ -40,8 +40,18 @@ export class ExpressionService {
         frequency: result.frequency || 0.5,
         formality: result.formality || "neutral",
         mnemonic: result.mnemonic || "",
-        usageTips: (result.usageTips as unknown) as Record<string, unknown> || {},
-        tenses: (result.tenses as unknown) as Record<string, unknown> || {},
+        imageUrl: result.imageUrl || null,
+        usageTips: {
+          naturalness: result.usageTips?.naturalness || "",
+          commonMistake: result.usageTips?.commonMistake || "",
+          context: result.usageTips?.context || ""
+        },
+        tenses: {
+          present: result.tenses?.present || { text: "", translation: "" },
+          past: result.tenses?.past || { text: "", translation: "" },
+          presentPerfect: result.tenses?.presentPerfect || { text: "", translation: "" },
+          future: result.tenses?.future || { text: "", translation: "" }
+        },
         examples: (result.examples || []).map((ex: GroqExample) => ({
           text: ex.text,
           translation: ex.translation,
