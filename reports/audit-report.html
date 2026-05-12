@@ -22,17 +22,17 @@
     <body>
       <div class="card" style="text-align: center">
         <h1>Architecture Audit Result</h1>
-        <div class="score-badge">87</div>
+        <div class="score-badge">97</div>
         <p>Quality Score</p>
       </div>
       
       <div class="card">
         <h2>Executive Summary</h2>
         <div style="display: flex; justify-content: space-around; text-align: center">
-          <div><h3>9</h3><p>Total Issues</p></div>
+          <div><h3>2</h3><p>Total Issues</p></div>
           <div style="color: #991b1b"><h3>0</h3><p>Critical</p></div>
-          <div style="color: #854d0e"><h3>9</h3><p>Warnings</p></div>
-          <div><h3>4180ms</h3><p>Analysis Time</p></div>
+          <div style="color: #854d0e"><h3>2</h3><p>Warnings</p></div>
+          <div><h3>538041ms</h3><p>Analysis Time</p></div>
         </div>
       </div>
     <h2 class="analyzer-title">Dead Code Analyzer</h2><table>
@@ -48,83 +48,17 @@
         <tbody>
           <tr>
             <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>analyzer.types.ts</code></td>
-            <td>15</td>
-            <td>Dead Export: InterfaceDeclaration "DeduplicationRules" is exported but never used outside this module.</td>
+            <td><code>duplication-sample.ts</code></td>
+            <td>5</td>
+            <td>Dead Export: FunctionDeclaration "processUser" is exported but never used outside this module.</td>
             <td>Remove the export or the entire declaration if it's not used locally either.</td>
           </tr>
-        </tbody></table><h2 class="analyzer-title">Duplicate Logic Detector</h2><table>
-        <thead>
-          <tr>
-            <th>Severity</th>
-            <th>File</th>
-            <th>Line</th>
-            <th>Explanation</th>
-            <th>Suggestion</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>markdown.report.ts</code></td>
-            <td>97</td>
-            <td>Detected logic highly similar to /Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/analyze-types.ts:117. Structural Hash: -1etvl9</td>
-            <td>Consider extracting this logic into a shared helper or utility. Found 3 occurrences.</td>
-          </tr>
         
           <tr>
             <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>report-generator.ts</code></td>
-            <td>74</td>
-            <td>Detected logic highly similar to /Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/analyze-types.ts:117. Structural Hash: -1etvl9</td>
-            <td>Consider extracting this logic into a shared helper or utility. Found 3 occurrences.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>logger.ts</code></td>
-            <td>72</td>
-            <td>Detected logic highly similar to /Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/logger.ts:66. Structural Hash: -lxoak6</td>
-            <td>Consider extracting this logic into a shared helper or utility. Found 4 occurrences.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>logger.ts</code></td>
-            <td>78</td>
-            <td>Detected logic highly similar to /Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/logger.ts:66. Structural Hash: -lxoak6</td>
-            <td>Consider extracting this logic into a shared helper or utility. Found 4 occurrences.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>logger.ts</code></td>
-            <td>84</td>
-            <td>Detected logic highly similar to /Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/logger.ts:66. Structural Hash: -lxoak6</td>
-            <td>Consider extracting this logic into a shared helper or utility. Found 4 occurrences.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>coupling-metrics.analyzer.ts</code></td>
-            <td>15</td>
-            <td>Detected logic highly similar to /Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/analyzers/circular-deps.analyzer.ts:16. Structural Hash: -9g96p9</td>
-            <td>Consider extracting this logic into a shared helper or utility. Found 2 occurrences.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>report-generator.ts</code></td>
-            <td>72</td>
-            <td>Detected logic highly similar to /Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/reporting/markdown.report.ts:95. Structural Hash: -7n31vr</td>
-            <td>Consider extracting this logic into a shared helper or utility. Found 2 occurrences.</td>
-          </tr>
-        
-          <tr>
-            <td><span class="tag tag-medium">MEDIUM</span></td>
-            <td><code>report-generator.ts</code></td>
-            <td>89</td>
-            <td>Detected logic highly similar to /Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/reporting/report-generator.ts:82. Structural Hash: sj8qia</td>
-            <td>Consider extracting this logic into a shared helper or utility. Found 2 occurrences.</td>
+            <td><code>duplication-sample.ts</code></td>
+            <td>7</td>
+            <td>Dead Export: FunctionDeclaration "processAdmin" is exported but never used outside this module.</td>
+            <td>Remove the export or the entire declaration if it's not used locally either.</td>
           </tr>
         </tbody></table></body></html>

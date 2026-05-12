@@ -1,92 +1,36 @@
 {
   "schemaVersion": "1.1.0",
   "metadata": {
-    "generatedAt": "2026-05-12T02:06:34.478Z",
+    "generatedAt": "2026-05-12T02:35:29.030Z",
     "project": "TheEnglishClass",
     "environment": "development",
     "nodeVersion": "v25.4.0"
   },
   "stats": {
-    "total": 9,
+    "total": 2,
     "criticals": 0,
-    "warnings": 9,
+    "warnings": 2,
     "suggestions": 0,
-    "score": 87,
-    "durationMs": 4180
+    "score": 97,
+    "durationMs": 538041
   },
   "results": [],
   "allIssues": [
     {
-      "file": "src/scripts/types/analyzer.types.ts",
-      "line": 15,
+      "file": "src/scripts/tests/duplication-sample.ts",
+      "line": 5,
       "severity": "MEDIUM",
-      "explanation": "Dead Export: InterfaceDeclaration \"DeduplicationRules\" is exported but never used outside this module.",
+      "explanation": "Dead Export: FunctionDeclaration \"processUser\" is exported but never used outside this module.",
       "suggestion": "Remove the export or the entire declaration if it's not used locally either.",
       "analyzer": "Dead Code Analyzer"
     },
     {
-      "file": "src/scripts/reporting/markdown.report.ts",
-      "line": 97,
+      "file": "src/scripts/tests/duplication-sample.ts",
+      "line": 7,
       "severity": "MEDIUM",
-      "analyzer": "Duplicate Logic Detector",
-      "explanation": "Detected logic highly similar to /Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/analyze-types.ts:117. Structural Hash: -1etvl9",
-      "suggestion": "Consider extracting this logic into a shared helper or utility. Found 3 occurrences."
-    },
-    {
-      "file": "src/scripts/reporting/report-generator.ts",
-      "line": 74,
-      "severity": "MEDIUM",
-      "analyzer": "Duplicate Logic Detector",
-      "explanation": "Detected logic highly similar to /Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/analyze-types.ts:117. Structural Hash: -1etvl9",
-      "suggestion": "Consider extracting this logic into a shared helper or utility. Found 3 occurrences."
-    },
-    {
-      "file": "src/scripts/logger.ts",
-      "line": 72,
-      "severity": "MEDIUM",
-      "analyzer": "Duplicate Logic Detector",
-      "explanation": "Detected logic highly similar to /Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/logger.ts:66. Structural Hash: -lxoak6",
-      "suggestion": "Consider extracting this logic into a shared helper or utility. Found 4 occurrences."
-    },
-    {
-      "file": "src/scripts/logger.ts",
-      "line": 78,
-      "severity": "MEDIUM",
-      "analyzer": "Duplicate Logic Detector",
-      "explanation": "Detected logic highly similar to /Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/logger.ts:66. Structural Hash: -lxoak6",
-      "suggestion": "Consider extracting this logic into a shared helper or utility. Found 4 occurrences."
-    },
-    {
-      "file": "src/scripts/logger.ts",
-      "line": 84,
-      "severity": "MEDIUM",
-      "analyzer": "Duplicate Logic Detector",
-      "explanation": "Detected logic highly similar to /Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/logger.ts:66. Structural Hash: -lxoak6",
-      "suggestion": "Consider extracting this logic into a shared helper or utility. Found 4 occurrences."
-    },
-    {
-      "file": "src/scripts/analyzers/coupling-metrics.analyzer.ts",
-      "line": 15,
-      "severity": "MEDIUM",
-      "analyzer": "Duplicate Logic Detector",
-      "explanation": "Detected logic highly similar to /Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/analyzers/circular-deps.analyzer.ts:16. Structural Hash: -9g96p9",
-      "suggestion": "Consider extracting this logic into a shared helper or utility. Found 2 occurrences."
-    },
-    {
-      "file": "src/scripts/reporting/report-generator.ts",
-      "line": 72,
-      "severity": "MEDIUM",
-      "analyzer": "Duplicate Logic Detector",
-      "explanation": "Detected logic highly similar to /Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/reporting/markdown.report.ts:95. Structural Hash: -7n31vr",
-      "suggestion": "Consider extracting this logic into a shared helper or utility. Found 2 occurrences."
-    },
-    {
-      "file": "src/scripts/reporting/report-generator.ts",
-      "line": 89,
-      "severity": "MEDIUM",
-      "analyzer": "Duplicate Logic Detector",
-      "explanation": "Detected logic highly similar to /Users/mauroociappina/Desktop/TheEnglishClass/src/scripts/reporting/report-generator.ts:82. Structural Hash: sj8qia",
-      "suggestion": "Consider extracting this logic into a shared helper or utility. Found 2 occurrences."
+      "explanation": "Dead Export: FunctionDeclaration \"processAdmin\" is exported but never used outside this module.",
+      "suggestion": "Remove the export or the entire declaration if it's not used locally either.",
+      "analyzer": "Dead Code Analyzer"
     }
   ]
 }
