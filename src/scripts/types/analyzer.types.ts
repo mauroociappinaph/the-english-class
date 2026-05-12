@@ -48,7 +48,9 @@ export interface AnalysisContext {
   circularDepRules: CircularDepRules;
   startTime: number;
   changedFiles?: string[]; // Paths of files that changed since last audit
+  graph: any; // Will be typed properly in the implementation
 }
+
 
 
 /**

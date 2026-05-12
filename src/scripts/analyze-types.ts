@@ -7,6 +7,8 @@ import { Issue, Analyzer, AnalysisContext } from './types/analyzer.types';
 import { logger } from './logger';
 import { ParsedFile, ParsedDeclaration } from './types/parser';
 import { AuditCache } from './utils/audit-cache';
+import { DependencyGraph } from './utils/dependency-graph';
+
 
 
 
@@ -80,8 +82,13 @@ export class SemanticAuditSuite {
         anyUsageRules: auditConfig.rules.anyUsage,
         circularDepRules: auditConfig.rules.circularDeps,
         startTime,
-        changedFiles: changedFiles.length > 0 ? changedFiles : undefined
+        changedFiles: changedFiles.length > 0 ? changedFiles : undefined,
+        graph: new DependencyGraph(this.projectRoot)
       };
+
+      // 3.5 Build Graph
+      context.graph.build(this.parser.project);
+
 
 
       // 4. Execute Analyzers

@@ -10,12 +10,13 @@ export class CircularDepsAnalyzer implements Analyzer {
   public readonly name = 'Circular Dependency Analyzer';
   public readonly isGlobal = true;
 
-  private dependencyGraph: Map<string, string[]> = new Map();
   private projectRoot: string = process.cwd();
+
 
   public analyze(context: AnalysisContext): AnalyzerResult {
     const startTime = Date.now();
-    const issues = this.analyzeProject(context.project);
+    const issues = this.analyzeProject(context);
+
     
     return {
       analyzerName: this.name,
@@ -27,21 +28,22 @@ export class CircularDepsAnalyzer implements Analyzer {
   /**
    * Main entry point for dependency analysis
    */
-  public analyzeProject(project: Project): Issue[] {
+  public analyzeProject(context: AnalysisContext): Issue[] {
     const issues: Issue[] = [];
-    const sourceFiles = project.getSourceFiles().filter(sf => {
+    const sourceFiles = context.project.getSourceFiles().filter(sf => {
       const path = sf.getFilePath();
       return !path.includes('node_modules') && !path.endsWith('.d.ts') && !path.endsWith('.d.mts');
     });
 
-    // 1. Build Dependency Graph
-    this.buildGraph(sourceFiles);
+    // Graph is already built by the orchestrator
+
 
 
 
     // 2. Detect Cycles
     sourceFiles.forEach(sourceFile => {
-      const cycle = this.findCycle(sourceFile.getFilePath());
+      const cycle = context.graph.findCycle(sourceFile.getFilePath());
+
       if (cycle) {
         issues.push({
           file: sourceFile.getFilePath(),
@@ -60,47 +62,9 @@ export class CircularDepsAnalyzer implements Analyzer {
     return issues;
   }
 
-  private buildGraph(sourceFiles: SourceFile[]) {
-    this.dependencyGraph.clear();
-    sourceFiles.forEach(sourceFile => {
-      const filePath = sourceFile.getFilePath();
-      const imports: string[] = sourceFile.getImportDeclarations()
-        .map(imp => imp.getModuleSpecifierSourceFile()?.getFilePath() as string | undefined)
-        .filter((fp): fp is string => !!fp);
-      
-      this.dependencyGraph.set(filePath, imports);
-    });
-  }
+  // Removed buildGraph and findCycle as they are now in DependencyGraph
 
-  private findCycle(startNode: string): string[] | null {
-    const visited = new Set<string>();
-    const stack = new Set<string>();
-    const pathTrace: string[] = [];
 
-    const visit = (node: string): string[] | null => {
-      if (stack.has(node)) {
-        const cycleIndex = pathTrace.indexOf(node);
-        return [...pathTrace.slice(cycleIndex), node];
-      }
-      if (visited.has(node)) return null;
-
-      visited.add(node);
-      stack.add(node);
-      pathTrace.push(node);
-
-      const neighbors = this.dependencyGraph.get(node) || [];
-      for (const neighbor of neighbors) {
-        const cycle = visit(neighbor);
-        if (cycle) return cycle;
-      }
-
-      stack.delete(node);
-      pathTrace.pop();
-      return null;
-    };
-
-    return visit(startNode);
-  }
 
   private checkLayerIntegrity(sourceFiles: SourceFile[]): Issue[] {
     const issues: Issue[] = [];
