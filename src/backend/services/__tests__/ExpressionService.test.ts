@@ -1,30 +1,29 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ExpressionService } from '../ExpressionService';
-import { prisma } from '@/backend/infrastructure/db';
-import { Expression as PrismaExpression } from '@prisma/client';
-
-// Mock Infrastructure
-vi.mock('@/backend/infrastructure/db', () => ({
-  prisma: {
-    expression: {
-      findUnique: vi.fn(),
-    },
-  },
-}));
-
-vi.mock('@/backend/infrastructure/groq', () => ({
-  groq: {
-    chat: {
-      completions: {
-        create: vi.fn(),
-      },
-    },
-  },
-}));
+import { IExpressionRepository } from '@/backend/domain/repositories/IExpressionRepository';
+import { ILinguisticAnalyzer } from '@/backend/domain/interfaces/ILinguisticAnalyzer';
+import { ExpressionDetail } from '@/backend/domain/types';
 
 describe('ExpressionService', () => {
+  let mockRepository: vi.Mocked<IExpressionRepository>;
+  let mockAnalyzer: vi.Mocked<ILinguisticAnalyzer>;
+  let service: ExpressionService;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    
+    mockRepository = {
+      findByText: vi.fn(),
+      findAll: vi.fn(),
+      save: vi.fn(),
+      delete: vi.fn(),
+    } as unknown as IExpressionRepository;
+
+    mockAnalyzer = {
+      analyzeExpression: vi.fn(),
+    } as unknown as ILinguisticAnalyzer;
+
+    service = new ExpressionService(mockRepository, mockAnalyzer);
   });
 
   describe('getExpression', () => {
@@ -34,31 +33,31 @@ describe('ExpressionService', () => {
         text: 'is packed with',
         translation: 'está lleno de',
         meaning: 'to be very full of something',
-        secondaryMeanings: '[]',
-        usageTips: '{"context": "informal"}',
-        tenses: '{}',
+        secondaryMeanings: [],
+        usageTips: { context: 'informal' },
+        tenses: {},
         examples: [],
-      } as unknown as PrismaExpression;
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      } as unknown as ExpressionDetail;
 
-      vi.mocked(prisma.expression.findUnique).mockResolvedValue(mockExpression);
+      mockRepository.findByText.mockResolvedValue(mockExpression);
 
-      const result = await ExpressionService.getExpression('is packed with');
+      const result = await service.getExpression('is packed with');
 
       expect(result).not.toBeNull();
       expect(result?.text).toBe('is packed with');
       expect(result?.usageTips).toEqual({ context: 'informal' });
-      expect(prisma.expression.findUnique).toHaveBeenCalledWith({
-        where: { text: 'is packed with' },
-        include: { examples: true },
-      });
+      expect(mockRepository.findByText).toHaveBeenCalledWith('is packed with');
     });
 
     it('should return null when expression is not found', async () => {
-      vi.mocked(prisma.expression.findUnique).mockResolvedValue(null as unknown as PrismaExpression);
+      mockRepository.findByText.mockResolvedValue(null);
 
-      const result = await ExpressionService.getExpression('nonexistent');
+      const result = await service.getExpression('nonexistent');
 
       expect(result).toBeNull();
+      expect(mockRepository.findByText).toHaveBeenCalledWith('nonexistent');
     });
   });
 });
