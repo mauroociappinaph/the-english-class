@@ -1,13 +1,31 @@
 "use client";
 
+import Link from "next/link";
 import { Languages } from "lucide-react";
 import { useStudyStore } from "@/frontend/store/useStudyStore";
+import { useParams } from "next/navigation";
 import { VisualCard } from "@/frontend/components/VisualCard";
+
+const FORMALITY_BADGE: Record<string, { bg: string; text: string }> = {
+  formal:          { bg: "bg-blue-500/20 border-blue-500/40",   text: "text-blue-300" },
+  neutral:         { bg: "bg-zinc-700/40 border-zinc-600/40",   text: "text-zinc-400" },
+  informal:        { bg: "bg-amber-500/20 border-amber-500/40", text: "text-amber-300" },
+  slang:           { bg: "bg-purple-500/20 border-purple-500/40", text: "text-purple-300" },
+  offensive:       { bg: "bg-red-500/20 border-red-500/40",     text: "text-red-400" },
+  "old-fashioned": { bg: "bg-stone-500/20 border-stone-500/40", text: "text-stone-400" },
+};
 
 export default function ExpressionOverview() {
   const { currentAnalysis } = useStudyStore();
+  const params = useParams();
+  const id = params.id as string;
 
   if (!currentAnalysis) return null;
+
+  const slangData = currentAnalysis.slangData;
+  const topVariant = slangData?.regionalVariants?.[0] ?? null;
+  const formalityKey = (currentAnalysis.formality ?? "neutral").toLowerCase();
+  const formalityStyle = FORMALITY_BADGE[formalityKey] ?? FORMALITY_BADGE.neutral;
 
   return (
     <div className="flex flex-col items-center gap-24">
@@ -24,6 +42,47 @@ export default function ExpressionOverview() {
             {currentAnalysis.secondaryMeanings.map((m, i) => (
               <span key={i} className="px-4 py-1.5 rounded-full bg-white/5 border border-white/5 text-sm text-zinc-500 font-medium italic">
                 &ldquo;{m}&rdquo;
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Regional metadata strip */}
+        {slangData && (
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            {/* Slang badge */}
+            {slangData.isSlang && (
+              <span className="px-3 py-1 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 text-xs font-bold uppercase tracking-wider">
+                🔥 Slang · Level {slangData.detectedSlangLevel}/3
+              </span>
+            )}
+
+            {/* Formality badge */}
+            <span className={`px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider ${formalityStyle.bg} ${formalityStyle.text}`}>
+              {currentAnalysis.formality ?? "Neutral"}
+            </span>
+
+            {/* Top variant region */}
+            {topVariant && (
+              <span className="px-3 py-1 rounded-full bg-zinc-800/60 border border-zinc-700 text-zinc-400 text-xs font-medium">
+                {topVariant.flag} {topVariant.region}
+              </span>
+            )}
+
+            {/* Regions count + link */}
+            {slangData.regionalVariants.length > 0 && (
+              <Link
+                href={`/expression/${id}/slang`}
+                className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold hover:bg-blue-500/20 transition-all"
+              >
+                🌍 {slangData.regionalVariants.length} regional variants →
+              </Link>
+            )}
+
+            {/* Similar words */}
+            {slangData.similarWords.slice(0, 3).map((word) => (
+              <span key={word} className="px-2.5 py-0.5 bg-zinc-900 border border-zinc-800 rounded-full text-zinc-500 text-xs">
+                {word}
               </span>
             ))}
           </div>
