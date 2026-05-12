@@ -34,7 +34,10 @@ export class ExpressionService {
     // 2. Call analyzers in parallel — main linguistics + slang variants
     const [result, slangData] = await Promise.all([
       this.analyzer.analyzeExpression(normalizedText),
-      this.slangAnalyzer?.analyzeSlang(normalizedText) ?? Promise.resolve(null),
+      this.slangAnalyzer?.analyzeSlang(normalizedText).catch((err: unknown) => {
+        console.warn(`[ExpressionService] Slang analysis failed for "${normalizedText}":`, err);
+        return null;
+      }) ?? Promise.resolve(null),
     ]);
 
     // 3. Save to DB with collision handling
