@@ -1,0 +1,60 @@
+import { groq } from "../groq";
+import { IJournalAnalyzer } from "../../domain/interfaces/IJournalAnalyzer";
+import { LinguisticAnalysis } from "@/shared/types/journal";
+
+export class GroqJournalAnalyzer implements IJournalAnalyzer {
+  async analyze(text: string, userLevel: string = "B1"): Promise<LinguisticAnalysis> {
+    const prompt = `You are a Senior English Professor and Expert Linguistic Analyst. 
+Analyze the provided journal entry for an English learner at level ${userLevel}.
+
+Analyze the text and return a strictly valid JSON object. 
+Ensure the "corrections" pinpoint EXACTLY the part of the text that needs changing.
+Explanations should be in Spanish to help the student understand, but the "rule" should be in English.
+
+Journal Entry:
+"""
+${text}
+"""
+
+Schema:
+{
+  "overallLevel": "CEFR (A1-C2)",
+  "vocabularyScore": 0 to 100,
+  "accuracyScore": 0 to 100,
+  "corrections": [
+    {
+      "type": "GRAMMAR | VOCABULARY | SPELLING | PUNCTUATION | STYLE",
+      "originalText": "exact text to replace",
+      "suggestedText": "corrected version",
+      "explanation": "pedagogical explanation in Spanish",
+      "rule": "grammatical rule in English"
+    }
+  ],
+  "recurringErrors": ["description of recurring patterns in Spanish"],
+  "feedback": "Encouraging and constructive feedback in English",
+  "suggestedVocab": ["3-5 more natural words or phrasal verbs for this context"]
+}`;
+
+    const completion = await groq.chat.completions.create({
+      messages: [
+        { role: "system", content: "You are a helpful English tutor. Return ONLY a valid JSON object." },
+        { role: "user", content: prompt }
+      ],
+      model: "llama-3.3-70b-versatile",
+      response_format: { type: "json_object" },
+      temperature: 0.1,
+    });
+
+    const response = JSON.parse(completion.choices[0]?.message?.content || "{}");
+    
+    return {
+      overallLevel: response.overallLevel || "B1",
+      vocabularyScore: response.vocabularyScore || 0,
+      accuracyScore: response.accuracyScore || 0,
+      corrections: response.corrections || [],
+      recurringErrors: response.recurringErrors || [],
+      feedback: response.feedback || "",
+      suggestedVocab: response.suggestedVocab || []
+    };
+  }
+}
