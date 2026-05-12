@@ -8,4 +8,6 @@ dev.db-journal
 prisma/migrations
 .atl/
 .audit-cache.json
+audit-results/
+
 
