@@ -3,12 +3,46 @@ import { SemanticAuditSuite } from '../analyze-types';
 import { FileScanner } from '../file-scanner';
 import { logger } from '../logger';
 
+async function validateCleanliness() {
+  const FORBIDDEN_PATTERNS = [
+    /\.DS_Store$/,
+    /tsconfig\.tsbuildinfo$/,
+    /^reports\//,
+    /\.audit-report\.(html|json|md)$/,
+    /\.audit-cache\.json$/
+  ];
+
+  try {
+    const allStagedFiles = execSync('git diff --cached --name-only', { encoding: 'utf8' })
+      .split('\n')
+      .map(f => f.trim())
+      .filter(f => f.length > 0);
+
+    const forbiddenFiles = allStagedFiles.filter(file => 
+      FORBIDDEN_PATTERNS.some(pattern => pattern.test(file))
+    );
+
+    if (forbiddenFiles.length > 0) {
+      logger.error('💩 Noise detected! The following files should not be committed:');
+      forbiddenFiles.forEach(f => logger.error(`   - ${f}`));
+      logger.info('💡 Tip: Add these to .gitignore and run: git rm --cached <file>');
+      throw new Error('Cleanliness check failed.');
+    }
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Cleanliness check failed.') throw error;
+    // If git fails, we skip this check
+  }
+}
+
 async function runHook() {
   const hookType = process.argv[2]; // 'pre-commit' or 'pre-push'
   
   logger.info(`🛡️  Running Git Hook: ${hookType}...`);
 
   try {
+    // 0. Cleanliness Check (Noise Detection)
+    await validateCleanliness();
+
     const suite = new SemanticAuditSuite();
     
     if (hookType === 'pre-commit') {
