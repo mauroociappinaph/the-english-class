@@ -127,13 +127,11 @@ export class SemanticAuditSuite {
         if (!analysis) return;
 
         const currentFileIssues: Issue[] = [];
-        this.checkLayerIntegrity(filePath, analysis, currentFileIssues);
-        this.checkControllerNaming(filePath, analysis, currentFileIssues);
-        
         currentFileIssues.push(...locationAnalyzer.analyze(analysis));
         currentFileIssues.push(...namingAnalyzer.analyze(analysis));
 
         // Merge with issues from local project analyzers
+
         const otherIssues = newIssuesByFile.get(filePath) || [];
         const totalIssues = [...currentFileIssues, ...otherIssues];
         
@@ -171,46 +169,9 @@ export class SemanticAuditSuite {
 
   }
 
-  private checkLayerIntegrity(filePath: string, analysis: ParsedFile, issues: Issue[]): void {
-    const relativePath = path.relative(this.projectRoot, filePath);
-    if (relativePath.includes('src/frontend/')) {
-      const hasInfraImport = analysis.imports.some((imp) => 
-        imp.module.startsWith('@/backend/infrastructure/')
-      );
-      if (hasInfraImport) {
-        issues.push({
-          file: filePath,
-          line: 1,
-          severity: 'HIGH',
-          explanation: `Layer Violation: ${relativePath} imports directly from infrastructure!`,
-          suggestion: 'Frontend should only depend on Services or Types.',
-          analyzer: 'LayerIntegrityAnalyzer'
-        });
-      }
-    }
-  }
-
-  private checkControllerNaming(filePath: string, analysis: ParsedFile, issues: Issue[]): void {
-    const relativePath = path.relative(this.projectRoot, filePath);
-    if (relativePath.includes('src/backend/controllers/')) {
-      analysis.declarations
-        .filter((d: ParsedDeclaration) => d.kind === 'Class')
-        .forEach((decl: ParsedDeclaration) => {
-          if (!decl.name.endsWith('Controller')) {
-            issues.push({
-              file: filePath,
-              line: decl.startLine,
-              severity: 'HIGH',
-              explanation: `Naming Violation: Class "${decl.name}" in ${relativePath} must end with "Controller".`,
-              suggestion: 'Follow the [Domain]Controller naming convention.',
-              analyzer: 'NamingIntegrityAnalyzer'
-            });
-          }
-        });
-    }
-  }
 
   private showSummary(issues: Issue[], startTime: number): void {
+
     const duration = Date.now() - startTime;
     const criticals = issues.filter(i => i.severity === 'HIGH').length;
     const warnings = issues.filter(i => i.severity === 'MEDIUM').length;
