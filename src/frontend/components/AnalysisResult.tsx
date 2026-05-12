@@ -4,6 +4,8 @@ import { InteractiveText } from "./InteractiveText";
 import { TenseTimeline } from "./TenseTimeline";
 import { VisualCard } from "./VisualCard";
 import { AnalysisResultProps } from "@/frontend/types/components";
+import { WordFamilyList } from "./WordFamilyList";
+import { PhrasalVerbDetails } from "./PhrasalVerbDetails";
 
 export function AnalysisResult({ currentAnalysis, getCefrStyle }: AnalysisResultProps) {
   // Global Guard: If there is no data, render nothing.
@@ -66,6 +68,15 @@ export function AnalysisResult({ currentAnalysis, getCefrStyle }: AnalysisResult
           <p className="text-zinc-400 text-2xl leading-relaxed font-medium">
             {currentAnalysis.meaning}
           </p>
+          {currentAnalysis.secondaryMeanings && currentAnalysis.secondaryMeanings.length > 0 && (
+            <div className="flex flex-wrap justify-center gap-3 pt-4">
+              {currentAnalysis.secondaryMeanings.map((m, i) => (
+                <span key={i} className="px-4 py-1.5 rounded-full bg-white/5 border border-white/5 text-sm text-zinc-500 font-medium italic">
+                  &ldquo;{m}&rdquo;
+                </span>
+              ))}
+            </div>
+          )}
         </motion.div>
 
         {/* Visual Mnemonic Bubble */}
@@ -81,6 +92,26 @@ export function AnalysisResult({ currentAnalysis, getCefrStyle }: AnalysisResult
             text={currentAnalysis.text} 
           />
         </motion.div>
+
+
+        {/* Linguistic Mechanics Section */}
+        {(currentAnalysis.wordFamilies || currentAnalysis.phrasalVerbDetails) && (
+          <motion.div 
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+            className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-12 p-12 rounded-[4rem] bg-white/[0.02] border border-white/5"
+          >
+            {currentAnalysis.phrasalVerbDetails && (
+              <div className="space-y-6">
+                <PhrasalVerbDetails details={currentAnalysis.phrasalVerbDetails} />
+              </div>
+            )}
+            {currentAnalysis.wordFamilies && (
+              <div className="space-y-6">
+                <WordFamilyList families={currentAnalysis.wordFamilies} />
+              </div>
+            )}
+          </motion.div>
+        )}
 
         {/* Usage & Examples Section */}
         <div className="w-full space-y-32 pt-24 border-t border-white/5">
