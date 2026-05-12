@@ -3,6 +3,7 @@ import { IExpressionRepository } from "../../domain/repositories/IExpressionRepo
 import { ExpressionDetail, CreateExpressionDto } from "../../domain/types";
 import { Prisma } from "@prisma/client";
 import { CollisionError } from "../../domain/errors";
+import { StudyPerformance } from "@/shared/types/expression";
 
 export class PrismaExpressionRepository implements IExpressionRepository {
   async findByText(text: string): Promise<ExpressionDetail | null> {
@@ -17,6 +18,17 @@ export class PrismaExpressionRepository implements IExpressionRepository {
     const expressions = await prisma.expression.findMany({
       include: { examples: true },
       orderBy: { createdAt: "desc" },
+    });
+    return expressions.map(e => this.formatExpression(e)).filter((e): e is ExpressionDetail => e !== null);
+  }
+
+  async findDueForReview(limit: number): Promise<ExpressionDetail[]> {
+    const now = new Date();
+    const expressions = await prisma.expression.findMany({
+      where: { nextReviewAt: { lte: now } },
+      include: { examples: true },
+      orderBy: { nextReviewAt: "asc" },
+      take: limit,
     });
     return expressions.map(e => this.formatExpression(e)).filter((e): e is ExpressionDetail => e !== null);
   }
@@ -55,6 +67,60 @@ export class PrismaExpressionRepository implements IExpressionRepository {
       }
       throw error;
     }
+  }
+
+  async updateStudyProgress(id: string, performance: StudyPerformance): Promise<ExpressionDetail> {
+    const current = await prisma.expression.findUniqueOrThrow({
+      where: { id },
+    });
+
+    const performanceScore = performance === 'hard' ? 0 : performance === 'good' ? 3 : 5;
+
+    // SM-2 simplified: adjust easiness factor
+    const newEasiness = Math.max(
+      1.3,
+      current.easiness + (0.1 - (5 - performanceScore) * (0.08 + (5 - performanceScore) * 0.02))
+    );
+
+    // Calculate new interval
+    let newInterval: number;
+    if (performanceScore < 3) {
+      newInterval = 0; // Reset on hard
+    } else if (current.interval === 0) {
+      newInterval = 1;
+    } else if (current.interval === 1) {
+      newInterval = 6;
+    } else {
+      newInterval = Math.round(current.interval * newEasiness);
+    }
+
+    const nextReview = new Date();
+    nextReview.setDate(nextReview.getDate() + newInterval);
+
+    // Determine status
+    let newStatus: string;
+    if (newInterval >= 21) {
+      newStatus = 'mastered';
+    } else if (current.timesStudied >= 1 || performanceScore >= 3) {
+      newStatus = 'learning';
+    } else {
+      newStatus = 'pending';
+    }
+
+    const updated = await prisma.expression.update({
+      where: { id },
+      data: {
+        easiness: newEasiness,
+        interval: newInterval,
+        nextReviewAt: nextReview,
+        timesStudied: current.timesStudied + 1,
+        difficulty: performanceScore < 3 ? Math.min(current.difficulty + 1, 5) : current.difficulty,
+        status: newStatus,
+      },
+      include: { examples: true },
+    });
+
+    return this.formatExpression(updated)!;
   }
 
   async delete(id: string): Promise<void> {

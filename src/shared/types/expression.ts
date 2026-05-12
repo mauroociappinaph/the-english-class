@@ -24,6 +24,8 @@ export interface Example {
   updatedAt?: Date;
 }
 
+export type StudyPerformance = 'hard' | 'good' | 'easy';
+
 export interface Expression {
   id: string;
   text: string;
@@ -36,7 +38,7 @@ export interface Expression {
   frequency: number | null;
   formality: string | null;
   mnemonic: string | null;
-  imageUrl?: string | null;    // Unified name
+  imageUrl?: string | null;
   usageTips: UsageTips | null;
   tenses: {
     present: Tense;
@@ -46,10 +48,15 @@ export interface Expression {
   } | null;
   examples: Example[];
   status?: 'pending' | 'learning' | 'mastered' | null;
+  difficulty?: number;
+  timesStudied?: number;
+  nextReviewAt?: Date | string;
+  interval?: number;
+  easiness?: number;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 }
 
-export type CreateExpressionDto = Omit<Expression, 'id' | 'createdAt' | 'updatedAt' | 'examples'> & {
+export type CreateExpressionDto = Omit<Expression, 'id' | 'createdAt' | 'updatedAt' | 'examples' | 'difficulty' | 'timesStudied' | 'nextReviewAt' | 'interval' | 'easiness'> & {
   examples: Omit<Example, 'id' | 'expressionId' | 'createdAt' | 'updatedAt'>[];
 };

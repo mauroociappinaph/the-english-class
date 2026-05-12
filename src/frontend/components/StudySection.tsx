@@ -1,7 +1,39 @@
+"use client";
+
 import { motion } from "framer-motion";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { useStudyStore } from "@/frontend/store/useStudyStore";
+import { getReviewSession } from "@/app/actions";
+import { ReviewSession } from "./ReviewSession";
 
 export function StudySection() {
+  const { isReviewing, startReview, expressions } = useStudyStore();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleStartSession = async () => {
+    setIsLoading(true);
+    try {
+      const reviewExpressions = await getReviewSession(12);
+      if (reviewExpressions.length > 0) {
+        startReview(reviewExpressions);
+      }
+    } catch (err) {
+      console.error("Failed to start review session:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isReviewing) {
+    return <ReviewSession />;
+  }
+
+  const dueCount = expressions.filter(e => {
+    if (!e.nextReviewAt) return true;
+    return new Date(e.nextReviewAt) <= new Date();
+  }).length;
+
   return (
     <motion.div 
       initial={{ opacity: 0, scale: 0.9 }}
@@ -13,10 +45,25 @@ export function StudySection() {
       </div>
       <div className="space-y-2">
         <h3 className="text-3xl font-bold">Ready for Review?</h3>
-        <p className="text-zinc-500">Master 12 expressions today using spaced repetition.</p>
+        <p className="text-zinc-500">
+          {dueCount > 0
+            ? `Master ${dueCount} expression${dueCount !== 1 ? 's' : ''} today using spaced repetition.`
+            : "No expressions due for review. Add more!"}
+        </p>
       </div>
-      <button className="w-full bg-white text-black font-black py-4 rounded-2xl hover:bg-zinc-200 transition-colors shadow-xl">
-         Start Session
+      <button 
+        onClick={handleStartSession}
+        disabled={isLoading || dueCount === 0}
+        className="w-full bg-white text-black font-black py-4 rounded-2xl hover:bg-zinc-200 transition-colors shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      >
+        {isLoading ? (
+          <>
+            <Loader2 size={20} className="animate-spin" />
+            Loading...
+          </>
+        ) : (
+          "Start Session"
+        )}
       </button>
     </motion.div>
   );

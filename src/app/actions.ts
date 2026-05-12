@@ -1,6 +1,7 @@
 "use server";
 
 import { ExpressionController } from "@/backend/controllers/ExpressionController";
+import { StudyPerformance } from "@/shared/types/expression";
 
 
 export async function analyzeExpression(text: string) {
@@ -14,4 +15,12 @@ export async function getExpressions() {
 
 export async function deleteExpression(id: string) {
   return ExpressionController.delete(id);
+}
+
+export async function getReviewSession(limit: number = 12) {
+  return ExpressionController.getReviewSession(limit);
+}
+
+export async function submitReview(id: string, performance: StudyPerformance) {
+  return ExpressionController.submitReview(id, performance);
 }

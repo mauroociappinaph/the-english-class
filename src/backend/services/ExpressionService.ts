@@ -2,6 +2,7 @@ import { IExpressionRepository } from "../domain/repositories/IExpressionReposit
 import { ILinguisticAnalyzer } from "../domain/interfaces/ILinguisticAnalyzer";
 import { ExpressionDetail, GroqExample } from "../domain/types";
 import { CollisionError } from "../domain/errors";
+import { StudyPerformance } from "@/shared/types/expression";
 
 /**
  * Service to handle Expression business logic
@@ -72,8 +73,15 @@ export class ExpressionService {
     return this.repository.findAll();
   }
 
+  async getReviewSession(limit: number = 12): Promise<ExpressionDetail[]> {
+    return this.repository.findDueForReview(limit);
+  }
+
+  async submitReview(id: string, performance: StudyPerformance): Promise<ExpressionDetail> {
+    return this.repository.updateStudyProgress(id, performance);
+  }
+
   async deleteExpression(id: string): Promise<void> {
     return this.repository.delete(id);
   }
 }
-

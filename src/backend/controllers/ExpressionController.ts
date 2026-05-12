@@ -1,5 +1,6 @@
 import { withTelemetry } from "@/backend/infrastructure/telemetry";
 import { expressionService } from "@/backend/infrastructure/registry";
+import { StudyPerformance } from "@/shared/types/expression";
 
 /**
  * Controller to orchestrate Expression actions
@@ -22,6 +23,14 @@ export class ExpressionController {
 
   static async getAll() {
     return withTelemetry("getExpressions", () => expressionService.getExpressions());
+  }
+
+  static async getReviewSession(limit: number = 12) {
+    return withTelemetry("getReviewSession", () => expressionService.getReviewSession(limit), { limit });
+  }
+
+  static async submitReview(id: string, performance: StudyPerformance) {
+    return withTelemetry("submitReview", () => expressionService.submitReview(id, performance), { id, performance });
   }
 
   static async delete(id: string) {

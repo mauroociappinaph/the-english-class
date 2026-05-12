@@ -24,6 +24,9 @@ model Expression {
   status            String   @default("pending") // pending, learning, mastered
   difficulty        Int      @default(1)
   timesStudied      Int      @default(0)
+  nextReviewAt      DateTime @default(now())
+  interval          Int      @default(0)
+  easiness          Float    @default(2.5)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   examples          Example[]
