@@ -2,11 +2,8 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { XCircle, CheckCircle2, AlertCircle } from "lucide-react";
-
-interface PitfallQuizProps {
-  mistake: string;
-}
+import { CheckCircle2, XCircle, AlertCircle } from "lucide-react";
+import { PitfallQuizProps } from "./types";
 
 export function PitfallQuiz({ mistake }: PitfallQuizProps) {
   const [selected, setSelected] = useState<"wrong" | "right" | null>(null);
