@@ -17,6 +17,7 @@ export function isTransientProviderError(err: unknown): boolean {
 /**
  * Creates a resilient analyzer that runs `primary` and transparently
  * falls back to `fallback` on transient provider errors (429 / 5xx).
+ * Handles both normal async methods (Promises) and streaming methods (AsyncGenerators).
  *
  * Usage:
  *   const analyzer = withFallback(groqLinguistic, geminiLinguistic);
@@ -28,6 +29,40 @@ export function withFallback<T extends object>(primary: T, fallback: T): T {
       const fn = target[prop as keyof T];
       if (typeof fn !== "function") return fn;
 
+      // Check if it's an AsyncGeneratorFunction
+      if (fn.constructor.name === "AsyncGeneratorFunction" || prop.toString().includes("Stream")) {
+        return async function* (...args: unknown[]) {
+          let generator: AsyncGenerator<any, any, any>;
+          try {
+            generator = await (fn as (...a: unknown[]) => AsyncGenerator).apply(target, args);
+            // Try to get the first chunk to catch initialization errors (e.g. 429)
+            const firstResult = await generator.next();
+            if (!firstResult.done) {
+              yield firstResult.value;
+            } else {
+              return firstResult.value;
+            }
+          } catch (err: unknown) {
+            if (isTransientProviderError(err)) {
+              console.warn(
+                `[Resilient Stream] Primary provider failed (${(err as Error).message?.slice(0, 80)}). Switching to fallback.`
+              );
+              const fallbackFn = fallback[prop as keyof T];
+              if (typeof fallbackFn === "function") {
+                const fallbackGenerator = await (fallbackFn as (...a: unknown[]) => AsyncGenerator).apply(fallback, args);
+                yield* fallbackGenerator;
+                return;
+              }
+            }
+            throw err;
+          }
+
+          // If we succeeded the first chunk, just yield the rest
+          yield* generator;
+        };
+      }
+
+      // Normal Promise-based function
       return async (...args: unknown[]) => {
         try {
           return await (fn as (...a: unknown[]) => unknown).apply(target, args);
