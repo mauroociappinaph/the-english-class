@@ -67,8 +67,8 @@ export default function ExpressionLayout({
   }
 
   return (
-    <div className="w-full relative min-h-screen bg-black">
-      <div className="flex flex-col items-center pt-20 pb-40 px-4 max-w-6xl mx-auto relative z-10">
+    <div className="w-full relative min-h-screen">
+      <div className="flex flex-col items-center pt-20 pb-40 px-4 relative z-10">
         {/* Back Button */}
         <Link 
           href="/" 

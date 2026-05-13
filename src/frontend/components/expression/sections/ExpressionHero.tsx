@@ -44,9 +44,9 @@ export function ExpressionHero({ expressionId, analysis }: ExpressionHeroProps) 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="text-3xl md:text-5xl font-medium text-zinc-400 italic tracking-tight py-4"
+        className="text-4xl md:text-6xl font-black text-white italic tracking-tight py-4"
       >
-        {analysis.meaning}
+        {analysis.translation}
       </motion.p>
 
       <div className="flex items-center justify-center gap-6 flex-wrap">
