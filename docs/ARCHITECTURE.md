@@ -16,9 +16,9 @@ Orquestan el flujo de datos desde y hacia las entidades.
 
 ### 3. Infrastructure (`src/backend/infrastructure`)
 Implementaciones concretas de las interfaces del dominio.
-- **Database**: Implementación de repositorios usando **Prisma** y SQLite.
-- **External APIs**: Cliente de **Groq SDK** para procesamiento de lenguaje natural.
-- **Telemetry**: Monitoreo de performance y logs.
+- **Database**: Implementación de repositorios usando **Prisma** y SQLite, con abstracciones en `BasePrismaRepository`.
+- **External APIs**: Pipeline resiliente con fallback automático (Groq -> NVIDIA -> Gemini).
+- **Telemetry**: Monitoreo de performance y logs integrados en todas las capas.
 
 ### 4. Controllers / Entry Points (`src/app/actions.ts`)
 La puerta de entrada al sistema desde el frontend.
@@ -38,6 +38,17 @@ La puerta de entrada al sistema desde el frontend.
 
 ---
 
-## 🤖 Integración con IA (Groq)
+## 🤖 Integración con IA y Resiliencia
+-
+-El sistema utiliza un orquestador resiliente (`withFallback`) que asegura la disponibilidad del servicio:
+-1. **Groq (Llama 3.3 70B)**: Proveedor principal para análisis lingüístico profundo.
+-2. **NVIDIA NIM (Llama 3.1 8B)**: Fallback estratégico y especialista en variaciones regionales (Slang).
+-3. **Google Gemini 2.0**: Capa final de redundancia.
+-
+-La lógica de prompts está centralizada en `BaseSlangAnalyzer`, permitiendo que el sistema mantenga la calidad pedagógica independientemente del proveedor activo.
 
-El sistema utiliza Groq para obtener desgloses gramaticales profundos. La lógica de prompt engineering y parsing de JSON reside en `src/backend/infrastructure/groq.ts`, asegurando que el resto del sistema solo vea objetos de dominio tipados, sin importar qué modelo de LLM se use por detrás.
+---
+
+## 📅 Spaced Repetition System (SRS)
+
+Se implementó el algoritmo **SM-2** para la gestión del aprendizaje a largo plazo. Cada expresión rastrea su `easiness`, `interval` y `nextReviewAt`, permitiendo sesiones de estudio optimizadas basadas en la curva del olvido.

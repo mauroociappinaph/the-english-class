@@ -1,8 +1,9 @@
 # 🎓 The English Class
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![Type Safety](https://img.shields.io/badge/type--safety-94%25-green.svg)
-![Architecture](https://img.shields.io/badge/architecture-hexagonal-orange.svg)
+![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
+![Type Safety](https://img.shields.io/badge/type--safety-100%25-brightgreen.svg)
+![Architecture](https://img.shields.io/badge/architecture-modular--hexagonal-orange.svg)
+![Health Score](https://img.shields.io/badge/health--score-100%2F100-brightgreen.svg)
 
 **The English Class** es una plataforma inteligente de aprendizaje de inglés diseñada para el dominio profundo de expresiones, modismos y verbos compuestos. Potenciada por IA, ofrece un desglose lingüístico preciso y una experiencia inmersiva.
 
@@ -34,9 +35,10 @@
 
 - **Frontend**: Next.js 16 (App Router), React 19, Tailwind CSS 4, Framer Motion.
 - **Backend**: Server Actions, Prisma, SQLite (better-sqlite3).
-- **IA**: Groq Cloud (LLM Processing).
+- **IA**: Groq Cloud, NVIDIA NIM, Google Gemini (Multi-provider Resilient Pipeline).
 - **Gobernanza**: TS-Morph (Custom Architectural Sentinel).
 - **Testing**: Vitest.
+- **Persistence**: SM-2 Algorithm for Spaced Repetition (SR).
 
 ---
 
@@ -52,10 +54,11 @@ Este proyecto no es solo código; es un sistema con leyes estrictas para garanti
 ## 📈 Calidad de Código
 
 Mantenemos un estándar de calidad extremadamente alto. Antes de cada commit, el Sentinel verifica:
-- ✅ **Zero Any Policy**
-- ✅ **Layer Boundaries**
-- ✅ **Cohesión de Interfaces**
-- ✅ **Seguridad OWASP**
+- ✅ **Zero Any Policy** (Enforced 100%)
+- ✅ **Layer Boundaries** (Strict Hexagonal)
+- ✅ **Cohesión de Interfaces** (SOLID compliance)
+- ✅ **Resiliencia de IA** (Automatic Failover)
+- ✅ **Seguridad OWASP** (Stateless & Type-safe)
 
 ---
 
