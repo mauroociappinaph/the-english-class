@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExpressionMeaningProps } from "./types";
+import { ExpressionMeaningProps, sectionVariants } from "./types";
 import { QuotedPillList } from "@/frontend/components/ui/QuotedPillList";
+import { Languages, Lightbulb } from "lucide-react";
 
 export function ExpressionMeaning({ meaning, secondaryMeanings, mnemonic }: ExpressionMeaningProps) {
   return (

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { GraduationCap, Sparkles } from "lucide-react";
-import { ExpressionMasteryProps } from "./types";
+import { ExpressionMasteryProps, sectionVariants } from "./types";
 
 export function ExpressionMastery({ usageTips, formality }: ExpressionMasteryProps) {
   return (

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Terminal, Share2 } from "lucide-react";
 import { InteractiveText } from "@/frontend/components/InteractiveText";
-import { ExpressionScenariosProps } from "./types";
+import { ExpressionScenariosProps, sectionVariants } from "./types";
 
 export function ExpressionScenarios({ examples }: ExpressionScenariosProps) {
   if (!examples || examples.length === 0) return null;

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Settings2, ListTree } from "lucide-react";
 import { MechanicsBlueprint } from "@/frontend/components/mechanics/MechanicsBlueprint";
 import { WordFamilyList } from "@/frontend/components/WordFamilyList";
-import { ExpressionMechanicsProps } from "./types";
+import { ExpressionMechanicsProps, sectionVariants } from "./types";
 
 export function ExpressionMechanics({ phrasalVerbDetails, wordFamilies }: ExpressionMechanicsProps) {
   return (

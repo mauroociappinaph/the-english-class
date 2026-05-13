@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { SimilarWords } from "@/frontend/components/expression/SimilarWords";
 import { getCefrStyle } from "@/frontend/components/cefr-styles";
-import { ExpressionHeroProps } from "./types";
+import { ExpressionHeroProps, sectionVariants } from "./types";
 
 const FORMALITY_BADGE: Record<string, { border: string; text: string }> = {
   formal: { border: "border-blue-500/30", text: "text-blue-300" },
@@ -15,18 +15,10 @@ const FORMALITY_BADGE: Record<string, { border: string; text: string }> = {
   "old-fashioned": { border: "border-stone-500/30", text: "text-stone-400" },
 };
 
-const sectionVariants = {
-  hidden: { opacity: 0, y: 32 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
 export function ExpressionHero({ expressionId, analysis }: ExpressionHeroProps) {
   const slangData = analysis.linguistics?.slangData;
-  const topVariant = slangData?.regionalVariants?.[0] ?? null;
+  const regionalVariants = slangData?.regionalVariants ?? [];
+  const topVariant = regionalVariants[0] ?? null;
   const formalityKey = (analysis.metadata?.formality ?? "neutral").toLowerCase();
   const formalityStyle = FORMALITY_BADGE[formalityKey] ?? FORMALITY_BADGE.neutral;
   const cefrStyle = getCefrStyle(analysis.metadata.cefr);
@@ -69,15 +61,15 @@ export function ExpressionHero({ expressionId, analysis }: ExpressionHeroProps) 
             Slang · Level {slangData.detectedSlangLevel}/3
           </span>
         )}
-        {slangData?.regionalVariants?.length > 0 && (
+        {regionalVariants.length > 0 && (
           <Link
             href={`/expression/${expressionId}/slang`}
             className="px-3 py-1 rounded-full border border-white/10 text-zinc-400 text-xs font-semibold hover:text-white hover:border-white/30 transition-all"
           >
-            🌍 {slangData.regionalVariants.length} regional variants →
+            🌍 {regionalVariants.length} regional variants →
           </Link>
         )}
-        <SimilarWords words={slangData?.similarWords} limit={3} />
+        <SimilarWords words={slangData?.similarWords ?? []} limit={3} />
       </div>
     </motion.section>
   );
