@@ -9,7 +9,7 @@ import { SimilarWords } from "@/frontend/components/expression/SimilarWords";
 import { MechanicsBlueprint } from "@/frontend/components/mechanics/MechanicsBlueprint";
 import { WordFamilyList } from "@/frontend/components/WordFamilyList";
 import { InteractiveText } from "@/frontend/components/InteractiveText";
-import { TenseTimeline } from "@/frontend/components/TenseTimeline";
+import { VisualGrammarEngine } from "@/frontend/components/VisualGrammarEngine";
 import { getCefrStyle } from "@/frontend/components/cefr-styles";
 import { Example } from "@/shared/types/expression";
 
@@ -204,7 +204,7 @@ export default function ExpressionPage() {
           <span className="text-zinc-600 text-lg">⏱</span>
           <h2 className="font-display text-lg font-black uppercase tracking-[0.4em] text-zinc-500">Chronology</h2>
         </div>
-        <TenseTimeline expression={currentAnalysis} />
+        <VisualGrammarEngine tenses={currentAnalysis.linguistics.tenses} />
       </motion.section>
 
       <SectionDivider label="scenarios" />

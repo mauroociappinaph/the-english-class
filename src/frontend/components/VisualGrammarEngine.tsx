@@ -3,7 +3,7 @@ import { LucideIcon, Activity, Clock, Timer, FastForward, History } from "lucide
 import { InteractiveText } from "./InteractiveText";
 import { TenseTimelineProps } from "@/frontend/types/components";
 
-export function TenseTimeline({ tenses = {} }: TenseTimelineProps) {
+export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
   const tenseOrder = ["past", "present", "future"];
   
   const categories: Record<string, { key: string; text: string; translation: string }[]> = {
@@ -32,7 +32,7 @@ export function TenseTimeline({ tenses = {} }: TenseTimelineProps) {
   };
 
   return (
-    <div className="relative w-full glass rounded-[3rem] border border-white/10 overflow-hidden min-h-[600px]">
+    <div className="relative w-full bg-black rounded-[3rem] border border-white/10 overflow-hidden min-h-[600px]">
       {/* Background Blueprint Grid */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
            style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
@@ -46,11 +46,11 @@ export function TenseTimeline({ tenses = {} }: TenseTimelineProps) {
             </div>
             <div>
               <h4 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-500">Temporal Analysis</h4>
-              <p className="text-lg font-bold text-white">Chronological Assembly</p>
+              <p className="text-lg font-bold text-white">Visual Grammar Engine</p>
             </div>
           </div>
           <div className="text-right flex flex-col items-end">
-            <span className="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">Chronos v4.1</span>
+            <span className="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">VGE v4.1</span>
             <div className="flex gap-1 mt-1">
               <div className="w-1 h-1 rounded-full bg-emerald-500/40" />
               <div className="w-1 h-1 rounded-full bg-emerald-500/20" />
@@ -85,7 +85,8 @@ export function TenseTimeline({ tenses = {} }: TenseTimelineProps) {
                       <motion.div 
                         key={tense.key}
                         initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
                         transition={{ delay: (idx * 0.2) + (tIdx * 0.1) }}
                         className="p-6 rounded-3xl bg-white/5 border border-white/5 hover:border-white/10 transition-all space-y-3 group/module"
                       >
