@@ -1,3 +1,4 @@
+"use client";
 import { motion } from "framer-motion";
 import { Terminal, Cpu, Layers, Activity, Share2 } from "lucide-react";
 import { useStudyStore } from "@/frontend/store/useStudyStore";
