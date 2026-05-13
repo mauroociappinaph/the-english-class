@@ -19,28 +19,28 @@ import { GeminiJournalAnalyzer } from "./analyzers/GeminiJournalAnalyzer";
 const expressionRepository = new PrismaExpressionRepository();
 const journalRepository = new PrismaJournalRepository();
 
-// Resilient analyzer for Journal: Groq -> Nvidia -> Gemini
+// Resilient analyzer for Journal: Nvidia -> Groq -> Gemini
 export const journalAnalyzer = withFallback(
-  new GroqJournalAnalyzer(),
+  new NvidiaJournalAnalyzer(),
   withFallback(
-    new NvidiaJournalAnalyzer(),
+    new GroqJournalAnalyzer(),
     new GeminiJournalAnalyzer()
   )
 );
 
-// Resilient analyzers: Groq → Nvidia → Gemini on 429/503
+// Resilient analyzers: Nvidia → Groq → Gemini on 429/503
 export const linguisticAnalyzer = withFallback(
-  new GroqLinguisticAnalyzer(),
+  new NvidiaLinguisticAnalyzer(),
   withFallback(
-    new NvidiaLinguisticAnalyzer(),
+    new GroqLinguisticAnalyzer(),
     new GeminiLinguisticAnalyzer()
   )
 );
 
 export const slangAnalyzer = withFallback(
-  new GroqSlangAnalyzer(),
+  new NvidiaSlangAnalyzer(),
   withFallback(
-    new NvidiaSlangAnalyzer(),
+    new GroqSlangAnalyzer(),
     new GeminiSlangAnalyzer()
   )
 );

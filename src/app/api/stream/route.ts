@@ -27,15 +27,17 @@ export async function POST(req: NextRequest) {
 
     const stream = new ReadableStream({
       async start(controller) {
-        try {
+          let chunkCount = 0;
           for await (const chunk of generator) {
+            chunkCount++;
             // Encode the chunk as an SSE message
             const sseMessage = `data: ${JSON.stringify({ text: chunk })}\n\n`;
             controller.enqueue(encoder.encode(sseMessage));
           }
+          console.log(`[Stream Route] Successfully sent ${chunkCount} chunks for: ${text}`);
           controller.enqueue(encoder.encode("data: [DONE]\n\n"));
         } catch (error) {
-          console.error("[Stream Route] Error during streaming:", error);
+          console.error("[Stream Route] ERROR during streaming for:", text, error);
           const errorMessage = `data: ${JSON.stringify({ error: "Stream failed" })}\n\n`;
           controller.enqueue(encoder.encode(errorMessage));
         } finally {
