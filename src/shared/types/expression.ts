@@ -86,7 +86,6 @@ export interface PhrasalVerbDetails {
 }
 
 export interface ExpressionCore {
-  id: string;
   text: string;
   translation: string;
   meaning: string;
@@ -122,6 +121,7 @@ export interface ExpressionStudy {
 }
 
 export interface Expression extends ExpressionCore {
+  id: string;
   metadata: ExpressionAttributes;
   linguistics: ExpressionLinguistics;
   study: ExpressionStudy;
