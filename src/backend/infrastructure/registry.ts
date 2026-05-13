@@ -11,10 +11,22 @@ import { NvidiaLinguisticAnalyzer } from "./analyzers/NvidiaLinguisticAnalyzer";
 import { NvidiaSlangAnalyzer } from "./analyzers/NvidiaSlangAnalyzer";
 import { withFallback } from "./resilience";
 
+import { NvidiaJournalAnalyzer } from "./analyzers/NvidiaJournalAnalyzer";
+
+import { GeminiJournalAnalyzer } from "./analyzers/GeminiJournalAnalyzer";
+
 // Singleton instances — primary providers
 const expressionRepository = new PrismaExpressionRepository();
 const journalRepository = new PrismaJournalRepository();
-const journalAnalyzer = new GroqJournalAnalyzer();
+
+// Resilient analyzer for Journal: Groq -> Nvidia -> Gemini
+const journalAnalyzer = withFallback(
+  new GroqJournalAnalyzer(),
+  withFallback(
+    new NvidiaJournalAnalyzer(),
+    new GeminiJournalAnalyzer()
+  )
+);
 
 // Resilient analyzers: Groq → Nvidia → Gemini on 429/503
 const linguisticAnalyzer = withFallback(
