@@ -168,7 +168,16 @@ export class PrismaExpressionRepository extends BasePrismaRepository implements 
         tenses: JSON.parse(expression.tenses || "null"),
         wordFamilies: JSON.parse(expression.wordFamilies || "null"),
         phrasalVerbDetails: JSON.parse(expression.phrasalVerbDetails || "null"),
-        slangData: JSON.parse(expression.slangData || "null"),
+        slangData: (() => {
+          const parsed = JSON.parse(expression.slangData || "null");
+          if (!parsed) return null;
+          return {
+            regionalVariants: parsed.regionalVariants || [],
+            detectedSlangLevel: parsed.detectedSlangLevel ?? 0,
+            isSlang: !!parsed.isSlang,
+            similarWords: parsed.similarWords || []
+          };
+        })(),
         examples: expression.examples,
       },
       study: {
