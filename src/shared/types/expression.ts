@@ -70,14 +70,14 @@ export interface SlangData {
   similarWords: string[];
 }
 
-interface WordFamilies {
+export interface WordFamilies {
   noun?: string[];
   verb?: string[];
   adjective?: string[];
   adverb?: string[];
 }
 
-interface PhrasalVerbDetails {
+export interface PhrasalVerbDetails {
   verb: string;
   particle: string;
   separable: 'no' | 'optional' | 'mandatory';

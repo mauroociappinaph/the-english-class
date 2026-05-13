@@ -4,7 +4,9 @@ import {
   UsageTips as SharedUsageTips,
   Tense as SharedTense,
   CreateExpressionDto as SharedCreateExpressionDto,
-  SlangData
+  SlangData,
+  WordFamilies,
+  PhrasalVerbDetails
 } from "@/shared/types/expression";
 
 export interface GroqExample extends Omit<SharedExample, 'id' | 'expressionId' | 'createdAt' | 'updatedAt'> {}
@@ -27,8 +29,8 @@ export interface GroqExpressionResponse {
   imageUrl: string | null;
   usageTips: GroqUsageTips;
   tenses: Record<string, GroqTense>;
-  wordFamilies: any;
-  phrasalVerbDetails: any;
+  wordFamilies: WordFamilies;
+  phrasalVerbDetails: PhrasalVerbDetails;
   examples: GroqExample[];
 }
 
