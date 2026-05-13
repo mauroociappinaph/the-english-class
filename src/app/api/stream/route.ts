@@ -27,27 +27,39 @@ export async function POST(req: NextRequest) {
       ? streamableAnalyzer.analyzeStream(text, userLevel)
       : streamableAnalyzer.analyzeStream(text);
 
+    let isClosed = false;
+
     const stream = new ReadableStream({
       async start(controller) {
         try {
           let chunkCount = 0;
           for await (const chunk of generator) {
+            if (isClosed) break;
             chunkCount++;
             // Encode the chunk as an SSE message
             const sseMessage = `data: ${JSON.stringify({ text: chunk })}\n\n`;
             controller.enqueue(encoder.encode(sseMessage));
           }
-          console.log(`[Stream Route] Successfully sent ${chunkCount} chunks for: ${text}`);
-          controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+          
+          if (!isClosed) {
+            console.log(`[Stream Route] Successfully sent ${chunkCount} chunks for: ${text}`);
+            controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+          }
         } catch (error) {
-          console.error("[Stream Route] ERROR during streaming for:", text, error);
-          const errorMessage = `data: ${JSON.stringify({ error: "Stream failed" })}\n\n`;
-          controller.enqueue(encoder.encode(errorMessage));
+          if (!isClosed) {
+            console.error("[Stream Route] ERROR during streaming for:", text, error);
+            const errorMessage = `data: ${JSON.stringify({ error: "Stream failed" })}\n\n`;
+            controller.enqueue(encoder.encode(errorMessage));
+          }
         } finally {
-          controller.close();
+          if (!isClosed) {
+            controller.close();
+            isClosed = true;
+          }
         }
       },
       cancel() {
+        isClosed = true;
         console.log("[Stream Route] Client disconnected");
       }
     });
