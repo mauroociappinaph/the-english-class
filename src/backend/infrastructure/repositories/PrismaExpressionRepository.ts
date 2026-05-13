@@ -65,6 +65,7 @@ export class PrismaExpressionRepository extends BasePrismaRepository implements 
           tenses: JSON.stringify(expression.linguistics.tenses),
           wordFamilies: JSON.stringify(expression.linguistics.wordFamilies),
           phrasalVerbDetails: JSON.stringify(expression.linguistics.phrasalVerbDetails),
+          chronology: JSON.stringify(expression.linguistics.chronology),
           slangData: expression.linguistics.slangData ? JSON.stringify(expression.linguistics.slangData) : null,
           examples: {
             create: expression.linguistics.examples.map(ex => ({
@@ -168,6 +169,7 @@ export class PrismaExpressionRepository extends BasePrismaRepository implements 
         tenses: JSON.parse(expression.tenses || "null"),
         wordFamilies: JSON.parse(expression.wordFamilies || "null"),
         phrasalVerbDetails: JSON.parse(expression.phrasalVerbDetails || "null"),
+        chronology: JSON.parse(expression.chronology || "null"),
         slangData: (() => {
           const parsed = JSON.parse(expression.slangData || "null");
           if (!parsed) return null;

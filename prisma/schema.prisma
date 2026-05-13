@@ -29,7 +29,8 @@ model Expression {
   easiness          Float    @default(2.5)
   wordFamilies      String?  // Store as JSON string: { noun: string[], verb: string[], adjective: string[], adverb: string[] }
   phrasalVerbDetails String? // Store as JSON string
-  slangData         String?  // Store as JSON string: SlangData
+  chronology         String? // Store as JSON string: ChronologyData
+  slangData          String?  // Store as JSON string: SlangData
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   examples          Example[]
