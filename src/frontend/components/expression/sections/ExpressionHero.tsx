@@ -39,6 +39,16 @@ export function ExpressionHero({ expressionId, analysis }: ExpressionHeroProps) 
         {analysis.text}
       </h1>
 
+      {/* Translation / Meaning - Pedagogical immediate feedback */}
+      <motion.p 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="text-3xl md:text-5xl font-medium text-zinc-400 italic tracking-tight py-4"
+      >
+        {analysis.meaning}
+      </motion.p>
+
       <div className="flex items-center justify-center gap-6 flex-wrap">
         <p className="text-zinc-500 italic font-mono text-xl">{analysis.metadata.ipa}</p>
         <div className={`px-4 py-1.5 rounded-full border ${cefrStyle.bg} text-white text-xs font-black uppercase tracking-widest`}>
