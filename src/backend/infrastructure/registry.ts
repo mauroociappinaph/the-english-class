@@ -20,7 +20,7 @@ const expressionRepository = new PrismaExpressionRepository();
 const journalRepository = new PrismaJournalRepository();
 
 // Resilient analyzer for Journal: Groq -> Nvidia -> Gemini
-const journalAnalyzer = withFallback(
+export const journalAnalyzer = withFallback(
   new GroqJournalAnalyzer(),
   withFallback(
     new NvidiaJournalAnalyzer(),
@@ -29,7 +29,7 @@ const journalAnalyzer = withFallback(
 );
 
 // Resilient analyzers: Groq → Nvidia → Gemini on 429/503
-const linguisticAnalyzer = withFallback(
+export const linguisticAnalyzer = withFallback(
   new GroqLinguisticAnalyzer(),
   withFallback(
     new NvidiaLinguisticAnalyzer(),
@@ -37,7 +37,7 @@ const linguisticAnalyzer = withFallback(
   )
 );
 
-const slangAnalyzer = withFallback(
+export const slangAnalyzer = withFallback(
   new GroqSlangAnalyzer(),
   withFallback(
     new NvidiaSlangAnalyzer(),
