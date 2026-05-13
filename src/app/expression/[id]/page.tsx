@@ -30,13 +30,26 @@ export default function ExpressionOverview() {
   return (
     <div className="flex flex-col items-center gap-24">
       <div className="max-w-3xl space-y-10 text-center">
-        <div className="flex items-center justify-center gap-6 text-5xl md:text-6xl font-bold text-white">
-          <Languages size={56} className="text-blue-500" />
-          <span className="gradient-text tracking-tight">{currentAnalysis.translation}</span>
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex items-center justify-center gap-6 text-5xl md:text-6xl font-bold text-white">
+            <Languages size={56} className="text-blue-500" />
+            <span className="gradient-text tracking-tight">{currentAnalysis.translation}</span>
+          </div>
+          
+          {topVariant && (
+            <div className="flex items-center gap-2 px-4 py-1.5 bg-white/5 rounded-full border border-white/10 text-zinc-400 text-sm font-bold tracking-wide uppercase">
+              <span className="text-lg">{topVariant.flag}</span>
+              <span className="bg-gradient-to-r from-zinc-300 to-zinc-500 bg-clip-text text-transparent">
+                {topVariant.region}
+              </span>
+            </div>
+          )}
         </div>
+
         <p className="text-zinc-400 text-2xl leading-relaxed font-medium">
           {currentAnalysis.meaning}
         </p>
+
         {currentAnalysis.secondaryMeanings && currentAnalysis.secondaryMeanings.length > 0 && (
           <div className="flex flex-wrap justify-center gap-3 pt-4">
             {currentAnalysis.secondaryMeanings.map((m, i) => (
@@ -61,13 +74,6 @@ export default function ExpressionOverview() {
             <span className={`px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider ${formalityStyle.bg} ${formalityStyle.text}`}>
               {currentAnalysis.formality ?? "Neutral"}
             </span>
-
-            {/* Top variant region */}
-            {topVariant && (
-              <span className="px-3 py-1 rounded-full bg-zinc-800/60 border border-zinc-700 text-zinc-400 text-xs font-medium">
-                {topVariant.flag} {topVariant.region}
-              </span>
-            )}
 
             {/* Regions count + link */}
             {slangData.regionalVariants.length > 0 && (

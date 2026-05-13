@@ -111,6 +111,26 @@ Schema:
     "separable": "no | optional | mandatory",
     "transitive": true,
     "commonCollocations": ["word1", "word2"]
+  },
+  "slangData": {
+    "regionalVariants": [
+      {
+        "region": "string (e.g. American English)",
+        "country": "string (e.g. United States)",
+        "flag": "emoji flag",
+        "word": "string (the expression itself or regional equivalent)",
+        "formality": "formal | neutral | informal | slang",
+        "slangLevel": 0,
+        "culturalNote": "brief explanation of origin/usage in English",
+        "usageContext": "where it is most common",
+        "example": "English example",
+        "exampleTranslation": "Spanish translation",
+        "tags": ["regional"]
+      }
+    ],
+    "detectedSlangLevel": 0,
+    "isSlang": false,
+    "similarWords": ["word1", "word2"]
   }
 }`;
 
@@ -276,6 +296,26 @@ Schema:
     "separable": "no | optional | mandatory",
     "transitive": true,
     "commonCollocations": ["word1", "word2"]
+  },
+  "slangData": {
+    "regionalVariants": [
+      {
+        "region": "string (e.g. American English)",
+        "country": "string (e.g. United States)",
+        "flag": "emoji flag",
+        "word": "string (the expression itself or regional equivalent)",
+        "formality": "formal | neutral | informal | slang",
+        "slangLevel": 0,
+        "culturalNote": "brief explanation of origin/usage in English",
+        "usageContext": "where it is most common",
+        "example": "English example",
+        "exampleTranslation": "Spanish translation",
+        "tags": ["regional"]
+      }
+    ],
+    "detectedSlangLevel": 0,
+    "isSlang": false,
+    "similarWords": ["word1", "word2"]
   }
 }`;
 
