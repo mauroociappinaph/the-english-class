@@ -61,7 +61,11 @@ export class DeadCodeAnalyzer implements Analyzer {
         if (!decl.isExported()) return;
         if (decl.isDefaultExport()) return;
 
-        const reservedNames = ['metadata', 'viewport', 'generateMetadata', 'revalidate', 'dynamic', 'fetchCache'];
+        const reservedNames = [
+          'metadata', 'viewport', 'generateMetadata', 'revalidate', 'dynamic', 'fetchCache',
+          'POST', 'GET', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS',
+          'maxDuration', 'runtime', 'preferredRegion'
+        ];
         
         let nameNode: Node | undefined;
         if (Node.isVariableDeclaration(decl) || Node.isFunctionDeclaration(decl) || Node.isClassDeclaration(decl) || Node.isInterfaceDeclaration(decl) || Node.isEnumDeclaration(decl) || Node.isTypeAliasDeclaration(decl)) {
