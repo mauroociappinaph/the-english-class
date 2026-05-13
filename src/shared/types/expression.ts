@@ -145,11 +145,36 @@ interface ExpressionAttributes {
   imageUrl?: string | null;
 }
 
+export interface ChronologyModule {
+  tense: string;
+  example: string;
+  simpleExplanation: string;
+  technicalExplanation: string;
+  visualTimelinePoint: number; 
+  grammarTags: string[];
+  visualIndicators?: string[]; // e.g. ["completed", "bridge", "prediction"]
+}
+
+export interface ChronologyData {
+  retrospective: {
+    pastSimple: ChronologyModule;
+    pastPerfect: ChronologyModule;
+  };
+  active: {
+    presentSimple: ChronologyModule;
+    presentPerfect: ChronologyModule;
+  };
+  projection: {
+    futureSimple: ChronologyModule;
+  };
+}
+
 interface ExpressionLinguistics {
   usageTips: UsageTips | null;
   tenses: Record<string, Tense> | null;
   wordFamilies: WordFamilies | null;
   phrasalVerbDetails: PhrasalVerbDetails | null;
+  chronology?: ChronologyData | null;
   slangData?: SlangData | null;
   examples: Example[];
 }
