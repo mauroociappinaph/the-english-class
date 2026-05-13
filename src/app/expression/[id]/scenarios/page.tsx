@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { Terminal, Cpu, Layers, Activity, Share2 } from "lucide-react";
 import { useStudyStore } from "@/frontend/store/useStudyStore";
+import { Example } from "@/shared/types/expression";
 import { InteractiveText } from "@/frontend/components/InteractiveText";
 
 export default function ScenariosPage() {
@@ -32,7 +33,7 @@ export default function ScenariosPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-left">
-        {currentAnalysis.linguistics.examples?.map((ex: any, i: number) => (
+        {currentAnalysis.linguistics.examples?.map((ex: Example, i: number) => (
           <motion.div 
             key={i}
             initial={{ opacity: 0, y: 20 }}
