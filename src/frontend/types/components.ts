@@ -1,4 +1,37 @@
-import { Expression } from './store';
+import { Expression, RegionalVariant } from './store';
+import React from 'react';
+
+export interface GrammarItem {
+  name: string;
+  example: string;
+  description: string;
+}
+
+export interface GrammarSectionProps {
+  category: string;
+  icon: React.ReactNode;
+  items: GrammarItem[];
+}
+
+export interface SlangComparePanelProps {
+  variants: RegionalVariant[];
+}
+
+export interface CompareColumnProps {
+  variant: RegionalVariant;
+  slot: 0 | 1;
+}
+
+export interface SlangFiltersProps {
+  availableRegions?: string[];
+  totalResults: number;
+}
+
+export interface SlangRegionCardProps {
+  variant: RegionalVariant;
+  isSelected?: boolean;
+  onSelect?: () => void;
+}
 
 export interface ExpressionLibraryProps {
   expressions: Expression[];

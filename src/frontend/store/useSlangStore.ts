@@ -1,31 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { FormalityLevel } from '@/shared/types/expression';
-
-export interface SlangState {
-  // Filters
-  activeRegion: string | null;
-  formalityFilter: FormalityLevel | null;
-  showSlangOnly: boolean;
-
-  // Compare mode
-  compareMode: boolean;
-  compareVariants: [string | null, string | null]; // region names
-
-  // Persistent
-  searchHistory: string[];
-  favorites: string[]; // expression ids
-
-  // Actions
-  setRegionFilter: (region: string | null) => void;
-  setFormalityFilter: (level: FormalityLevel | null) => void;
-  setShowSlangOnly: (val: boolean) => void;
-  toggleCompareMode: () => void;
-  setCompareVariant: (slot: 0 | 1, region: string | null) => void;
-  addToHistory: (text: string) => void;
-  toggleFavorite: (id: string) => void;
-  clearFilters: () => void;
-}
+import { SlangState } from '@/frontend/types/store';
 
 export const useSlangStore = create<SlangState>()(
   persist(

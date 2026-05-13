@@ -1,14 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { RegionalVariant, SlangLevel } from "@/shared/types/expression";
+import { SlangLevel } from "@/shared/types/expression";
+import { SlangRegionCardProps } from "@/frontend/types/components";
 import { useSlangStore } from "@/frontend/store/useSlangStore";
-
-interface SlangRegionCardProps {
-  variant: RegionalVariant;
-  isSelected?: boolean;
-  onSelect?: () => void;
-}
 
 const FORMALITY_STYLES: Record<string, { bg: string; text: string; label: string }> = {
   formal:         { bg: "bg-blue-500/20 border-blue-500/40",   text: "text-blue-300",   label: "Formal" },

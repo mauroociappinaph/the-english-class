@@ -1,6 +1,6 @@
 import { prisma } from "../db";
 import { Prisma } from "@prisma/client";
-
+import { PrismaJournalWithCorrections } from "../types";
 import { IJournalRepository } from "../../domain/repositories/IJournalRepository";
 import { 
   JournalEntry, 
@@ -9,10 +9,6 @@ import {
   ErrorType,
   Correction
 } from "@/shared/types/journal";
-
-type PrismaJournalWithCorrections = Prisma.JournalEntryGetPayload<{
-  include: { corrections: true }
-}>;
 
 
 export class PrismaJournalRepository implements IJournalRepository {

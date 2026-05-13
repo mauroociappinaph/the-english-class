@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { FormalityLevel } from "@/shared/types/expression";
 import { useSlangStore } from "@/frontend/store/useSlangStore";
+import { SlangFiltersProps } from "@/frontend/types/components";
 
 const REGIONS = [
   { label: "🇺🇸 American", value: "American English" },
@@ -29,10 +30,6 @@ const FORMALITY_OPTIONS: { label: string; value: FormalityLevel | null }[] = [
   { label: "Old-fashioned", value: "old-fashioned" },
 ];
 
-interface SlangFiltersProps {
-  availableRegions?: string[];
-  totalResults: number;
-}
 
 export function SlangFilters({ availableRegions, totalResults }: SlangFiltersProps) {
   const {

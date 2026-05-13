@@ -3,20 +3,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { BookOpen, Clock, Zap, MessageSquare, AlertCircle } from "lucide-react";
+import { GrammarItem, GrammarSectionProps } from "@/frontend/types/components";
 
-interface GrammarItem {
-  name: string;
-  example: string;
-  description: string;
-}
-
-interface GrammarSectionData {
-  category: string;
-  icon: React.ReactNode;
-  items: GrammarItem[];
-}
-
-const GRAMMAR_DATA: GrammarSectionData[] = [
+const GRAMMAR_DATA: GrammarSectionProps[] = [
   {
     category: "Past Tenses",
     icon: <Clock className="w-5 h-5 text-blue-400" />,

@@ -1,11 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-
-type StreamOptions = {
-  type?: 'expression' | 'journal';
-  userLevel?: string;
-  onFinish?: (fullText: string) => void;
-  onError?: (error: Error) => void;
-};
+import { StreamOptions } from '@/frontend/types/hooks';
 
 export function useAiStream() {
   const [streamedText, setStreamedText] = useState<string>('');

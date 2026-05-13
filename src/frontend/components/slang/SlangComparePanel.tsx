@@ -1,12 +1,8 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { RegionalVariant } from "@/shared/types/expression";
+import { SlangComparePanelProps, CompareColumnProps } from "@/frontend/types/components";
 import { useSlangStore } from "@/frontend/store/useSlangStore";
-
-interface SlangComparePanelProps {
-  variants: RegionalVariant[];
-}
 
 function speakText(text: string, locale: string = "en-US") {
   if (typeof window === "undefined" || !window.speechSynthesis) return;
@@ -17,10 +13,6 @@ function speakText(text: string, locale: string = "en-US") {
   window.speechSynthesis.speak(utterance);
 }
 
-interface CompareColumnProps {
-  variant: RegionalVariant;
-  slot: 0 | 1;
-}
 
 function CompareColumn({ variant, slot }: CompareColumnProps) {
   const { setCompareVariant } = useSlangStore();
