@@ -87,6 +87,43 @@ export class PrismaExpressionRepository extends BasePrismaRepository implements 
     }
   }
 
+  async update(id: string, expression: CreateExpressionDto): Promise<ExpressionDetail> {
+    // Delete existing examples first for a clean state
+    await prisma.example.deleteMany({ where: { expressionId: id } });
+
+    const updated = await prisma.expression.update({
+      where: { id },
+      data: {
+        translation: expression.translation,
+        meaning: expression.meaning,
+        secondaryMeanings: JSON.stringify(expression.metadata.secondaryMeanings),
+        type: expression.metadata.type,
+        cefr: expression.metadata.cefr,
+        ipa: expression.metadata.ipa,
+        frequency: expression.metadata.frequency,
+        formality: expression.metadata.formality,
+        mnemonic: expression.metadata.mnemonic,
+        imageUrl: expression.metadata.imageUrl,
+        usageTips: JSON.stringify(expression.linguistics.usageTips),
+        tenses: JSON.stringify(expression.linguistics.tenses),
+        wordFamilies: JSON.stringify(expression.linguistics.wordFamilies),
+        phrasalVerbDetails: JSON.stringify(expression.linguistics.phrasalVerbDetails),
+        chronology: JSON.stringify(expression.linguistics.chronology),
+        slangData: expression.linguistics.slangData ? JSON.stringify(expression.linguistics.slangData) : null,
+        examples: {
+          create: expression.linguistics.examples.map(ex => ({
+            text: ex.text,
+            translation: ex.translation,
+            category: ex.category || "cotidiano",
+            explanation: ex.explanation,
+          })),
+        },
+      },
+      include: { examples: true },
+    });
+    return this.formatExpression(updated)!;
+  }
+
   async updateStudyProgress(id: string, performance: StudyPerformance): Promise<ExpressionDetail> {
     const current = await prisma.expression.findUniqueOrThrow({
       where: { id },
