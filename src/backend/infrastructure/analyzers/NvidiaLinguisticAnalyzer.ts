@@ -22,7 +22,8 @@ RULES:
   - "explanation": English explanation of context.
   - "tone": Delivery/emotion (e.g., "Sarcastic", "Desperate", "Commanding whisper").
   - "register": Level of formality (e.g., "Street Slang", "Highly Formal", "Casual").
-  Provide at least 5 different cinematic examples.
+  Provide exactly 3 different cinematic examples.
+- "slangData": If the expression is used identically across different regions (e.g. standard English), provide ONLY the primary regional variant. Only list multiple variants if there are significant linguistic, phonetic, or cultural differences.
 
 Expression: "${text}"
 
@@ -207,7 +208,8 @@ RULES:
   - "explanation": English explanation of context.
   - "tone": Delivery/emotion (e.g., "Sarcastic", "Desperate", "Commanding whisper").
   - "register": Level of formality (e.g., "Street Slang", "Highly Formal", "Casual").
-  Provide at least 5 different cinematic examples.
+  Provide exactly 3 different cinematic examples.
+- "slangData": If the expression is used identically across different regions (e.g. standard English), provide ONLY the primary regional variant. Only list multiple variants if there are significant linguistic, phonetic, or cultural differences.
 
 Expression: "${text}"
 
