@@ -76,7 +76,21 @@ export function withFallback<T extends object>(
               const fallbackFn = fallback[prop as keyof T];
               if (typeof fallbackFn === "function") {
                 const startFallback = performance.now();
-                const fallbackGenerator = await (fallbackFn as (...a: unknown[]) => AsyncGenerator<unknown, unknown, unknown>).apply(fallback, args);
+                let fallbackGenerator: AsyncGenerator<unknown, unknown, unknown>;
+                
+                const fallbackStream = async () => {
+                  return await (fallbackFn as (...a: unknown[]) => AsyncGenerator<unknown, unknown, unknown>).apply(fallback, args);
+                };
+
+                if (timeoutMs) {
+                  const fallbackTimeoutPromise = new Promise<never>((_, reject) => 
+                    setTimeout(() => reject(new Error(`TIMEOUT: Fallback stream took > ${timeoutMs}ms to initialize`)), timeoutMs)
+                  );
+                  fallbackGenerator = await Promise.race([fallbackStream(), fallbackTimeoutPromise]);
+                } else {
+                  fallbackGenerator = await fallbackStream();
+                }
+
                 const endFallback = performance.now();
                 console.log(`[Resilient Stream] Fallback provider (${fallback.constructor.name}) INITIALIZED in ${((endFallback - startFallback) / 1000).toFixed(2)}s`);
                 yield* fallbackGenerator;
@@ -121,7 +135,20 @@ export function withFallback<T extends object>(
               const fallbackFn = fallback[prop as keyof T];
               if (typeof fallbackFn === "function") {
                 const startFallback = performance.now();
-                const fallbackResult = await (fallbackFn as (...a: unknown[]) => unknown).apply(fallback, args);
+                
+                let fallbackResult;
+                if (timeoutMs) {
+                  const fallbackTimeoutPromise = new Promise<never>((_, reject) => 
+                    setTimeout(() => reject(new Error(`TIMEOUT: Fallback provider took > ${timeoutMs}ms`)), timeoutMs)
+                  );
+                  fallbackResult = await Promise.race([
+                    (fallbackFn as (...a: unknown[]) => Promise<unknown>).apply(fallback, args),
+                    fallbackTimeoutPromise
+                  ]);
+                } else {
+                  fallbackResult = await (fallbackFn as (...a: unknown[]) => Promise<unknown>).apply(fallback, args);
+                }
+
                 const endFallback = performance.now();
                 console.log(`[Resilient] Fallback provider (${fallback.constructor.name}) COMPLETED in ${((endFallback - startFallback) / 1000).toFixed(2)}s`);
                 return fallbackResult;
