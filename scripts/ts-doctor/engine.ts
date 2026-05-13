@@ -1,5 +1,5 @@
 import { Project, Diagnostic } from "ts-morph";
-import { DiagnosticIssue } from "./reporter";
+import { DiagnosticIssue } from "./types";
 import { Suggester } from "./suggester";
 
 export class DiagnosticEngine {

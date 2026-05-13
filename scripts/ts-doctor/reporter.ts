@@ -1,14 +1,6 @@
 import chalk from "chalk";
 import path from "path";
-
-export interface DiagnosticIssue {
-  file: string;
-  line: number;
-  column: number;
-  message: string;
-  code: number;
-  suggestion?: string;
-}
+import { DiagnosticIssue } from "./types";
 
 export class Reporter {
   private static root = process.cwd();

@@ -7,7 +7,7 @@ async function main() {
   Reporter.printHeader();
 
   const project = new Project({
-    tsconfigFilePath: path.join(process.cwd(), "tsconfig.json"),
+    tsConfigFilePath: path.join(process.cwd(), "tsconfig.json"),
     compilerOptions: {
       jsx: 4, // React.JSX.Element
       allowJs: true,
