@@ -56,10 +56,29 @@ Schema:
     }
   ],
   "wordFamilies": {
-    "noun": ["related noun"],
-    "verb": ["related verb"],
-    "adjective": ["related adjective"],
-    "adverb": ["related adverb"]
+    "noun": [
+      {
+        "word": "string",
+        "pronunciation": "string",
+        "cefr": "A1-C2",
+        "translation": "string",
+        "simpleExplanation": "string",
+        "differenceWithSimilar": "string",
+        "examples": [{ "text": "...", "translation": "..." }],
+        "grammarExplanation": "string",
+        "commonCollocations": ["string"],
+        "synonyms": ["string"],
+        "antonyms": ["string"],
+        "commonMistakes": "string",
+        "naturalContexts": ["formal", "informal", "business", "academic", "casual conversation"],
+        "patterns": ["pattern1", "pattern2"],
+        "morphology": { "prefix": "...", "suffix": "...", "root": "..." },
+        "tips": ["string"]
+      }
+    ],
+    "verb": ["...same as noun structure..."],
+    "adjective": ["...same as noun structure..."],
+    "adverb": ["...same as noun structure..."]
   },
   "phrasalVerbDetails": {
     "verb": "base verb",
@@ -163,10 +182,29 @@ Schema:
     }
   ],
   "wordFamilies": {
-    "noun": ["related noun"],
-    "verb": ["related verb"],
-    "adjective": ["related adjective"],
-    "adverb": ["related adverb"]
+    "noun": [
+      {
+        "word": "string",
+        "pronunciation": "string",
+        "cefr": "A1-C2",
+        "translation": "string",
+        "simpleExplanation": "string",
+        "differenceWithSimilar": "string",
+        "examples": [{ "text": "...", "translation": "..." }],
+        "grammarExplanation": "string",
+        "commonCollocations": ["string"],
+        "synonyms": ["string"],
+        "antonyms": ["string"],
+        "commonMistakes": "string",
+        "naturalContexts": ["formal", "informal", "business", "academic", "casual conversation"],
+        "patterns": ["pattern1", "pattern2"],
+        "morphology": { "prefix": "...", "suffix": "...", "root": "..." },
+        "tips": ["string"]
+      }
+    ],
+    "verb": ["...same as noun structure..."],
+    "adjective": ["...same as noun structure..."],
+    "adverb": ["...same as noun structure..."]
   },
   "phrasalVerbDetails": {
     "verb": "base verb",
