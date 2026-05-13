@@ -2,7 +2,7 @@
 
 import { useStudyStore } from "@/frontend/store/useStudyStore";
 import { useParams } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { VisualGrammarEngine } from "@/frontend/components/VisualGrammarEngine";
 import { SectionDivider } from "@/frontend/components/expression/sections/SectionDivider";
 import { ExpressionHero } from "@/frontend/components/expression/sections/ExpressionHero";
@@ -11,7 +11,7 @@ import { ExpressionMechanics } from "@/frontend/components/expression/sections/E
 import { ExpressionScenarios } from "@/frontend/components/expression/sections/ExpressionScenarios";
 import { ExpressionMastery } from "@/frontend/components/expression/sections/ExpressionMastery";
 
-const sectionVariants = {
+const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 32 },
   visible: {
     opacity: 1,
@@ -35,13 +35,13 @@ export default function ExpressionPage() {
       <ExpressionMeaning
         meaning={currentAnalysis.meaning}
         secondaryMeanings={currentAnalysis.metadata.secondaryMeanings}
-        mnemonic={currentAnalysis.metadata.mnemonic}
+        mnemonic={currentAnalysis.metadata.mnemonic ?? undefined}
       />
 
       <SectionDivider label="mechanics" />
       <ExpressionMechanics
-        phrasalVerbDetails={currentAnalysis.linguistics.phrasalVerbDetails}
-        wordFamilies={currentAnalysis.linguistics.wordFamilies}
+        phrasalVerbDetails={currentAnalysis.linguistics.phrasalVerbDetails ?? undefined}
+        wordFamilies={currentAnalysis.linguistics.wordFamilies ?? undefined}
       />
 
       <SectionDivider label="chronology" />
@@ -65,7 +65,7 @@ export default function ExpressionPage() {
 
       <SectionDivider label="mastery" />
       <ExpressionMastery
-        usageTips={currentAnalysis.linguistics.usageTips}
+        usageTips={currentAnalysis.linguistics.usageTips ?? undefined}
         formality={currentAnalysis.metadata.formality ?? "Neutral"}
       />
     </div>
