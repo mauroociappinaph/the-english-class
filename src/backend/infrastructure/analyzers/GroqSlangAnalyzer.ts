@@ -13,7 +13,7 @@ export class GroqSlangAnalyzer extends BaseSlangAnalyzer {
         { role: "user", content: prompt }
       ],
       model: "llama-3.1-8b-instant",
-      response_format: { type: "json_object" },
+      
       temperature: 0.2,
     });
 

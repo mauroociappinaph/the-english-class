@@ -1,5 +1,6 @@
 import { SlangData } from "@/shared/types/expression";
 import { BaseSlangAnalyzer } from "./BaseSlangAnalyzer";
+import { parseRobustJson } from "../utils/json-parser";
 
 export class NvidiaSlangAnalyzer extends BaseSlangAnalyzer {
   async analyzeSlang(text: string): Promise<SlangData> {
@@ -26,7 +27,8 @@ export class NvidiaSlangAnalyzer extends BaseSlangAnalyzer {
     }
 
     const data = await response.json();
-    const parsed = JSON.parse(data.choices[0]?.message?.content || "{}");
+    const content = data.choices[0]?.message?.content || "{}";
+    const parsed = parseRobustJson(content);
     return this.enrichVariants(parsed);
   }
 }

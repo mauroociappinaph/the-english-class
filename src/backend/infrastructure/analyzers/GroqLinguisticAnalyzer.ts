@@ -98,7 +98,6 @@ export class GroqLinguisticAnalyzer implements ILinguisticAnalyzer, IStreamable 
         { role: "user", content: prompt }
       ],
       model: "llama-3.3-70b-versatile",
-      response_format: { type: "json_object" },
       temperature: 0.1,
       stream: true,
     });
@@ -106,9 +105,11 @@ export class GroqLinguisticAnalyzer implements ILinguisticAnalyzer, IStreamable 
     for await (const chunk of stream) {
       const content = chunk.choices[0]?.delta?.content || "";
       if (content) {
+        process.stdout.write("."); // Just a dot per chunk
         yield content;
       }
     }
+    console.log("\n[GroqLinguisticAnalyzer] Stream yielded all chunks");
   }
 
   async analyzeExpression(text: string): Promise<GroqExpressionResponse> {

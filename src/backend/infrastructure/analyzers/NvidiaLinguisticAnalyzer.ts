@@ -1,6 +1,7 @@
 import { ILinguisticAnalyzer } from "../../domain/interfaces/ILinguisticAnalyzer";
 import { IStreamable } from "../../domain/interfaces/IStreamable";
 import { GroqExpressionResponse } from "../../domain/types";
+import { parseRobustJson } from "../utils/json-parser";
 
 const GET_PEDAGOGICAL_PROMPT = (text: string) => `You are a Senior English Professor and Linguistic Analyst (Cambridge standards). 
 Analyze the provided English expression and return a strictly valid JSON object.
@@ -169,6 +170,11 @@ export class NvidiaLinguisticAnalyzer implements ILinguisticAnalyzer, IStreamabl
 
     const data = await response.json();
     const content = data.choices[0]?.message?.content || "{}";
-    return JSON.parse(content);
+    try {
+      return parseRobustJson(content);
+    } catch (e) {
+      console.error("[Nvidia] JSON parse error for content:", content);
+      throw e;
+    }
   }
 }
