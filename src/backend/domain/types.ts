@@ -13,10 +13,22 @@ interface GroqTense extends SharedTense {}
 
 interface GroqUsageTips extends SharedUsageTips {}
 
-export interface GroqExpressionResponse extends Omit<SharedExpression, 'id' | 'createdAt' | 'updatedAt' | 'examples' | 'usageTips' | 'tenses' | 'imageUrl'> {
-  imageUrl: string;
+export interface GroqExpressionResponse {
+  text: string;
+  translation: string;
+  meaning: string;
+  secondaryMeanings: string[];
+  type: string;
+  cefr: string;
+  ipa: string;
+  frequency: number;
+  formality: string;
+  mnemonic: string;
+  imageUrl: string | null;
   usageTips: GroqUsageTips;
   tenses: Record<string, GroqTense>;
+  wordFamilies: any;
+  phrasalVerbDetails: any;
   examples: GroqExample[];
 }
 

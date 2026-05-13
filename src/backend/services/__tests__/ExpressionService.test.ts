@@ -33,10 +33,15 @@ describe('ExpressionService', () => {
         text: 'is packed with',
         translation: 'está lleno de',
         meaning: 'to be very full of something',
-        secondaryMeanings: [],
-        usageTips: { context: 'informal' },
-        tenses: {},
-        examples: [],
+        metadata: {
+          secondaryMeanings: [],
+        },
+        linguistics: {
+          usageTips: { context: 'informal' },
+          tenses: {},
+          examples: [],
+        },
+        study: {},
         createdAt: new Date(),
         updatedAt: new Date(),
       } as unknown as ExpressionDetail;
@@ -47,7 +52,7 @@ describe('ExpressionService', () => {
 
       expect(result).not.toBeNull();
       expect(result?.text).toBe('is packed with');
-      expect(result?.usageTips).toEqual({ context: 'informal' });
+      expect(result?.linguistics.usageTips).toEqual({ context: 'informal' });
       expect(mockRepository.findByText).toHaveBeenCalledWith('is packed with');
     });
 

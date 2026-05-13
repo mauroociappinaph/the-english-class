@@ -46,29 +46,33 @@ export class ExpressionService {
         text: normalizedText,
         translation: result.translation || "",
         meaning: result.meaning || "",
-        secondaryMeanings: result.secondaryMeanings || [],
-        type: result.type || "expression",
-        cefr: result.cefr || "B1",
-        ipa: result.ipa || "",
-        frequency: result.frequency || 0.5,
-        formality: result.formality || "neutral",
-        mnemonic: result.mnemonic || "",
-        imageUrl: result.imageUrl || null,
-        usageTips: {
-          naturalness: result.usageTips?.naturalness || "",
-          commonMistake: result.usageTips?.commonMistake || "",
-          context: result.usageTips?.context || ""
+        metadata: {
+          secondaryMeanings: result.secondaryMeanings || [],
+          type: result.type || "expression",
+          cefr: result.cefr || "B1",
+          ipa: result.ipa || "",
+          frequency: result.frequency || 0.5,
+          formality: result.formality || "neutral",
+          mnemonic: result.mnemonic || "",
+          imageUrl: result.imageUrl || null,
         },
-        tenses: result.tenses || null,
-        wordFamilies: result.wordFamilies || null,
-        phrasalVerbDetails: result.phrasalVerbDetails || null,
-        slangData: slangData || null,
-        examples: (result.examples || []).map((ex: GroqExample) => ({
-          text: ex.text,
-          translation: ex.translation,
-          category: ex.category,
-          explanation: ex.explanation
-        }))
+        linguistics: {
+          usageTips: {
+            naturalness: result.usageTips?.naturalness || "",
+            commonMistake: result.usageTips?.commonMistake || "",
+            context: result.usageTips?.context || ""
+          },
+          tenses: result.tenses || null,
+          wordFamilies: result.wordFamilies || null,
+          phrasalVerbDetails: result.phrasalVerbDetails || null,
+          slangData: slangData || null,
+          examples: (result.examples || []).map((ex: GroqExample) => ({
+            text: ex.text,
+            translation: ex.translation,
+            category: ex.category,
+            explanation: ex.explanation
+          }))
+        }
       });
     } catch (error: unknown) {
       if (error instanceof CollisionError) {
