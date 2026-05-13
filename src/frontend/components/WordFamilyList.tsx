@@ -41,7 +41,7 @@ export function WordFamilyList({ families }: WordFamilyListProps) {
   if (entries.length === 0) return null;
 
   // Flatten all variants to check for patterns and counts
-  const allVariants = Object.values(richFamilies).flat().filter(Boolean);
+  const allVariants = Object.values(richFamilies || {}).flat().filter(Boolean);
 
   return (
     <div className="w-full relative space-y-12">
