@@ -29,7 +29,15 @@ export class ExpressionService {
     
     // 1. Check if it exists in DB
     const existing = await this.getExpression(normalizedText);
-    if (existing) return existing;
+    
+    // Check if we need to re-analyze to get the new Chronology data
+    const needsChronology = existing && !existing.linguistics.chronology;
+
+    if (existing && !needsChronology) return existing;
+
+    if (needsChronology) {
+      console.log(`[ExpressionService] "${normalizedText}" exists but lacks chronology. Re-analyzing...`);
+    }
 
     // 2. Call analyzers in parallel — main linguistics + slang variants
     const [result, slangData] = await Promise.all([
@@ -40,40 +48,46 @@ export class ExpressionService {
       }) ?? Promise.resolve(null),
     ]);
 
+    const expressionData: any = {
+      text: normalizedText,
+      translation: result.translation || "",
+      meaning: result.meaning || "",
+      metadata: {
+        secondaryMeanings: result.secondaryMeanings || [],
+        type: result.type || "expression",
+        cefr: result.cefr || "B1",
+        ipa: result.ipa || "",
+        frequency: result.frequency || 0.5,
+        formality: result.formality || "neutral",
+        mnemonic: result.mnemonic || "",
+        imageUrl: result.imageUrl || null,
+      },
+      linguistics: {
+        usageTips: {
+          naturalness: result.usageTips?.naturalness || "",
+          commonMistake: result.usageTips?.commonMistake || "",
+          context: result.usageTips?.context || ""
+        },
+        tenses: result.tenses || null,
+        wordFamilies: result.wordFamilies || null,
+        phrasalVerbDetails: result.phrasalVerbDetails || null,
+        chronology: result.chronology || null,
+        slangData: slangData || null,
+        examples: (result.examples || []).map((ex: GroqExample) => ({
+          text: ex.text,
+          translation: ex.translation,
+          category: ex.category,
+          explanation: ex.explanation
+        }))
+      }
+    };
+
     // 3. Save to DB with collision handling
     try {
-      return await this.repository.save({
-        text: normalizedText,
-        translation: result.translation || "",
-        meaning: result.meaning || "",
-        metadata: {
-          secondaryMeanings: result.secondaryMeanings || [],
-          type: result.type || "expression",
-          cefr: result.cefr || "B1",
-          ipa: result.ipa || "",
-          frequency: result.frequency || 0.5,
-          formality: result.formality || "neutral",
-          mnemonic: result.mnemonic || "",
-          imageUrl: result.imageUrl || null,
-        },
-        linguistics: {
-          usageTips: {
-            naturalness: result.usageTips?.naturalness || "",
-            commonMistake: result.usageTips?.commonMistake || "",
-            context: result.usageTips?.context || ""
-          },
-          tenses: result.tenses || null,
-          wordFamilies: result.wordFamilies || null,
-          phrasalVerbDetails: result.phrasalVerbDetails || null,
-          slangData: slangData || null,
-          examples: (result.examples || []).map((ex: GroqExample) => ({
-            text: ex.text,
-            translation: ex.translation,
-            category: ex.category,
-            explanation: ex.explanation
-          }))
-        }
-      });
+      if (existing) {
+        return await this.repository.update(existing.id, expressionData);
+      }
+      return await this.repository.save(expressionData);
     } catch (error: unknown) {
       if (error instanceof CollisionError) {
         const existingAfterCollision = await this.getExpression(normalizedText);
