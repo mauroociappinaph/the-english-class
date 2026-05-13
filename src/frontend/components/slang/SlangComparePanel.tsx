@@ -4,14 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { SlangComparePanelProps, CompareColumnProps } from "@/frontend/types/components";
 import { useSlangStore } from "@/frontend/store/useSlangStore";
 
-function speakText(text: string, locale: string = "en-US") {
-  if (typeof window === "undefined" || !window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = locale;
-  utterance.rate = 0.9;
-  window.speechSynthesis.speak(utterance);
-}
+import { speakText } from "@/frontend/utils/audio";
 
 
 function CompareColumn({ variant, slot }: CompareColumnProps) {
