@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Activity, Clock, Timer, FastForward, History } from "lucide-react";
+import { LucideIcon, Activity, Clock, Timer, FastForward, History } from "lucide-react";
 import { InteractiveText } from "./InteractiveText";
 import { TenseTimelineProps } from "@/frontend/types/components";
 
@@ -25,7 +25,7 @@ export function TenseTimeline({ tenses = {} }: TenseTimelineProps) {
     }
   });
 
-  const zoneLabels: Record<string, { label: string; icon: any; color: string }> = {
+  const zoneLabels: Record<string, { label: string; icon: LucideIcon; color: string }> = {
     past: { label: "RETROSPECTIVE_ZONE", icon: History, color: "text-rose-400" },
     present: { label: "ACTIVE_FLOW", icon: Timer, color: "text-blue-400" },
     future: { label: "PROJECTION_ENGINE", icon: FastForward, color: "text-emerald-400" }
