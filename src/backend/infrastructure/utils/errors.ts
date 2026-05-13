@@ -14,7 +14,7 @@ export function isTransientProviderError(err: any): boolean {
   }
 
   // Server errors
-  if (status >= 500 || message.includes("server error") || message.includes("overloaded")) {
+  if (status >= 500 || message.includes("server error") || message.includes("overloaded") || message.includes("empty response")) {
     return true;
   }
 

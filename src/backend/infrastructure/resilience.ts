@@ -60,10 +60,7 @@ export function withFallback<T extends object>(
                   innerChunkCount++;
                   yield firstResult.value;
                 } else {
-                  // If first result is done but not yielded anything, just finish
-                  const end = performance.now();
-                  console.log(`[Resilient Stream] Primary provider (${target.constructor.name}) FINISHED EMPTY in ${((end - start) / 1000).toFixed(2)}s`);
-                  return;
+                  throw new Error("EMPTY_STREAM: Primary provider returned an empty response");
                 }
               }
 
