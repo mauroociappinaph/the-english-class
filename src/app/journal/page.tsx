@@ -5,8 +5,9 @@ import { JournalEditor } from '@/frontend/components/journal/JournalEditor';
 import { FeedbackSummary } from '@/frontend/components/journal/FeedbackSummary';
 import { createJournalEntry, analyzeJournalEntry } from '@/app/actions';
 import { LinguisticAnalysis } from "@/shared/types/journal";
+import { useAiStream } from '@/frontend/hooks/useAiStream';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Sparkles } from 'lucide-react';
+import { BookOpen, Sparkles, Cpu } from 'lucide-react';
 
 const DAILY_PROMPTS = [
   "What was the highlight of your day today?",
@@ -22,6 +23,7 @@ export default function JournalPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState<LinguisticAnalysis | null>(null);
   const [prompt, setPrompt] = useState('');
+  const { streamedText, startStream } = useAiStream();
 
   useEffect(() => {
     setPrompt(DAILY_PROMPTS[Math.floor(Math.random() * DAILY_PROMPTS.length)]);
@@ -41,6 +43,9 @@ export default function JournalPage() {
     if (!content.trim()) return;
     setIsAnalyzing(true);
     try {
+      // Start streaming visual progress
+      startStream(content, { type: 'journal' });
+
       // 1. Save first to get ID
       const entry = await createJournalEntry({ content, mode: 'FREE_WRITING' });
       // 2. Analyze
@@ -59,7 +64,8 @@ export default function JournalPage() {
     } catch (error) {
       console.error("Analysis failed:", error);
     } finally {
-      setIsAnalyzing(false);
+      // Small delay for UX
+      setTimeout(() => setIsAnalyzing(false), 1000);
     }
   };
 
@@ -104,6 +110,30 @@ export default function JournalPage() {
         isSaving={isSaving}
         isAnalyzing={isAnalyzing}
       />
+
+      <AnimatePresence>
+        {isAnalyzing && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="glass rounded-3xl p-8 border border-blue-500/20 bg-blue-500/[0.03] space-y-4"
+          >
+            <div className="flex items-center gap-3 text-blue-400">
+              <Cpu size={20} className="animate-pulse" />
+              <span className="text-xs font-black uppercase tracking-widest">Real-time Linguistic Processing</span>
+            </div>
+            <div className="font-mono text-sm text-zinc-400 leading-relaxed max-h-[200px] overflow-y-auto custom-scrollbar">
+              {streamedText || "Initializing deep analysis engine..."}
+              <motion.span 
+                animate={{ opacity: [0, 1] }} 
+                transition={{ repeat: Infinity, duration: 0.8 }}
+                className="inline-block w-2 h-4 ml-1 bg-blue-500 align-middle"
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {analysis && (

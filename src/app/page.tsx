@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useStudyStore } from "@/frontend/store/useStudyStore";
+import { useAiStream } from "@/frontend/hooks/useAiStream";
 import { analyzeExpression, getExpressions, deleteExpression } from "./actions";
 import { Expression } from "@/shared/types/expression";
 
@@ -17,6 +18,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [activeTab, setActiveTab] = useState<"search" | "library" | "study">("search");
   const { isAnalyzing, setAnalyzing, setCurrentAnalysis, expressions, setExpressions, addExpression, removeExpression } = useStudyStore();
+  const { streamedText, startStream } = useAiStream();
 
   useEffect(() => {
     const fetchLibrary = async () => {
@@ -32,14 +34,19 @@ export default function Home() {
 
     setAnalyzing(true);
     try {
+      // Start visual streaming in parallel to show progress
+      startStream(input.toLowerCase(), { type: 'expression' });
+      
       const result = await analyzeExpression(input.toLowerCase());
       if (result) {
         setCurrentAnalysis(result);
         if (!expressions.find(e => e.id === result.id)) {
           addExpression(result);
         }
-        // Navigate to the detail page
-        router.push(`/expression/${result.id}`);
+        // Small delay to let the user see the final tokens if the server action was too fast
+        setTimeout(() => {
+          router.push(`/expression/${result.id}`);
+        }, 800);
       }
 
     } catch (err) {
@@ -105,12 +112,26 @@ export default function Home() {
           <AnimatePresence mode="wait">
             {isAnalyzing && (
               <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="w-full flex flex-col items-center gap-4 py-20"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="w-full max-w-2xl flex flex-col items-center gap-6 py-12 px-6 bg-white/5 border border-white/10 rounded-3xl backdrop-blur-xl"
               >
-                <div className="h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                <p className="text-zinc-500 animate-pulse font-medium">Desglosando lingüísticamente...</p>
+                <div className="relative">
+                  <div className="h-16 w-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="h-2 w-2 bg-blue-500 rounded-full animate-pulse" />
+                  </div>
+                </div>
+                
+                <div className="space-y-2 text-center w-full">
+                  <p className="text-blue-400 font-bold tracking-tight uppercase text-xs">AI Analysis in Progress</p>
+                  <div className="h-[120px] overflow-hidden relative group">
+                    <p className="text-zinc-300 font-mono text-sm leading-relaxed text-left line-clamp-5">
+                      {streamedText || "Initializing neural linguistic engine..."}
+                    </p>
+                    <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+                  </div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
