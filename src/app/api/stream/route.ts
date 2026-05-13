@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
 
     const stream = new ReadableStream({
       async start(controller) {
+        try {
           let chunkCount = 0;
           for await (const chunk of generator) {
             chunkCount++;
