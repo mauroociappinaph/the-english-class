@@ -28,7 +28,7 @@ export default function MasteryPage() {
                   <span className="text-zinc-500 text-sm font-black uppercase tracking-[0.4em] block">Naturalness</span>
                 </div>
                 <p className="text-zinc-100 text-3xl leading-relaxed font-bold pl-8 border-l-2 border-white/10">
-                  {currentAnalysis.usageTips?.naturalness}
+                  {currentAnalysis.linguistics.usageTips?.naturalness}
                 </p>
               </div>
 
@@ -38,7 +38,7 @@ export default function MasteryPage() {
                   <span className="text-sm font-black uppercase tracking-[0.4em]">Common Pitfall</span>
                 </div>
                 <p className="text-zinc-400 text-xl leading-relaxed font-medium italic">
-                  "{currentAnalysis.usageTips?.commonMistake}"
+                  "{currentAnalysis.linguistics.usageTips?.commonMistake}"
                 </p>
               </div>
             </div>
@@ -46,7 +46,7 @@ export default function MasteryPage() {
             <div className="flex flex-col justify-end gap-16 lg:pl-20 lg:border-l border-white/5">
               <div className="space-y-6">
                 <span className="text-zinc-600 text-sm font-black uppercase tracking-[0.5em] block">Formality</span>
-                <p className="text-white text-5xl font-black uppercase tracking-tighter text-glow-sm">{currentAnalysis.formality}</p>
+                <p className="text-white text-5xl font-black uppercase tracking-tighter text-glow-sm">{currentAnalysis.metadata.formality}</p>
               </div>
               <div className="space-y-8">
                 <span className="text-zinc-600 text-sm font-black uppercase tracking-[0.5em] block">Frequency</span>

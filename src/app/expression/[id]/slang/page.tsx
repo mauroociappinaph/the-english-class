@@ -66,7 +66,7 @@ export default function SlangPage() {
   const { currentAnalysis } = useStudyStore();
   const { activeRegion, formalityFilter, showSlangOnly } = useSlangStore();
 
-  const slangData = currentAnalysis?.slangData;
+  const slangData = currentAnalysis?.linguistics.slangData;
   const allVariants: RegionalVariant[] = slangData?.regionalVariants ?? [];
 
   const filteredVariants = useMemo(() => {
@@ -108,7 +108,7 @@ export default function SlangPage() {
       {slangData.similarWords.length > 0 && (
         <div className="flex items-center gap-2 mb-6 flex-wrap">
           <span className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Similar:</span>
-          {slangData.similarWords.map((word) => (
+          {slangData.similarWords.map((word: string) => (
             <span key={word} className="px-2.5 py-0.5 bg-zinc-900 border border-zinc-700 rounded-full text-zinc-400 text-xs font-medium hover:text-white transition-colors cursor-default">
               {word}
             </span>

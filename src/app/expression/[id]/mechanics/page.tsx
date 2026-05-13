@@ -42,8 +42,8 @@ export default function MechanicsPage() {
           <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
         </div>
 
-        {currentAnalysis.phrasalVerbDetails ? (
-          <MechanicsBlueprint details={currentAnalysis.phrasalVerbDetails} />
+        {currentAnalysis.linguistics.phrasalVerbDetails ? (
+          <MechanicsBlueprint details={currentAnalysis.linguistics.phrasalVerbDetails} />
         ) : (
           <div className="p-20 text-center glass rounded-[3rem] border border-white/5 space-y-6">
             <div className="w-16 h-16 rounded-full bg-zinc-900 border border-white/5 flex items-center justify-center mx-auto">
@@ -75,8 +75,8 @@ export default function MechanicsPage() {
           <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
         </div>
 
-        {currentAnalysis.wordFamilies ? (
-          <WordFamilyList families={currentAnalysis.wordFamilies} />
+        {currentAnalysis.linguistics.wordFamilies ? (
+          <WordFamilyList families={currentAnalysis.linguistics.wordFamilies} />
         ) : (
           <div className="p-20 text-center glass rounded-[3rem] border border-white/5">
             <p className="text-zinc-500 italic text-lg">No extended word family data available for this term.</p>

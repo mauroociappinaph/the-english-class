@@ -10,7 +10,7 @@ export default function ChronologyPage() {
 
   return (
     <div className="w-full max-w-5xl mx-auto py-8">
-      <TenseTimeline tenses={currentAnalysis.tenses} />
+      <TenseTimeline tenses={currentAnalysis.linguistics.tenses} />
       
       <div className="mt-12 px-8 flex items-center justify-between opacity-40">
         <div className="flex items-center gap-4">

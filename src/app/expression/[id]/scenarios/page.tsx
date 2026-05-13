@@ -32,7 +32,7 @@ export default function ScenariosPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-left">
-        {currentAnalysis.examples?.map((ex, i) => (
+        {currentAnalysis.linguistics.examples?.map((ex: any, i: number) => (
           <motion.div 
             key={i}
             initial={{ opacity: 0, y: 20 }}
