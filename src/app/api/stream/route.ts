@@ -2,6 +2,8 @@ import { NextRequest } from "next/server";
 import { linguisticAnalyzer, journalAnalyzer } from "@/backend/infrastructure/registry";
 import { IStreamable } from "@/backend/domain/interfaces/IStreamable";
 
+export const maxDuration = 60;
+
 export async function POST(req: NextRequest) {
   try {
     const { text, type = "expression", userLevel = "B1" } = await req.json();

@@ -1,7 +1,5 @@
 "use server";
 
-export const maxDuration = 60;
-
 import { ExpressionController } from "@/backend/controllers/ExpressionController";
 import { JournalController } from "@/backend/controllers/JournalController";
 import { StudyPerformance } from "@/shared/types/expression";
