@@ -21,7 +21,7 @@ export default function ExpressionOverview() {
   const params = useParams();
   const id = params.id as string;
 
-  if (!currentAnalysis) return null;
+  if (!currentAnalysis || !currentAnalysis.metadata || !currentAnalysis.linguistics) return null;
 
   const slangData = currentAnalysis?.linguistics?.slangData;
   const topVariant = slangData?.regionalVariants?.[0] ?? null;
