@@ -1,4 +1,4 @@
-import { groq } from "../groq";
+import { getGroqClient } from "../groq";
 import { ISlangAnalyzer } from "../../domain/interfaces/ISlangAnalyzer";
 import { SlangData, RegionalVariant } from "@/shared/types/expression";
 
@@ -91,7 +91,8 @@ Return ONLY valid JSON in this exact schema:
   "similarWords": ["flat", "unit", "studio", "condo"]
 }`;
 
-    const completion = await groq.chat.completions.create({
+    const client = getGroqClient();
+    const completion = await client.chat.completions.create({
       messages: [
         { role: "system", content: "Return ONLY a valid JSON object. No markdown, no explanations." },
         { role: "user", content: prompt }

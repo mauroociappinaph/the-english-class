@@ -1,10 +1,11 @@
-import { gemini, GEMINI_MODEL } from "../gemini";
+import { getGeminiClient, GEMINI_MODEL } from "../gemini";
 import { IJournalAnalyzer } from "../../domain/interfaces/IJournalAnalyzer";
 import { LinguisticAnalysis } from "@/shared/types/journal";
 
 export class GeminiJournalAnalyzer implements IJournalAnalyzer {
   async analyze(text: string, userLevel: string = "B1"): Promise<LinguisticAnalysis> {
-    if (!gemini) {
+    const client = getGeminiClient();
+    if (!client) {
       throw new Error("[GeminiJournalAnalyzer] Gemini client not initialized.");
     }
 
@@ -42,7 +43,7 @@ Schema:
   "suggestedVocab": ["3-5 more natural words or phrasal verbs for this context"]
 }`;
 
-    const model = gemini.getGenerativeModel({
+    const model = client.getGenerativeModel({
       model: GEMINI_MODEL,
       generationConfig: {
         responseMimeType: "application/json",

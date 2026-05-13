@@ -1,10 +1,11 @@
-import { gemini, GEMINI_MODEL } from "../gemini";
+import { getGeminiClient, GEMINI_MODEL } from "../gemini";
 import { ILinguisticAnalyzer } from "../../domain/interfaces/ILinguisticAnalyzer";
 import { GroqExpressionResponse } from "../../domain/types";
 
 export class GeminiLinguisticAnalyzer implements ILinguisticAnalyzer {
   async analyzeExpression(text: string): Promise<GroqExpressionResponse> {
-    if (!gemini) {
+    const client = getGeminiClient();
+    if (!client) {
       throw new Error("[GeminiLinguisticAnalyzer] Gemini client not initialized — GOOGLE_GENERATIVE_AI_API_KEY missing.");
     }
 
@@ -83,7 +84,7 @@ Schema:
   }
 }`;
 
-    const model = gemini.getGenerativeModel({
+    const model = client.getGenerativeModel({
       model: GEMINI_MODEL,
       generationConfig: {
         responseMimeType: "application/json",

@@ -1,4 +1,4 @@
-import { groq } from "../groq";
+import { getGroqClient } from "../groq";
 import { IJournalAnalyzer } from "../../domain/interfaces/IJournalAnalyzer";
 import { IStreamable } from "../../domain/interfaces/IStreamable";
 import { LinguisticAnalysis } from "@/shared/types/journal";
@@ -39,7 +39,8 @@ Schema:
   "suggestedVocab": ["3-5 more natural words or phrasal verbs for this context"]
 }`;
 
-    const stream = await groq.chat.completions.create({
+    const client = getGroqClient();
+    const stream = await client.chat.completions.create({
       messages: [
         { role: "system", content: "You are a helpful English tutor. Return ONLY a valid JSON object." },
         { role: "user", content: prompt }
@@ -93,7 +94,8 @@ Schema:
   "suggestedVocab": ["3-5 more natural words or phrasal verbs for this context"]
 }`;
 
-    const completion = await groq.chat.completions.create({
+    const client = getGroqClient();
+    const completion = await client.chat.completions.create({
       messages: [
         { role: "system", content: "You are a helpful English tutor. Return ONLY a valid JSON object." },
         { role: "user", content: prompt }

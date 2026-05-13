@@ -1,4 +1,4 @@
-import { gemini, GEMINI_MODEL } from "../gemini";
+import { getGeminiClient, GEMINI_MODEL } from "../gemini";
 import { ISlangAnalyzer } from "../../domain/interfaces/ISlangAnalyzer";
 import { SlangData, RegionalVariant } from "@/shared/types/expression";
 
@@ -22,7 +22,8 @@ const SUPPORTED_VARIANTS = [
 
 export class GeminiSlangAnalyzer implements ISlangAnalyzer {
   async analyzeSlang(text: string): Promise<SlangData> {
-    if (!gemini) {
+    const client = getGeminiClient();
+    if (!client) {
       throw new Error("[GeminiSlangAnalyzer] Gemini client not initialized — GOOGLE_GENERATIVE_AI_API_KEY missing.");
     }
 
@@ -72,7 +73,7 @@ Return ONLY valid JSON:
   "similarWords": ["word1", "word2", "word3"]
 }`;
 
-    const model = gemini.getGenerativeModel({
+    const model = client.getGenerativeModel({
       model: GEMINI_MODEL,
       generationConfig: {
         responseMimeType: "application/json",

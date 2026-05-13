@@ -1,4 +1,4 @@
-import { groq } from "../groq";
+import { getGroqClient } from "../groq";
 import { ILinguisticAnalyzer } from "../../domain/interfaces/ILinguisticAnalyzer";
 import { IStreamable } from "../../domain/interfaces/IStreamable";
 import { GroqExpressionResponse } from "../../domain/types";
@@ -91,7 +91,8 @@ Schema:
   }
 } `;
 
-    const stream = await groq.chat.completions.create({
+    const client = getGroqClient();
+    const stream = await client.chat.completions.create({
       messages: [
         { role: "system", content: "Return ONLY a valid JSON object." },
         { role: "user", content: prompt }
@@ -197,7 +198,8 @@ Schema:
   }
 } `;
 
-    const completion = await groq.chat.completions.create({
+    const client = getGroqClient();
+    const completion = await client.chat.completions.create({
       messages: [
         { role: "system", content: "Return ONLY a valid JSON object." },
         { role: "user", content: prompt }
