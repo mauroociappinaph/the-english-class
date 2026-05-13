@@ -38,7 +38,7 @@ export function ReviewSession() {
     }
   };
 
-  const cefrStyle = getCefrStyle(currentExpression.cefr);
+  const cefrStyle = getCefrStyle(currentExpression.metadata.cefr);
 
   return (
     <motion.div
@@ -54,7 +54,7 @@ export function ReviewSession() {
             {currentReviewIndex + 1} / {reviewQueue.length}
           </span>
           <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${cefrStyle.bg} text-white`}>
-            {currentExpression.cefr}
+            {currentExpression.metadata.cefr}
           </span>
         </div>
         <button
@@ -92,8 +92,8 @@ export function ReviewSession() {
               <p className="text-4xl font-black tracking-tight leading-tight">
                 {currentExpression.text}
               </p>
-              {currentExpression.ipa && (
-                <p className="text-zinc-500 text-sm font-mono">{currentExpression.ipa}</p>
+              {currentExpression.metadata.ipa && (
+                <p className="text-zinc-500 text-sm font-mono">{currentExpression.metadata.ipa}</p>
               )}
               <div className="flex items-center gap-2 text-zinc-600 text-sm mt-4">
                 <RotateCcw size={14} />
@@ -116,25 +116,25 @@ export function ReviewSession() {
                   {currentExpression.meaning}
                 </p>
               </div>
-              {currentExpression.wordFamilies && (
+              {currentExpression.linguistics.wordFamilies && (
                 <>
                   <div className="w-full h-px bg-white/10" />
-                  <WordFamilyList families={currentExpression.wordFamilies} />
+                  <WordFamilyList families={currentExpression.linguistics.wordFamilies} />
                 </>
               )}
-              {currentExpression.phrasalVerbDetails && (
+              {currentExpression.linguistics.phrasalVerbDetails && (
                 <>
                   <div className="w-full h-px bg-white/10" />
-                  <PhrasalVerbDetails details={currentExpression.phrasalVerbDetails} />
+                  <PhrasalVerbDetails details={currentExpression.linguistics.phrasalVerbDetails} />
                 </>
               )}
-              {currentExpression.examples.length > 0 && (
+              {currentExpression.linguistics.examples.length > 0 && (
                 <>
                   <div className="w-full h-px bg-white/10" />
                   <div className="space-y-2 text-left">
                     <p className="text-sm uppercase tracking-widest text-zinc-600 font-bold">Example</p>
                     <p className="text-zinc-400 text-sm italic">
-                      &ldquo;{currentExpression.examples[0].text}&rdquo;
+                      &ldquo;{currentExpression.linguistics.examples[0].text}&rdquo;
                     </p>
                   </div>
                 </>

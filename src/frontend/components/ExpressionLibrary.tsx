@@ -14,8 +14,8 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
       {expressions.map((ex, i) => (
         <div key={ex.id || i} className="glass p-6 rounded-2xl space-y-3 relative group overflow-hidden">
           <div 
-            className={`absolute top-0 right-0 w-2 h-full ${getCefrStyle(ex?.cefr || 'A1').bg}`} 
-            style={{ boxShadow: `-5px 0 15px rgba(${getCefrStyle(ex?.cefr || 'A1').glow}, 0.2)` }}
+            className={`absolute top-0 right-0 w-2 h-full ${getCefrStyle(ex?.metadata.cefr || 'A1').bg}`} 
+            style={{ boxShadow: `-5px 0 15px rgba(${getCefrStyle(ex?.metadata.cefr || 'A1').glow}, 0.2)` }}
           />
           
           <button 
@@ -29,8 +29,8 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
           </button>
 
           <div className="flex justify-between items-center">
-            <span className="text-[10px] font-bold text-zinc-500 uppercase">{ex?.type}</span>
-            <span className="text-[10px] font-bold text-white/50">{ex?.cefr}</span>
+            <span className="text-[10px] font-bold text-zinc-500 uppercase">{ex?.metadata.type}</span>
+            <span className="text-[10px] font-bold text-white/50">{ex?.metadata.cefr}</span>
           </div>
           <h4 className="text-xl font-bold">{ex?.text}</h4>
           <p className="text-zinc-400 text-sm">{ex?.translation}</p>

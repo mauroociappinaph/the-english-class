@@ -30,8 +30,8 @@ export function StudySection() {
   }
 
   const dueCount = expressions.filter(e => {
-    if (!e.nextReviewAt) return true;
-    return new Date(e.nextReviewAt) <= new Date();
+    if (!e.study.nextReviewAt) return true;
+    return new Date(e.study.nextReviewAt) <= new Date();
   }).length;
 
   return (
