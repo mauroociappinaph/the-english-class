@@ -7,6 +7,8 @@ import { GroqJournalAnalyzer } from "./analyzers/GroqJournalAnalyzer";
 import { GroqSlangAnalyzer } from "./analyzers/GroqSlangAnalyzer";
 import { GeminiLinguisticAnalyzer } from "./analyzers/GeminiLinguisticAnalyzer";
 import { GeminiSlangAnalyzer } from "./analyzers/GeminiSlangAnalyzer";
+import { NvidiaLinguisticAnalyzer } from "./analyzers/NvidiaLinguisticAnalyzer";
+import { NvidiaSlangAnalyzer } from "./analyzers/NvidiaSlangAnalyzer";
 import { withFallback } from "./resilience";
 
 // Singleton instances — primary providers
@@ -14,15 +16,21 @@ const expressionRepository = new PrismaExpressionRepository();
 const journalRepository = new PrismaJournalRepository();
 const journalAnalyzer = new GroqJournalAnalyzer();
 
-// Resilient analyzers: Groq → Gemini on 429/503
+// Resilient analyzers: Groq → Nvidia → Gemini on 429/503
 const linguisticAnalyzer = withFallback(
   new GroqLinguisticAnalyzer(),
-  new GeminiLinguisticAnalyzer()
+  withFallback(
+    new NvidiaLinguisticAnalyzer(),
+    new GeminiLinguisticAnalyzer()
+  )
 );
 
 const slangAnalyzer = withFallback(
   new GroqSlangAnalyzer(),
-  new GeminiSlangAnalyzer()
+  withFallback(
+    new NvidiaSlangAnalyzer(),
+    new GeminiSlangAnalyzer()
+  )
 );
 
 export const expressionService = new ExpressionService(
