@@ -14,17 +14,7 @@ RULES:
 - "secondaryMeanings": Scan for polysemy. Provide all other significantly different definitions or usages in different domains (e.g., technical, social, scientific, slang) in ENGLISH. Do not include minor nuances, only distinct alternative meanings.
 - "usageTips": All descriptions must be in ENGLISH.
 - "tenses": Each tense must have a "text" (ENGLISH example) and a "translation" (SPANISH).
-- "examples": Act as a Hollywood Script Analyst. Each example MUST have:
-  - "text": English expression used in a sentence.
-  - "translation": Standard Spanish translation.
-  - "literalTranslation": Literal word-by-word Spanish translation.
-  - "subtitleAdaptation": How a professional subtitler would adapt this for Netflix LATAM.
-  - "category": Cinematic Tropes (e.g., "Medical Drama", "90s Sitcom", "Courtroom Thriller", "Sci-Fi", "Spy Movie", "Police Procedural").
-  - "explanation": English explanation of context.
-  - "tone": Delivery/emotion (e.g., "Sarcastic", "Desperate", "Commanding whisper").
-  - "register": Level of formality (e.g., "Street Slang", "Highly Formal", "Casual").
   Provide exactly 3 different cinematic examples.
-- "slangData": If the expression is used identically across different regions (e.g. standard English), provide ONLY the primary regional variant. Only list multiple variants if there are significant linguistic, phonetic, or cultural differences.
 
 Expression: "${text}"
 
@@ -130,11 +120,12 @@ Schema:
         "tags": ["regional"]
       }
     ],
+    "_instruction": "If variants are identical across regions, provide ONLY the primary regional variant in regionalVariants[]. Only list multiple if they differ significantly.",
     "detectedSlangLevel": 0,
     "isSlang": false,
     "similarWords": ["word1", "word2"]
   }
-}`;
+} `;
 
     const stream = await groq.chat.completions.create({
       messages: [
@@ -165,17 +156,7 @@ RULES:
 - "secondaryMeanings": Scan for polysemy. Provide all other significantly different definitions or usages in different domains (e.g., technical, social, scientific, slang) in ENGLISH. Do not include minor nuances, only distinct alternative meanings.
 - "usageTips": All descriptions must be in ENGLISH.
 - "tenses": Each tense must have a "text" (ENGLISH example) and a "translation" (SPANISH).
-- "examples": Act as a Hollywood Script Analyst. Each example MUST have:
-  - "text": English expression used in a sentence.
-  - "translation": Standard Spanish translation.
-  - "literalTranslation": Literal word-by-word Spanish translation.
-  - "subtitleAdaptation": How a professional subtitler would adapt this for Netflix LATAM.
-  - "category": Cinematic Tropes (e.g., "Medical Drama", "90s Sitcom", "Courtroom Thriller", "Sci-Fi", "Spy Movie", "Police Procedural").
-  - "explanation": English explanation of context.
-  - "tone": Delivery/emotion (e.g., "Sarcastic", "Desperate", "Commanding whisper").
-  - "register": Level of formality (e.g., "Street Slang", "Highly Formal", "Casual").
   Provide exactly 3 different cinematic examples.
-- "slangData": If the expression is used identically across different regions (e.g. standard English), provide ONLY the primary regional variant. Only list multiple variants if there are significant linguistic, phonetic, or cultural differences.
 
 Expression: "${text}"
 
@@ -281,11 +262,12 @@ Schema:
         "tags": ["regional"]
       }
     ],
+    "_instruction": "If variants are identical across regions, provide ONLY the primary regional variant in regionalVariants[]. Only list multiple if they differ significantly.",
     "detectedSlangLevel": 0,
     "isSlang": false,
     "similarWords": ["word1", "word2"]
   }
-}`;
+} `;
 
     const completion = await groq.chat.completions.create({
       messages: [

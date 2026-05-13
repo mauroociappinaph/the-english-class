@@ -3,15 +3,18 @@
  * falling back to an alternative provider.
  */
 export function isTransientProviderError(err: unknown): boolean {
-  if (!(err instanceof Error)) return false;
+  if (!err) return false;
 
-  const msg = err.message ?? "";
-  // Groq SDK surfaces the HTTP status at the start of the message: "429 {...}"
-  if (/^(429|503|502)\b/.test(msg)) return true;
+  // Extract message and status
+  const msg = (err as Error).message ?? "";
+  const errObj = err as Record<string, unknown>;
+  const status = errObj.status || errObj.statusCode;
 
-  // SDK may also expose a .status property
-  const status = (err as unknown as Record<string, unknown>).status;
-  return status === 429 || status === 503 || status === 502;
+  // Groq/OpenAI SDKs often prefix with "RateLimitError: 429" or similar
+  const hasTransientCode = /\b(429|503|502|504|401)\b/.test(msg) || 
+                           [429, 503, 502, 504, 401].includes(Number(status));
+
+  return hasTransientCode;
 }
 
 /**
@@ -32,9 +35,9 @@ export function withFallback<T extends object>(primary: T, fallback: T): T {
       // Check if it's an AsyncGeneratorFunction
       if (fn.constructor.name === "AsyncGeneratorFunction" || prop.toString().includes("Stream")) {
         return async function* (...args: unknown[]) {
-          let generator: AsyncGenerator<any, any, any>;
+          let generator: AsyncGenerator<unknown, unknown, unknown>;
           try {
-            generator = await (fn as (...a: unknown[]) => AsyncGenerator).apply(target, args);
+            generator = await (fn as (...a: unknown[]) => AsyncGenerator<unknown, unknown, unknown>).apply(target, args);
             // Try to get the first chunk to catch initialization errors (e.g. 429)
             const firstResult = await generator.next();
             if (!firstResult.done) {
@@ -49,7 +52,7 @@ export function withFallback<T extends object>(primary: T, fallback: T): T {
               );
               const fallbackFn = fallback[prop as keyof T];
               if (typeof fallbackFn === "function") {
-                const fallbackGenerator = await (fallbackFn as (...a: unknown[]) => AsyncGenerator).apply(fallback, args);
+                const fallbackGenerator = await (fallbackFn as (...a: unknown[]) => AsyncGenerator<unknown, unknown, unknown>).apply(fallback, args);
                 yield* fallbackGenerator;
                 return;
               }
