@@ -19,20 +19,20 @@ const journalRepository = new PrismaJournalRepository();
 export const journalAnalyzer = withFallback(
   new GroqJournalAnalyzer(),
   new NvidiaJournalAnalyzer(),
-  { timeoutMs: 1000 }
+  { timeoutMs: 10000 }
 );
 
-// Resilient analyzers: Groq -> Nvidia (1s timeout)
+// Resilient analyzers: Groq -> Nvidia (10s timeout)
 export const linguisticAnalyzer = withFallback(
   new GroqLinguisticAnalyzer(),
   new NvidiaLinguisticAnalyzer(),
-  { timeoutMs: 1000 }
+  { timeoutMs: 10000 }
 );
 
 export const slangAnalyzer = withFallback(
   new GroqSlangAnalyzer(),
   new NvidiaSlangAnalyzer(),
-  { timeoutMs: 1000 }
+  { timeoutMs: 10000 }
 );
 
 export const expressionService = new ExpressionService(
