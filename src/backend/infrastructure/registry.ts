@@ -29,7 +29,7 @@ export const linguisticAnalyzer = withFallback(
   { timeoutMs: 10000 }
 );
 
-export const slangAnalyzer = withFallback(
+const slangAnalyzer = withFallback(
   new GroqSlangAnalyzer(),
   new NvidiaSlangAnalyzer(),
   { timeoutMs: 10000 }

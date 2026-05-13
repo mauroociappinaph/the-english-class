@@ -2,7 +2,7 @@
  * Detects Groq rate-limit (429) and server errors (503/502) that warrant
  * falling back to an alternative provider.
  */
-export function isTransientProviderError(err: unknown): boolean {
+function isTransientProviderError(err: unknown): boolean {
   if (!err) return false;
 
   // Extract message and status
