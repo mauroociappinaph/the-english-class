@@ -30,7 +30,7 @@ export interface Example {
 
 export type StudyPerformance = 'hard' | 'good' | 'easy';
 
-export type SlangTag =
+type SlangTag =
   | 'slang'
   | 'formal'
   | 'offensive'
@@ -70,14 +70,14 @@ export interface SlangData {
   similarWords: string[];
 }
 
-export interface WordFamilies {
+interface WordFamilies {
   noun?: string[];
   verb?: string[];
   adjective?: string[];
   adverb?: string[];
 }
 
-export interface PhrasalVerbDetails {
+interface PhrasalVerbDetails {
   verb: string;
   particle: string;
   separable: 'no' | 'optional' | 'mandatory';
@@ -85,13 +85,13 @@ export interface PhrasalVerbDetails {
   commonCollocations: string[];
 }
 
-export interface ExpressionCore {
+interface ExpressionCore {
   text: string;
   translation: string;
   meaning: string;
 }
 
-export interface ExpressionAttributes {
+interface ExpressionAttributes {
   secondaryMeanings: string[];
   type: string;
   cefr: string;
@@ -102,7 +102,7 @@ export interface ExpressionAttributes {
   imageUrl?: string | null;
 }
 
-export interface ExpressionLinguistics {
+interface ExpressionLinguistics {
   usageTips: UsageTips | null;
   tenses: Record<string, Tense> | null;
   wordFamilies: WordFamilies | null;
@@ -111,7 +111,7 @@ export interface ExpressionLinguistics {
   examples: Example[];
 }
 
-export interface ExpressionStudy {
+interface ExpressionStudy {
   status?: 'pending' | 'learning' | 'mastered' | null;
   difficulty?: number;
   timesStudied?: number;
