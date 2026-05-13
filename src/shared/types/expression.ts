@@ -70,11 +70,29 @@ export interface SlangData {
   similarWords: string[];
 }
 
-export interface Expression {
+export interface WordFamilies {
+  noun?: string[];
+  verb?: string[];
+  adjective?: string[];
+  adverb?: string[];
+}
+
+export interface PhrasalVerbDetails {
+  verb: string;
+  particle: string;
+  separable: 'no' | 'optional' | 'mandatory';
+  transitive: boolean;
+  commonCollocations: string[];
+}
+
+export interface ExpressionCore {
   id: string;
   text: string;
   translation: string;
   meaning: string;
+}
+
+export interface ExpressionAttributes {
   secondaryMeanings: string[];
   type: string;
   cefr: string;
@@ -83,33 +101,37 @@ export interface Expression {
   formality: string | null;
   mnemonic: string | null;
   imageUrl?: string | null;
+}
+
+export interface ExpressionLinguistics {
   usageTips: UsageTips | null;
   tenses: Record<string, Tense> | null;
-  wordFamilies: {
-    noun?: string[];
-    verb?: string[];
-    adjective?: string[];
-    adverb?: string[];
-  } | null;
-  phrasalVerbDetails: {
-    verb: string;
-    particle: string;
-    separable: 'no' | 'optional' | 'mandatory';
-    transitive: boolean;
-    commonCollocations: string[];
-  } | null;
+  wordFamilies: WordFamilies | null;
+  phrasalVerbDetails: PhrasalVerbDetails | null;
   slangData?: SlangData | null;
   examples: Example[];
+}
+
+export interface ExpressionStudy {
   status?: 'pending' | 'learning' | 'mastered' | null;
   difficulty?: number;
   timesStudied?: number;
   nextReviewAt?: Date | string;
   interval?: number;
   easiness?: number;
+}
+
+export interface Expression extends ExpressionCore {
+  metadata: ExpressionAttributes;
+  linguistics: ExpressionLinguistics;
+  study: ExpressionStudy;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 }
 
-export type CreateExpressionDto = Omit<Expression, 'id' | 'createdAt' | 'updatedAt' | 'examples' | 'difficulty' | 'timesStudied' | 'nextReviewAt' | 'interval' | 'easiness'> & {
-  examples: Omit<Example, 'id' | 'expressionId' | 'createdAt' | 'updatedAt'>[];
+export type CreateExpressionDto = ExpressionCore & {
+  metadata: ExpressionAttributes;
+  linguistics: Omit<ExpressionLinguistics, 'examples'> & {
+    examples: Omit<Example, 'id' | 'expressionId' | 'createdAt' | 'updatedAt'>[];
+  };
 };
