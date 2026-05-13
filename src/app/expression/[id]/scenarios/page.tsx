@@ -49,7 +49,7 @@ export default function ScenariosPage() {
                 <div className="flex items-center gap-3">
                   <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
                   <span className="text-[10px] font-mono font-black uppercase text-zinc-500 tracking-[0.2em] group-hover:text-blue-400 transition-colors">
-                    MODULE_{ex.category.toUpperCase().replace(/\s+/g, '_')}
+                    MODULE_{(ex.category ?? 'scenario').toUpperCase().replace(/\s+/g, '_')}
                   </span>
                 </div>
                 <Terminal size={12} className="text-zinc-800 group-hover:text-blue-500/30 transition-colors" />
