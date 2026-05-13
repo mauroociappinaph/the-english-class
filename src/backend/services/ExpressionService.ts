@@ -31,12 +31,27 @@ export class ExpressionService {
     const existing = await this.getExpression(normalizedText);
     
     // Check if we need to re-analyze to get the new Chronology data
-    const needsChronology = existing && !existing.linguistics.chronology;
+    const chronology = existing?.linguistics.chronology;
+    const needsChronology = existing && (
+      !chronology || 
+      Object.keys(chronology).length === 0
+    );
 
-    if (existing && !needsChronology) return existing;
+    console.log(`[ExpressionService] Analysis request for: "${normalizedText}"`);
+    console.log(`[ExpressionService] Existing in DB: ${!!existing}`);
+    if (existing) {
+      console.log(`[ExpressionService] Has chronology: ${!!existing.linguistics.chronology}`);
+    }
+
+    if (existing && !needsChronology) {
+      console.log(`[ExpressionService] Returning cached result for "${normalizedText}"`);
+      return existing;
+    }
 
     if (needsChronology) {
-      console.log(`[ExpressionService] "${normalizedText}" exists but lacks chronology. Re-analyzing...`);
+      console.log(`[ExpressionService] "${normalizedText}" exists but lacks chronology. FORCING RE-ANALYSIS...`);
+    } else {
+      console.log(`[ExpressionService] Fresh analysis for: "${normalizedText}"`);
     }
 
     // 2. Call analyzers in parallel — main linguistics + slang variants
