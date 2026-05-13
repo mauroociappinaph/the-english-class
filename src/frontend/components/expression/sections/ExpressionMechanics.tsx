@@ -31,11 +31,7 @@ export function ExpressionMechanics({ phrasalVerbDetails, wordFamilies }: Expres
       )}
 
       {wordFamilies && (
-        <div className="space-y-8 pt-8">
-          <div className="flex items-center gap-4">
-            <ListTree size={16} className="text-zinc-600" />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-600">Word Families — Learn one, get four</span>
-          </div>
+        <div className="pt-16">
           <WordFamilyList families={wordFamilies} />
         </div>
       )}
