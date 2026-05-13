@@ -18,6 +18,8 @@ export function useAiStream() {
     setStreamedText('');
     setError(null);
     setIsStreaming(true);
+    const clientStreamStart = performance.now();
+    console.log(`[Client Stream] Starting stream for: "${text}"`);
 
     // Cancel previous stream if any
     if (abortControllerRef.current) {
@@ -72,6 +74,10 @@ export function useAiStream() {
                 throw new Error(data.error);
               }
               if (data.text) {
+                if (accumulatedText === '') {
+                  const firstChunkTime = performance.now();
+                  console.log(`[Client Stream] Received FIRST chunk in ${((firstChunkTime - clientStreamStart) / 1000).toFixed(2)}s`);
+                }
                 accumulatedText += data.text;
                 setStreamedText(accumulatedText);
               }
@@ -100,6 +106,8 @@ export function useAiStream() {
     } finally {
       setIsStreaming(false);
       abortControllerRef.current = null;
+      const totalTime = performance.now();
+      console.log(`[Client Stream] Stream FINISHED in ${((totalTime - clientStreamStart) / 1000).toFixed(2)}s`);
     }
   }, []);
 

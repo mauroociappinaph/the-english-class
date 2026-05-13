@@ -15,6 +15,7 @@ export class ExpressionController {
   }
 
   static async analyze(text: string) {
+    console.log(`[Controller] Starting analysis for: "${text}"`);
     return withTelemetry("analyzeExpression", async () => {
       try {
         return await expressionService.analyzeExpression(text);

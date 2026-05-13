@@ -44,11 +44,17 @@ export default function Home() {
     if (!input.trim()) return;
 
     setAnalyzing(true);
+    const clientStart = performance.now();
+    console.log(`[Client] Starting analysis for: "${input}"`);
+    
     try {
       // Start visual streaming in parallel to show progress
       startStream(input.toLowerCase(), { type: 'expression' });
       
       const result = await analyzeExpression(input.toLowerCase());
+      const clientEnd = performance.now();
+      console.log(`[Client] Analysis COMPLETED in ${((clientEnd - clientStart) / 1000).toFixed(2)}s`);
+
       if (result) {
         setCurrentAnalysis(result);
         if (!expressions.find(e => e.id === result.id)) {
