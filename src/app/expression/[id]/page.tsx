@@ -5,6 +5,7 @@ import { Languages } from "lucide-react";
 import { useStudyStore } from "@/frontend/store/useStudyStore";
 import { useParams } from "next/navigation";
 import { VisualCard } from "@/frontend/components/VisualCard";
+import { SimilarWords } from "@/frontend/components/expression/SimilarWords";
 
 const FORMALITY_BADGE: Record<string, { bg: string; text: string }> = {
   formal:          { bg: "bg-blue-500/20 border-blue-500/40",   text: "text-blue-300" },
@@ -85,12 +86,7 @@ export default function ExpressionOverview() {
               </Link>
             )}
 
-            {/* Similar words */}
-            {slangData.similarWords.slice(0, 3).map((word: string) => (
-              <span key={word} className="px-2.5 py-0.5 bg-zinc-900 border border-zinc-800 rounded-full text-zinc-500 text-xs">
-                {word}
-              </span>
-            ))}
+            <SimilarWords words={slangData.similarWords} limit={3} />
           </div>
         )}
       </div>

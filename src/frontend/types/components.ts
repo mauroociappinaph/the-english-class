@@ -27,6 +27,11 @@ export interface SlangFiltersProps {
   totalResults: number;
 }
 
+export interface SimilarWordsProps {
+  words: string[];
+  limit?: number;
+}
+
 export interface SlangRegionCardProps {
   variant: RegionalVariant;
   isSelected?: boolean;

@@ -8,6 +8,7 @@ import { SlangFilters } from "@/frontend/components/slang/SlangFilters";
 import { SlangRegionCard } from "@/frontend/components/slang/SlangRegionCard";
 import { SlangComparePanel } from "@/frontend/components/slang/SlangComparePanel";
 import { RegionalVariant } from "@/shared/types/expression";
+import { SimilarWords } from "@/frontend/components/expression/SimilarWords";
 
 function EmptySlang() {
   return (
@@ -104,17 +105,7 @@ export default function SlangPage() {
         </motion.div>
       )}
 
-      {/* Similar words */}
-      {slangData.similarWords.length > 0 && (
-        <div className="flex items-center gap-2 mb-6 flex-wrap">
-          <span className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Similar:</span>
-          {slangData.similarWords.map((word: string) => (
-            <span key={word} className="px-2.5 py-0.5 bg-zinc-900 border border-zinc-700 rounded-full text-zinc-400 text-xs font-medium hover:text-white transition-colors cursor-default">
-              {word}
-            </span>
-          ))}
-        </div>
-      )}
+      <SimilarWords words={slangData.similarWords} />
 
       {/* Overview badges */}
       <SlangOverviewBadge variants={allVariants} />
