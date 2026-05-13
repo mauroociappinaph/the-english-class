@@ -84,7 +84,22 @@ Schema:
     "particle": "preposition/adverb",
     "separable": "no | optional | mandatory",
     "transitive": true,
-    "commonCollocations": ["word1", "word2"]
+    "logicExplanation": "Clear explanation of how the verb and particle interact logically.",
+    "transitiveExplanation": "Didactic explanation of why it needs (or doesn't need) an object.",
+    "separabilityExplanation": "Detailed rules on where the object can be placed.",
+    "validExamples": ["sentence 1", "sentence 2"],
+    "invalidExamples": ["incorrect sentence 1", "incorrect sentence 2"],
+    "collocations": [
+      {
+        "phrase": "collocation phrase",
+        "frequency": "high | medium | low",
+        "naturalness": 0-100,
+        "usageContext": "formal | informal | spoken | business | academic",
+        "example": "usage example",
+        "translation": "spanish translation",
+        "usageNote": "short pedagogical tip"
+      }
+    ]
   },
   "slangData": {
     "regionalVariants": [
