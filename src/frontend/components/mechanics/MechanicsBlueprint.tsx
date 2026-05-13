@@ -52,10 +52,30 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
                 <span className="text-4xl md:text-6xl font-black text-white tracking-tighter italic">{verb}</span>
               </div>
               
-              <div className="flex flex-col items-center justify-center px-4">
-                <div className="h-px w-8 bg-zinc-800" />
-                <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse my-2" />
-                <div className="h-px w-8 bg-zinc-800" />
+              <div className="flex flex-col items-center justify-center px-6 relative">
+                {/* Energy Flow Animation */}
+                <motion.div 
+                  className="absolute inset-0 bg-blue-500/10 blur-xl rounded-full"
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    opacity: [0.3, 0.6, 0.3] 
+                  }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                />
+                
+                <div className="h-px w-10 bg-zinc-800 relative z-10" />
+                <motion.div 
+                  className="w-2.5 h-2.5 rounded-full bg-blue-500 relative z-10"
+                  animate={{ 
+                    boxShadow: [
+                      "0 0 0px 0px rgba(59, 130, 246, 0)",
+                      "0 0 15px 4px rgba(59, 130, 246, 0.4)",
+                      "0 0 0px 0px rgba(59, 130, 246, 0)"
+                    ]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                />
+                <div className="h-px w-10 bg-zinc-800 relative z-10" />
               </div>
 
               <div className="flex-1 p-8 rounded-[2rem] bg-blue-500/5 border border-blue-500/20 flex flex-col items-center justify-center space-y-2 group hover:bg-blue-500/10 transition-colors">
@@ -113,25 +133,29 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
 
                 <div className="space-y-8 relative">
                   {/* Transitividad Case */}
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <div className="flex items-baseline gap-2">
-                      <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">01. Transitividad</p>
-                      <div className="h-px flex-1 bg-white/5" />
+                      <p className="text-[10px] font-black text-blue-400/80 uppercase tracking-[0.2em]">01. Transitividad</p>
+                      <div className="h-px flex-1 bg-blue-500/10" />
                     </div>
-                    <div className="space-y-3">
-                      <p className="text-sm text-zinc-300 leading-relaxed">
-                        Define si el verbo necesita un objeto para cerrar el sentido.
+                    <div className="space-y-4">
+                      <p className="text-sm text-zinc-200 leading-loose">
+                        Define si el verbo necesita un objeto para cerrar el sentido completo de la acción.
                       </p>
                       {/* Live Example for Transitive */}
-                      <div className="p-4 rounded-2xl bg-zinc-900/50 border border-white/5 font-mono text-[11px] space-y-2">
+                      <div className="p-6 rounded-2xl bg-zinc-950/50 border border-white/5 font-mono text-xs space-y-3">
                         <div className="flex items-center gap-2 text-zinc-500">
-                          <span className="w-1 h-1 rounded-full bg-blue-500" />
-                          <span>LIVE EXAMPLE</span>
+                          <motion.span 
+                            animate={{ opacity: [0.4, 1, 0.4] }}
+                            transition={{ duration: 1.5, repeat: Infinity }}
+                            className="w-1.5 h-1.5 rounded-full bg-blue-500" 
+                          />
+                          <span className="text-[9px] font-black tracking-widest">LIVE SPECIMEN</span>
                         </div>
-                        <p className="text-zinc-300">
+                        <p className="text-zinc-300 text-sm">
                           {transitive ? (
                             <>
-                              I <span className="text-white font-bold">{verb}</span> <span className="text-blue-400 font-black underline decoration-blue-500/30 underline-offset-4">[something]</span> {particle}
+                              I <span className="text-white font-bold">{verb}</span> <span className="text-blue-400 font-black underline decoration-blue-500/40 underline-offset-8">[something]</span> {particle}
                             </>
                           ) : (
                             <>
@@ -139,22 +163,22 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
                             </>
                           )}
                         </p>
-                        <p className="text-[9px] text-zinc-600 italic">
-                          {transitive ? "Requires a target to complete the action." : "Action is self-contained."}
+                        <p className="text-[10px] text-zinc-600 italic leading-relaxed">
+                          {transitive ? "Critical requirement: A target is mandatory to stabilize the sentence structure." : "Autonomous operation: No external target required."}
                         </p>
                       </div>
                     </div>
                   </div>
 
                   {/* Separabilidad Case */}
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <div className="flex items-baseline gap-2">
-                      <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">02. Separabilidad</p>
-                      <div className="h-px flex-1 bg-white/5" />
+                      <p className="text-[10px] font-black text-blue-400/80 uppercase tracking-[0.2em]">02. Separabilidad</p>
+                      <div className="h-px flex-1 bg-blue-500/10" />
                     </div>
-                    <div className="space-y-3">
-                      <p className="text-sm text-zinc-300 leading-relaxed">
-                        Determina si podés meter el objeto en el medio del bloque.
+                    <div className="space-y-4">
+                      <p className="text-sm text-zinc-200 leading-loose">
+                        Determina si el flujo lógico permite inyectar el objeto en medio del bloque verbal.
                       </p>
                       
                       {/* Live Example for Separability */}
