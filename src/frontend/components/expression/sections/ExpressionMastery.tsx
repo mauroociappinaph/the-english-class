@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { GraduationCap, Sparkles } from "lucide-react";
+import { PitfallQuiz } from "@/frontend/components/expression/PitfallQuiz";
 import { ExpressionMasteryProps, sectionVariants } from "./types";
 
 export function ExpressionMastery({ usageTips, formality }: ExpressionMasteryProps) {
@@ -22,7 +23,7 @@ export function ExpressionMastery({ usageTips, formality }: ExpressionMasteryPro
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Naturalness */}
         {usageTips?.naturalness && (
-          <div className="space-y-4 border border-white/5 rounded-2xl p-8">
+          <div className="space-y-4 border border-white/5 rounded-2xl p-8 bg-white/[0.01]">
             <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600 block">Naturalness</span>
             <p className="text-white text-2xl leading-relaxed font-medium">
               {usageTips.naturalness}
@@ -32,14 +33,22 @@ export function ExpressionMastery({ usageTips, formality }: ExpressionMasteryPro
 
         {/* Common Mistake */}
         {usageTips?.commonMistake && (
-          <div className="space-y-4 border border-red-500/10 rounded-2xl p-8">
-            <div className="flex items-center gap-2 text-red-400">
-              <Sparkles size={14} />
-              <span className="text-[9px] font-black uppercase tracking-[0.4em]">Common Pitfall</span>
+          <div className="space-y-6 border border-white/5 rounded-2xl p-8 bg-white/[0.01]">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-zinc-500">
+                <Sparkles size={14} className="text-amber-500/50" />
+                <span className="text-[9px] font-black uppercase tracking-[0.4em]">Interactive Quiz</span>
+              </div>
+              <span className="text-[8px] font-bold px-2 py-0.5 rounded bg-zinc-800 text-zinc-500 uppercase">Common Pitfall</span>
             </div>
-            <p className="text-zinc-400 text-xl leading-relaxed italic">
-              &ldquo;{usageTips.commonMistake}&rdquo;
-            </p>
+            
+            <PitfallQuiz mistake={usageTips.commonMistake} />
+            
+            {usageTips.context && (
+              <p className="text-xs text-zinc-500 leading-relaxed pt-4 border-t border-white/5 italic">
+                Context: {usageTips.context}
+              </p>
+            )}
           </div>
         )}
       </div>
