@@ -20,7 +20,11 @@ export class ExpressionController {
       try {
         return await expressionService.analyzeExpression(text);
       } catch (error) {
-        console.error(`[Controller] Analysis failed for "${text}":`, error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error(`[Controller] CRITICAL: Analysis pipeline failed for "${text}":`, errorMessage);
+        if (error instanceof Error && error.stack) {
+          console.error(error.stack);
+        }
         return null;
       }
     }, { text });

@@ -8,31 +8,32 @@ import { GroqSlangAnalyzer } from "./analyzers/GroqSlangAnalyzer";
 import { NvidiaLinguisticAnalyzer } from "./analyzers/NvidiaLinguisticAnalyzer";
 import { NvidiaSlangAnalyzer } from "./analyzers/NvidiaSlangAnalyzer";
 import { withFallback } from "./resilience";
-
 import { NvidiaJournalAnalyzer } from "./analyzers/NvidiaJournalAnalyzer";
 
 // Singleton instances — primary providers
 const expressionRepository = new PrismaExpressionRepository();
 const journalRepository = new PrismaJournalRepository();
 
+const timeout = { timeoutMs: 10000 };
+
 // Resilient analyzer for Journal: Groq -> Nvidia
 export const journalAnalyzer = withFallback(
   new GroqJournalAnalyzer(),
   new NvidiaJournalAnalyzer(),
-  { timeoutMs: 10000 }
+  timeout
 );
 
 // Resilient analyzers: Groq -> Nvidia (10s timeout)
 export const linguisticAnalyzer = withFallback(
   new GroqLinguisticAnalyzer(),
   new NvidiaLinguisticAnalyzer(),
-  { timeoutMs: 10000 }
+  timeout
 );
 
 const slangAnalyzer = withFallback(
   new GroqSlangAnalyzer(),
   new NvidiaSlangAnalyzer(),
-  { timeoutMs: 10000 }
+  timeout
 );
 
 export const expressionService = new ExpressionService(
@@ -45,4 +46,3 @@ export const journalService = new JournalService(
   journalRepository,
   journalAnalyzer
 );
-
