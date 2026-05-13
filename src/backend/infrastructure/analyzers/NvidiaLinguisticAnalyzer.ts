@@ -97,7 +97,7 @@ export class NvidiaLinguisticAnalyzer implements ILinguisticAnalyzer, IStreamabl
         'Authorization': `Bearer ${process.env.NVIDIA_API_KEY}`
       },
       body: JSON.stringify({
-        model: "meta/llama-3.1-70b-instruct",
+        model: "meta/llama-3.1-8b-instruct",
         messages: [
           { role: "system", content: "Return ONLY a valid JSON object." },
           { role: "user", content: prompt }
@@ -154,7 +154,7 @@ export class NvidiaLinguisticAnalyzer implements ILinguisticAnalyzer, IStreamabl
         'Authorization': `Bearer ${process.env.NVIDIA_API_KEY}`
       },
       body: JSON.stringify({
-        model: "meta/llama-3.1-70b-instruct",
+        model: "meta/llama-3.1-8b-instruct",
         messages: [
           { role: "system", content: "Return ONLY a valid JSON object." },
           { role: "user", content: prompt }
