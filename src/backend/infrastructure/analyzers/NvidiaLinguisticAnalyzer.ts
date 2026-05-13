@@ -10,7 +10,7 @@ Analyze the provided English expression and return a strictly valid JSON object.
 RULES:
 - "translation": Provide a natural Spanish translation of the expression.
 - "meaning": Provide a clear explanation in ENGLISH.
-- "secondaryMeanings": Provide other meanings in ENGLISH.
+- "secondaryMeanings": Scan for polysemy. Provide all other significantly different definitions or usages in different domains (e.g., technical, social, scientific, slang) in ENGLISH. Do not include minor nuances, only distinct alternative meanings.
 - "usageTips": All descriptions must be in ENGLISH.
 - "tenses": Each tense must have a "text" (ENGLISH example) and a "translation" (SPANISH).
 - "examples": Act as a Hollywood Script Analyst. Each example MUST have:
@@ -175,7 +175,7 @@ Analyze the provided English expression and return a strictly valid JSON object.
 RULES:
 - "translation": Provide a natural Spanish translation of the expression.
 - "meaning": Provide a clear explanation in ENGLISH.
-- "secondaryMeanings": Provide other meanings in ENGLISH.
+- "secondaryMeanings": Scan for polysemy. Provide all other significantly different definitions or usages in different domains (e.g., technical, social, scientific, slang) in ENGLISH. Do not include minor nuances, only distinct alternative meanings.
 - "usageTips": All descriptions must be in ENGLISH.
 - "tenses": Each tense must have a "text" (ENGLISH example) and a "translation" (SPANISH).
 - "examples": Act as a Hollywood Script Analyst. Each example MUST have:

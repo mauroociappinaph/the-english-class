@@ -1,3 +1,3 @@
 export interface IStreamable {
-  analyzeStream(text: string): AsyncGenerator<string, void, unknown>;
+  analyzeStream(text: string, context?: any): AsyncGenerator<string, void, unknown>;
 }
