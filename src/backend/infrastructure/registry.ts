@@ -28,13 +28,14 @@ export const journalAnalyzer = withFallback(
   )
 );
 
-// Resilient analyzers: Nvidia → Groq → Gemini on 429/503
+// Resilient analyzers: Nvidia → Groq → Gemini on 429/503/Timeout
 export const linguisticAnalyzer = withFallback(
   new NvidiaLinguisticAnalyzer(),
   withFallback(
     new GroqLinguisticAnalyzer(),
     new GeminiLinguisticAnalyzer()
-  )
+  ),
+  { timeoutMs: 6000 }
 );
 
 export const slangAnalyzer = withFallback(
@@ -42,7 +43,8 @@ export const slangAnalyzer = withFallback(
   withFallback(
     new GroqSlangAnalyzer(),
     new GeminiSlangAnalyzer()
-  )
+  ),
+  { timeoutMs: 6000 }
 );
 
 export const expressionService = new ExpressionService(

@@ -19,14 +19,16 @@ export function isTransientProviderError(err: unknown): boolean {
 
 /**
  * Creates a resilient analyzer that runs `primary` and transparently
- * falls back to `fallback` on transient provider errors (429 / 5xx).
- * Handles both normal async methods (Promises) and streaming methods (AsyncGenerators).
- *
- * Usage:
- *   const analyzer = withFallback(groqLinguistic, geminiLinguistic);
- *   const slangAnalyzer = withFallback(groqSlang, geminiSlang);
+ * falls back to `fallback` on transient provider errors (429 / 5xx)
+ * OR if the primary provider takes longer than `timeoutMs`.
  */
-export function withFallback<T extends object>(primary: T, fallback: T): T {
+export function withFallback<T extends object>(
+  primary: T, 
+  fallback: T, 
+  options: { timeoutMs?: number } = {}
+): T {
+  const { timeoutMs } = options;
+
   return new Proxy(primary, {
     get(target, prop) {
       const fn = target[prop as keyof T];
@@ -36,8 +38,22 @@ export function withFallback<T extends object>(primary: T, fallback: T): T {
       if (fn.constructor.name === "AsyncGeneratorFunction" || prop.toString().includes("Stream")) {
         return async function* (...args: unknown[]) {
           let generator: AsyncGenerator<unknown, unknown, unknown>;
+          
+          const primaryStream = async () => {
+            return await (fn as (...a: unknown[]) => AsyncGenerator<unknown, unknown, unknown>).apply(target, args);
+          };
+
           try {
-            generator = await (fn as (...a: unknown[]) => AsyncGenerator<unknown, unknown, unknown>).apply(target, args);
+            // If timeout is set, we wait for the generator initialization
+            if (timeoutMs) {
+              const timeoutPromise = new Promise<never>((_, reject) => 
+                setTimeout(() => reject(new Error(`TIMEOUT: Primary stream took > ${timeoutMs}ms to initialize`)), timeoutMs)
+              );
+              generator = await Promise.race([primaryStream(), timeoutPromise]);
+            } else {
+              generator = await primaryStream();
+            }
+
             // Try to get the first chunk to catch initialization errors (e.g. 429)
             const firstResult = await generator.next();
             if (!firstResult.done) {
@@ -46,9 +62,10 @@ export function withFallback<T extends object>(primary: T, fallback: T): T {
               return firstResult.value;
             }
           } catch (err: unknown) {
-            if (isTransientProviderError(err)) {
+            const isTimeout = (err as Error).message?.includes("TIMEOUT");
+            if (isTransientProviderError(err) || isTimeout) {
               console.warn(
-                `[Resilient Stream] Primary provider failed (${(err as Error).message?.slice(0, 80)}). Switching to fallback.`
+                `[Resilient Stream] Primary provider ${isTimeout ? 'timed out' : 'failed'}. Switching to fallback.`
               );
               const fallbackFn = fallback[prop as keyof T];
               if (typeof fallbackFn === "function") {
@@ -67,20 +84,33 @@ export function withFallback<T extends object>(primary: T, fallback: T): T {
 
       // Normal Promise-based function
       return async (...args: unknown[]) => {
-        try {
-          return await (fn as (...a: unknown[]) => unknown).apply(target, args);
-        } catch (err: unknown) {
-          if (isTransientProviderError(err)) {
-            console.warn(
-              `[Resilient] Primary provider failed (${(err as Error).message?.slice(0, 80)}). Switching to fallback.`
-            );
-            const fallbackFn = fallback[prop as keyof T];
-            if (typeof fallbackFn === "function") {
-              return await (fallbackFn as (...a: unknown[]) => unknown).apply(fallback, args);
+        const primaryPromise = (fn as (...a: unknown[]) => unknown).apply(target, args);
+
+        const runWithFallback = async () => {
+          try {
+            if (timeoutMs) {
+              const timeoutPromise = new Promise<never>((_, reject) => 
+                setTimeout(() => reject(new Error(`TIMEOUT: Primary provider took > ${timeoutMs}ms`)), timeoutMs)
+              );
+              return await Promise.race([primaryPromise, timeoutPromise]);
             }
+            return await primaryPromise;
+          } catch (err: unknown) {
+            const isTimeout = (err as Error).message?.includes("TIMEOUT");
+            if (isTransientProviderError(err) || isTimeout) {
+              console.warn(
+                `[Resilient] Primary provider ${isTimeout ? 'timed out' : 'failed'}. Switching to fallback.`
+              );
+              const fallbackFn = fallback[prop as keyof T];
+              if (typeof fallbackFn === "function") {
+                return await (fallbackFn as (...a: unknown[]) => unknown).apply(fallback, args);
+              }
+            }
+            throw err;
           }
-          throw err;
-        }
+        };
+
+        return runWithFallback();
       };
     },
   });

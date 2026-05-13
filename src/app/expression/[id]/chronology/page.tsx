@@ -9,18 +9,15 @@ export default function ChronologyPage() {
   if (!currentAnalysis) return null;
 
   return (
-    <div className="w-full max-w-5xl mx-auto space-y-16">
-      <div className="flex items-center gap-8">
-        <h3 className="text-sm font-black uppercase tracking-[0.5em] text-zinc-500 whitespace-nowrap">Chronological Context</h3>
-        <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
-      </div>
+    <div className="w-full max-w-5xl mx-auto py-8">
       <TenseTimeline tenses={currentAnalysis.tenses} />
       
-      <div className="p-12 rounded-[3rem] bg-white/[0.02] border border-white/5 text-center mt-20">
-        <p className="text-zinc-500 text-sm leading-relaxed max-w-2xl mx-auto">
-          Understanding the temporal flow of an expression helps you visualize how it adapts to different timeframes. 
-          The timeline above shows the most common verbal forms for this specific structure.
-        </p>
+      <div className="mt-12 px-8 flex items-center justify-between opacity-40">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-px bg-zinc-800" />
+          <span className="text-[10px] font-mono tracking-widest uppercase">System Stability: Nominal</span>
+        </div>
+        <span className="text-[10px] font-mono tracking-widest uppercase">Encryption: Verified</span>
       </div>
     </div>
   );
