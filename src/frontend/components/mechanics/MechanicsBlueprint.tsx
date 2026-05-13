@@ -38,9 +38,9 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="flex flex-col gap-16">
           {/* Core Assembly */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="space-y-8">
             <div className="flex items-center gap-3">
               <GitMerge size={16} className="text-blue-500" />
               <span className="text-xs font-black uppercase tracking-widest text-zinc-400">Core Assembly</span>
@@ -86,17 +86,17 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
           </div>
 
           {/* Usage Logic */}
-          <div className="space-y-8">
+          <div className="space-y-8 pt-8 border-t border-white/5">
             <div className="flex items-center gap-3">
               <ListTree size={16} className="text-purple-500" />
               <span className="text-xs font-black uppercase tracking-widest text-zinc-400">Usage Logic</span>
             </div>
 
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Transitive */}
-              <div className="p-6 rounded-3xl bg-white/5 border border-white/10 space-y-3">
+              <div className="p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black uppercase text-zinc-500 tracking-tighter">Transitive</span>
+                  <span className="text-[10px] font-black uppercase text-zinc-500 tracking-[0.2em]">Transitive</span>
                   <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase ${transitive ? 'bg-blue-500/20 text-blue-400 border border-blue-500/20' : 'bg-zinc-800 text-zinc-500'}`}>
                     {transitive ? 'Detected' : 'Negative'}
                   </span>
@@ -107,9 +107,9 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
               </div>
 
               {/* Separability */}
-              <div className="p-6 rounded-3xl bg-white/5 border border-white/10 space-y-3">
+              <div className="p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black uppercase text-zinc-500 tracking-tighter">Separability</span>
+                  <span className="text-[10px] font-black uppercase text-zinc-500 tracking-[0.2em]">Separability</span>
                   <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase bg-zinc-800 ${currentSep.color}`}>
                     {currentSep.label}
                   </span>
@@ -119,16 +119,16 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
                 </p>
               </div>
 
-              {/* Logic Documentation - Enhanced UI/UX with Live Examples */}
-              <div className="relative group/specs p-8 rounded-[2.5rem] bg-blue-500/[0.03] border border-blue-500/10 space-y-6 mt-12 overflow-hidden">
+              {/* Logic Documentation - Full Width */}
+              <div className="md:col-span-2 relative group/specs p-10 rounded-[3rem] bg-blue-500/[0.02] border border-blue-500/10 space-y-8 mt-4 overflow-hidden">
                 {/* Decorative background element */}
-                <div className="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/5 rounded-full blur-2xl group-hover/specs:bg-blue-500/10 transition-colors" />
+                <div className="absolute -right-4 -top-4 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl group-hover/specs:bg-blue-500/10 transition-colors" />
                 
-                <div className="flex items-center gap-3 text-blue-400">
-                  <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                    <Activity size={16} />
+                <div className="flex items-center gap-4 text-blue-400">
+                  <div className="w-10 h-10 rounded-2xl bg-blue-500/10 flex items-center justify-center">
+                    <Activity size={18} />
                   </div>
-                  <span className="text-xs font-black uppercase tracking-[0.2em]">Logic Documentation</span>
+                  <span className="text-xs font-black uppercase tracking-[0.3em]">Logic Documentation</span>
                 </div>
 
                 <div className="space-y-8 relative">
