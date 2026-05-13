@@ -23,9 +23,9 @@ export default function ExpressionOverview() {
 
   if (!currentAnalysis) return null;
 
-  const slangData = currentAnalysis.linguistics.slangData;
+  const slangData = currentAnalysis?.linguistics?.slangData;
   const topVariant = slangData?.regionalVariants?.[0] ?? null;
-  const formalityKey = (currentAnalysis.metadata.formality ?? "neutral").toLowerCase();
+  const formalityKey = (currentAnalysis?.metadata?.formality ?? "neutral").toLowerCase();
   const formalityStyle = FORMALITY_BADGE[formalityKey] ?? FORMALITY_BADGE.neutral;
 
   return (
@@ -77,7 +77,7 @@ export default function ExpressionOverview() {
             </span>
 
             {/* Regions count + link */}
-            {slangData.regionalVariants.length > 0 && (
+            {slangData.regionalVariants?.length > 0 && (
               <Link
                 href={`/expression/${id}/slang`}
                 className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold hover:bg-blue-500/20 transition-all"

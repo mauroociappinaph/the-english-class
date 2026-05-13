@@ -67,7 +67,7 @@ export default function SlangPage() {
   const { currentAnalysis } = useStudyStore();
   const { activeRegion, formalityFilter, showSlangOnly } = useSlangStore();
 
-  const slangData = currentAnalysis?.linguistics.slangData;
+  const slangData = currentAnalysis?.linguistics?.slangData;
   const allVariants: RegionalVariant[] = slangData?.regionalVariants ?? [];
 
   const filteredVariants = useMemo(() => {

@@ -1,7 +1,7 @@
 import { SimilarWordsProps } from "@/frontend/types/components";
 
 export function SimilarWords({ words, limit }: SimilarWordsProps) {
-  if (!words || words.length === 0) return null;
+  if (!words || !Array.isArray(words) || words.length === 0) return null;
   
   const displayWords = limit ? words.slice(0, limit) : words;
 
