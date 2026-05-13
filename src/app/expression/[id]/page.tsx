@@ -10,6 +10,7 @@ import { ExpressionMeaning } from "@/frontend/components/expression/sections/Exp
 import { ExpressionMechanics } from "@/frontend/components/expression/sections/ExpressionMechanics";
 import { ExpressionScenarios } from "@/frontend/components/expression/sections/ExpressionScenarios";
 import { ExpressionMastery } from "@/frontend/components/expression/sections/ExpressionMastery";
+import { ChronologyEngine } from "@/frontend/components/chronology/ChronologyEngine";
 
 const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 32 },
@@ -53,11 +54,7 @@ export default function ExpressionPage() {
         viewport={{ once: true, margin: "-10%" }}
         className="space-y-10"
       >
-        <div className="flex items-center gap-4">
-          <span className="text-zinc-600 text-lg">⏱</span>
-          <h2 className="font-display text-lg font-black uppercase tracking-[0.4em] text-zinc-500">Chronology</h2>
-        </div>
-        <VisualGrammarEngine tenses={currentAnalysis.linguistics.tenses} />
+        <ChronologyEngine data={currentAnalysis.linguistics.chronology} />
       </motion.section>
 
       <SectionDivider label="scenarios" />
