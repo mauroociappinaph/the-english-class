@@ -3,22 +3,9 @@
 import { motion } from "framer-motion";
 import { Terminal, Share2 } from "lucide-react";
 import { InteractiveText } from "@/frontend/components/InteractiveText";
-import { Example } from "@/shared/types/expression";
+import { ExpressionScenariosProps } from "./types";
 
-const sectionVariants = {
-  hidden: { opacity: 0, y: 32 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-interface Props {
-  examples?: Example[];
-}
-
-export function ExpressionScenarios({ examples }: Props) {
+export function ExpressionScenarios({ examples }: ExpressionScenariosProps) {
   if (!examples || examples.length === 0) return null;
 
   return (

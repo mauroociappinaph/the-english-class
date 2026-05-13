@@ -4,23 +4,9 @@ import { motion } from "framer-motion";
 import { Settings2, ListTree } from "lucide-react";
 import { MechanicsBlueprint } from "@/frontend/components/mechanics/MechanicsBlueprint";
 import { WordFamilyList } from "@/frontend/components/WordFamilyList";
-import { PhrasalVerbDetails, WordFamily } from "@/shared/types/expression";
+import { ExpressionMechanicsProps } from "./types";
 
-const sectionVariants = {
-  hidden: { opacity: 0, y: 32 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-interface Props {
-  phrasalVerbDetails?: PhrasalVerbDetails;
-  wordFamilies?: WordFamily[];
-}
-
-export function ExpressionMechanics({ phrasalVerbDetails, wordFamilies }: Props) {
+export function ExpressionMechanics({ phrasalVerbDetails, wordFamilies }: ExpressionMechanicsProps) {
   return (
     <motion.section
       id="mechanics"

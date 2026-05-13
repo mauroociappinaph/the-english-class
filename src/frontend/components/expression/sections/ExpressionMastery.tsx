@@ -2,23 +2,9 @@
 
 import { motion } from "framer-motion";
 import { GraduationCap, Sparkles } from "lucide-react";
-import { UsageTips } from "@/shared/types/expression";
+import { ExpressionMasteryProps } from "./types";
 
-const sectionVariants = {
-  hidden: { opacity: 0, y: 32 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-interface Props {
-  usageTips?: UsageTips;
-  formality: string;
-}
-
-export function ExpressionMastery({ usageTips, formality }: Props) {
+export function ExpressionMastery({ usageTips, formality }: ExpressionMasteryProps) {
   return (
     <motion.section
       id="mastery"

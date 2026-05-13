@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Puzzle, ArrowRight, ShieldCheck, Zap } from "lucide-react";
 import { PhrasalVerbDetailsProps } from "../types/components";
+import { QuotedPill } from "@/frontend/components/ui/QuotedPill";
 
 export function PhrasalVerbDetails({ details }: PhrasalVerbDetailsProps) {
   const { verb, particle, separable, transitive, commonCollocations } = details;
@@ -76,9 +77,9 @@ export function PhrasalVerbDetails({ details }: PhrasalVerbDetailsProps) {
           </div>
           <div className="flex flex-wrap gap-1.5">
             {commonCollocations.map((item, idx) => (
-              <span key={idx} className="text-[11px] text-zinc-400 bg-white/5 px-2 py-0.5 rounded-lg border border-white/5 italic">
-                &ldquo;{item}&rdquo;
-              </span>
+              <QuotedPill key={idx} className="text-[11px] text-zinc-400 bg-white/5 px-2 py-0.5 rounded-lg border border-white/5 italic">
+                {item}
+              </QuotedPill>
             ))}
           </div>
         </motion.div>

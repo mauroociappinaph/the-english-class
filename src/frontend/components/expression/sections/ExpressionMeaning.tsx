@@ -1,24 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Languages, Lightbulb } from "lucide-react";
+import { ExpressionMeaningProps } from "./types";
+import { QuotedPillList } from "@/frontend/components/ui/QuotedPillList";
 
-const sectionVariants = {
-  hidden: { opacity: 0, y: 32 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-interface Props {
-  meaning: string;
-  secondaryMeanings?: string[];
-  mnemonic?: string;
-}
-
-export function ExpressionMeaning({ meaning, secondaryMeanings, mnemonic }: Props) {
+export function ExpressionMeaning({ meaning, secondaryMeanings, mnemonic }: ExpressionMeaningProps) {
   return (
     <motion.section
       id="meaning"
@@ -38,13 +24,10 @@ export function ExpressionMeaning({ meaning, secondaryMeanings, mnemonic }: Prop
           {meaning}
         </p>
         {secondaryMeanings && secondaryMeanings.length > 0 && (
-          <div className="flex flex-wrap gap-3">
-            {secondaryMeanings.map((m, i) => (
-              <span key={i} className="px-4 py-1.5 rounded-full border border-white/5 text-sm text-zinc-500 font-medium italic">
-                &ldquo;{m}&rdquo;
-              </span>
-            ))}
-          </div>
+          <QuotedPillList 
+            items={secondaryMeanings} 
+            className="px-4 py-1.5 rounded-full border border-white/5 text-sm text-zinc-500 font-medium italic"
+          />
         )}
       </div>
 

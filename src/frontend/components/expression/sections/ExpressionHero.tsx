@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { SimilarWords } from "@/frontend/components/expression/SimilarWords";
 import { getCefrStyle } from "@/frontend/components/cefr-styles";
-import { ExpressionAnalysis } from "@/shared/types/expression";
+import { ExpressionHeroProps } from "./types";
 
 const FORMALITY_BADGE: Record<string, { border: string; text: string }> = {
   formal: { border: "border-blue-500/30", text: "text-blue-300" },
@@ -24,12 +24,7 @@ const sectionVariants = {
   },
 };
 
-interface Props {
-  expressionId: string;
-  analysis: ExpressionAnalysis;
-}
-
-export function ExpressionHero({ expressionId, analysis }: Props) {
+export function ExpressionHero({ expressionId, analysis }: ExpressionHeroProps) {
   const slangData = analysis.linguistics?.slangData;
   const topVariant = slangData?.regionalVariants?.[0] ?? null;
   const formalityKey = (analysis.metadata?.formality ?? "neutral").toLowerCase();

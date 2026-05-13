@@ -24,11 +24,13 @@ export function FeedbackSummary({ analysis }: FeedbackSummaryProps) {
         
         {analysis.suggestedVocab.length > 0 && (
           <div className="mt-6 flex flex-wrap gap-2">
-            {analysis.suggestedVocab.map((vocab, i) => (
-              <span key={i} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-blue-300">
-                {vocab}
-              </span>
-            ))}
+            {analysis.suggestedVocab.map((vocab, i) => {
+              return (
+                <span key={i} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-blue-300">
+                  {vocab}
+                </span>
+              );
+            })}
           </div>
         )}
       </div>

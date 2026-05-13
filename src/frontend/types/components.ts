@@ -62,11 +62,7 @@ export interface TenseTimelineProps {
   tenses?: Record<string, { text: string; translation: string }> | null;
 }
 
-export interface VisualCardProps {
-  imageUrl?: string | null;
-  mnemonic?: string | null;
-  text: string;
-}
+
 
 export interface WordFamilyListProps {
   families: {
