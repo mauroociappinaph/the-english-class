@@ -28,23 +28,25 @@ export const journalAnalyzer = withFallback(
   )
 );
 
-// Resilient analyzers: Nvidia → Groq → Gemini on 429/503/Timeout
+// Resilient analyzers: Nvidia (35s) → Gemini (15s) → Groq (10s) on 429/503/Timeout
 export const linguisticAnalyzer = withFallback(
   new NvidiaLinguisticAnalyzer(),
   withFallback(
+    new GeminiLinguisticAnalyzer(),
     new GroqLinguisticAnalyzer(),
-    new GeminiLinguisticAnalyzer()
+    { timeoutMs: 15000 }
   ),
-  { timeoutMs: 6000 }
+  { timeoutMs: 35000 }
 );
 
 export const slangAnalyzer = withFallback(
   new NvidiaSlangAnalyzer(),
   withFallback(
+    new GeminiSlangAnalyzer(),
     new GroqSlangAnalyzer(),
-    new GeminiSlangAnalyzer()
+    { timeoutMs: 15000 }
   ),
-  { timeoutMs: 6000 }
+  { timeoutMs: 35000 }
 );
 
 export const expressionService = new ExpressionService(

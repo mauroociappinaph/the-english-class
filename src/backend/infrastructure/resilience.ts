@@ -63,9 +63,10 @@ export function withFallback<T extends object>(
             }
           } catch (err: unknown) {
             const isTimeout = (err as Error).message?.includes("TIMEOUT");
+            const errMsg = (err as Error).message || "Unknown error";
             if (isTransientProviderError(err) || isTimeout) {
               console.warn(
-                `[Resilient Stream] Primary provider ${isTimeout ? 'timed out' : 'failed'}. Switching to fallback.`
+                `[Resilient Stream] Primary provider ${isTimeout ? 'timed out' : 'failed'} (${errMsg}). Switching to fallback.`
               );
               const fallbackFn = fallback[prop as keyof T];
               if (typeof fallbackFn === "function") {
@@ -97,9 +98,10 @@ export function withFallback<T extends object>(
             return await primaryPromise;
           } catch (err: unknown) {
             const isTimeout = (err as Error).message?.includes("TIMEOUT");
+            const errMsg = (err as Error).message || "Unknown error";
             if (isTransientProviderError(err) || isTimeout) {
               console.warn(
-                `[Resilient] Primary provider ${isTimeout ? 'timed out' : 'failed'}. Switching to fallback.`
+                `[Resilient] Primary provider ${isTimeout ? 'timed out' : 'failed'} (${errMsg}). Switching to fallback.`
               );
               const fallbackFn = fallback[prop as keyof T];
               if (typeof fallbackFn === "function") {
