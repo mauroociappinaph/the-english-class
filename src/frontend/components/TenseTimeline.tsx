@@ -97,6 +97,23 @@ export function TenseTimeline({ tenses = {} }: TenseTimelineProps) {
           </div>
         ))}
       </div>
+
+      {/* Grammar Atlas CTA */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+        className="mt-24 text-center pb-12"
+      >
+        <p className="text-zinc-500 text-xs font-medium mb-4 uppercase tracking-widest">Need more temporal context?</p>
+        <button 
+          onClick={() => window.location.href = '/?tab=grammar'}
+          className="px-8 py-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white hover:text-black transition-all text-sm font-bold shadow-2xl group"
+        >
+          Explore full Grammar Atlas
+          <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
+        </button>
+      </motion.div>
     </div>
   );
 }
