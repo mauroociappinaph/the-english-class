@@ -1,6 +1,4 @@
-"use client";
-
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { 
   Volume2, 
   ChevronRight, 
@@ -39,47 +37,59 @@ export function WordVariantCard({ variant, category, index }: WordVariantCardPro
       transition={{ delay: index * 0.1 }}
       className="group relative"
     >
-      <div 
-        onClick={() => setIsExpanded(!isExpanded)}
-        className={clsx(
-          "relative overflow-hidden rounded-[2.5rem] border transition-all duration-500 cursor-pointer",
-          "bg-white/[0.01] border-white/5 hover:bg-white/[0.03] hover:border-white/10",
-          isExpanded ? "ring-2 ring-blue-500/20 bg-white/[0.04]" : ""
-        )}
-      >
-        {/* Main Content (Always Visible) */}
+      <div className={clsx(
+        "relative overflow-hidden rounded-[2.5rem] border transition-all duration-500",
+        isExpanded ? "bg-white/[0.03] border-white/10" : "bg-white/[0.01] border-white/5 hover:border-white/10"
+      )}>
+        {/* Progress Line */}
+        <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${category.color.split(' ')[2]} opacity-20`} />
+
         <div className="p-8">
           <div className="flex items-start justify-between">
-            <div className="flex items-center gap-4">
-              <div className={clsx("w-12 h-12 rounded-2xl flex items-center justify-center", category.color)}>
-                <Icon size={22} />
+            <div className="flex gap-6">
+              {/* Pos Icon */}
+              <div className={clsx(
+                "w-16 h-16 rounded-3xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110",
+                category.color
+              )}>
+                <Icon size={28} />
               </div>
-              <div>
+
+              <div className="space-y-1">
                 <div className="flex items-center gap-3">
-                  <h3 className="text-2xl font-black text-white tracking-tight group-hover:text-blue-400 transition-colors">
+                  <h3 className="text-3xl font-black text-white tracking-tight">
                     {variant.word}
                   </h3>
-                  <span className={clsx("px-2 py-0.5 rounded-md text-[9px] font-black border tracking-tighter", cefrColors[variant.cefr] || "text-zinc-500 border-zinc-500/20")}>
-                    {variant.cefr}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-xs font-medium text-zinc-500 italic">/{variant.pronunciation}/</span>
-                  <button className="text-zinc-600 hover:text-white transition-colors">
-                    <Volume2 size={14} />
+                  <button className="p-2 rounded-full hover:bg-white/5 text-zinc-500 hover:text-white transition-colors">
+                    <Volume2 size={16} />
                   </button>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-mono text-zinc-500">[{variant.pronunciation}]</span>
+                  <div className={clsx(
+                    "px-2 py-0.5 rounded-md text-[10px] font-black border",
+                    cefrColors[variant.cefr] || "text-zinc-500 border-zinc-800 bg-zinc-800/10"
+                  )}>
+                    {variant.cefr}
+                  </div>
+                  <span className="text-zinc-600 font-bold text-xs uppercase tracking-widest">•</span>
+                  <span className="text-emerald-500/80 font-bold text-xs uppercase tracking-widest">
+                    {variant.translation}
+                  </span>
                 </div>
               </div>
             </div>
-            
-            <div className="flex flex-col items-end">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-1">
-                {category.label}
-              </span>
-              <span className="text-sm font-bold text-zinc-400">
-                {variant.translation}
-              </span>
-            </div>
+
+            <button 
+              onClick={() => setIsExpanded(!isExpanded)}
+              className={clsx(
+                "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300",
+                isExpanded ? "bg-white/10 text-white rotate-90" : "bg-white/5 text-zinc-500 hover:bg-white/10"
+              )}
+            >
+              <ChevronRight size={20} />
+            </button>
           </div>
 
           <p className="mt-6 text-zinc-400 text-sm leading-relaxed max-w-[90%]">
@@ -88,157 +98,184 @@ export function WordVariantCard({ variant, category, index }: WordVariantCardPro
 
           <div className="mt-6 flex items-center justify-between">
             <div className="flex gap-2">
-              {variant.naturalContexts.slice(0, 2).map(ctx => (
+              {variant.naturalContexts?.slice(0, 2).map(ctx => (
                 <span key={ctx} className="px-3 py-1 rounded-full bg-zinc-900 border border-white/5 text-[9px] font-bold text-zinc-500 uppercase tracking-widest">
                   {ctx}
                 </span>
-              ))}
-              {variant.naturalContexts.length > 2 && (
+              )) || null}
+              {(variant.naturalContexts?.length || 0) > 2 && (
                 <span className="text-[9px] font-bold text-zinc-700 flex items-center italic">
-                  +{variant.naturalContexts.length - 2} more
+                  +{(variant.naturalContexts?.length || 0) - 2} more
                 </span>
               )}
             </div>
             
-            <motion.div 
-              animate={{ rotate: isExpanded ? 90 : 0 }}
-              className="text-zinc-600 group-hover:text-blue-400 transition-colors"
-            >
-              <ChevronRight size={20} />
-            </motion.div>
+            {!isExpanded && (
+              <div className="flex -space-x-2">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="w-6 h-6 rounded-lg bg-zinc-800 border-2 border-zinc-950 flex items-center justify-center">
+                    <div className="w-1 h-1 rounded-full bg-zinc-600" />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
 
-        {/* Expanded Content (Details) */}
-        <AnimatePresence>
           {isExpanded && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden border-t border-white/5 bg-black/20"
-            >
-              <div className="p-8 space-y-8">
-                {/* Comparison/Difference */}
-                {variant.differenceWithSimilar && (
-                  <div className="p-5 rounded-2xl bg-amber-500/5 border border-amber-500/10 space-y-2">
-                    <div className="flex items-center gap-2 text-amber-400">
-                      <ArrowRightLeft size={16} />
-                      <span className="text-[10px] font-black uppercase tracking-widest">Wait, how is it different?</span>
-                    </div>
-                    <p className="text-sm text-zinc-300 italic">
-                      {variant.differenceWithSimilar}
-                    </p>
+            <div className="mt-10 pt-10 border-t border-white/5 space-y-12">
+              {/* Examples Section */}
+              <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                    <Target size={20} />
                   </div>
-                )}
+                  <div>
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Examples in Action</h4>
+                    <p className="text-[9px] font-bold text-zinc-600 uppercase">Natural usage scenarios</p>
+                  </div>
+                </div>
 
-                {/* Examples */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {variant.examples?.slice(0, 3).map((ex, i) => (
+                    <div key={i} className="p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-all group/ex">
+                      <p className="text-white text-base font-medium italic leading-relaxed">
+                        "{ex.text}"
+                      </p>
+                      <p className="mt-3 text-xs text-zinc-500 uppercase font-black tracking-widest group-hover/ex:text-emerald-500/70 transition-colors">
+                        {ex.translation}
+                      </p>
+                    </div>
+                  )) || (
+                    <p className="text-zinc-600 text-xs italic">No examples available for this variant yet.</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Advanced Mechanics */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-blue-400">
-                    <BookOpen size={16} />
-                    <span className="text-[10px] font-black uppercase tracking-widest">Real-world examples</span>
+                  <div className="flex items-center gap-2 text-zinc-400">
+                    <Info size={14} className="text-blue-400" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-blue-400/50">Common Partners</span>
                   </div>
-                  <div className="space-y-3">
-                    {variant.examples.map((ex, i) => (
-                      <div key={i} className="pl-4 border-l-2 border-white/10 py-1">
-                        <p className="text-sm font-bold text-white tracking-tight leading-snug">
-                          "{ex.text}"
-                        </p>
-                        <p className="text-xs text-zinc-500 mt-1">
-                          {ex.translation}
-                        </p>
-                      </div>
-                    ))}
+                  <div className="flex flex-wrap gap-2">
+                    {variant.commonCollocations?.map(coll => (
+                      <span key={coll} className="px-3 py-1.5 rounded-xl bg-blue-500/5 border border-blue-500/10 text-[11px] font-bold text-blue-400">
+                        {coll}
+                      </span>
+                    )) || null}
                   </div>
                 </div>
 
-                {/* Grammar & Collocations */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-zinc-500">
-                      <Target size={14} />
-                      <span className="text-[9px] font-black uppercase tracking-widest">Common Partners</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {variant.commonCollocations.map(col => (
-                        <span key={col} className="px-2 py-1 rounded bg-white/5 text-[11px] text-zinc-400">
-                          {col}
-                        </span>
-                      ))}
-                    </div>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-zinc-400">
+                    <ArrowRightLeft size={14} className="text-purple-400" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-purple-400/50">Synonyms & Antonyms</span>
                   </div>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-zinc-500">
-                      <Info size={14} />
-                      <span className="text-[9px] font-black uppercase tracking-widest">Grammar Bit</span>
-                    </div>
-                    <p className="text-xs text-zinc-400 italic">
-                      {variant.grammarExplanation}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Morphology Pattern */}
-                <div className="pt-4 border-t border-white/5">
-                  <div className="flex items-center gap-2 text-emerald-400 mb-4">
-                    <LinkIcon size={14} />
-                    <span className="text-[9px] font-black uppercase tracking-widest">Morphology Pattern</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    {variant.patterns.map((p, i) => (
-                      <div key={p} className="flex items-center gap-3">
-                        <span className={clsx(
-                          "text-xs font-bold",
-                          p === variant.word ? "text-white underline decoration-emerald-500 underline-offset-4" : "text-zinc-600"
-                        )}>
-                          {p}
-                        </span>
-                        {i < variant.patterns.length - 1 && (
-                          <ChevronRight size={12} className="text-zinc-800" />
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Common Mistakes & Tips */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-red-400/70">
-                      <AlertCircle size={14} />
-                      <span className="text-[9px] font-black uppercase tracking-widest text-red-400/50">Common Mistake</span>
-                    </div>
-                    <p className="text-xs text-zinc-400">
-                      {variant.commonMistakes}
-                    </p>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-amber-400/70">
-                      <Lightbulb size={14} />
-                      <span className="text-[9px] font-black uppercase tracking-widest text-amber-400/50">Pro Tip</span>
-                    </div>
-                    <ul className="space-y-1">
-                      {variant.tips.map((tip, i) => (
-                        <li key={i} className="text-xs text-zinc-400 flex items-start gap-2">
-                          <span className="text-amber-500 mt-1">•</span>
-                          {tip}
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="flex flex-wrap gap-2">
+                    {variant.synonyms?.slice(0, 3).map(syn => (
+                      <span key={syn} className="px-3 py-1.5 rounded-xl bg-purple-500/5 border border-blue-500/10 text-[11px] font-bold text-purple-400">
+                        {syn}
+                      </span>
+                    )) || null}
+                    {variant.antonyms?.slice(0, 2).map(ant => (
+                      <span key={ant} className="px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/5 text-[11px] font-bold text-zinc-600">
+                        {ant}
+                      </span>
+                    )) || null}
                   </div>
                 </div>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
 
-      {/* Decorative Corner Label (only visible when not expanded) */}
-      {!isExpanded && (
-        <div className="absolute -right-4 -bottom-4 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity pointer-events-none">
-          <Icon size={120} />
+              {/* Morphology Patterns */}
+              <div className="space-y-6">
+                <div className="p-8 rounded-[2.5rem] bg-gradient-to-br from-zinc-900/50 to-transparent border border-white/5 space-y-8">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400">
+                      <LinkIcon size={20} />
+                    </div>
+                    <div>
+                      <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Morphology Pattern</h4>
+                      <p className="text-[9px] font-bold text-zinc-600 uppercase">Visual word relationships</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-4">
+                    {variant.patterns?.map((p, i) => (
+                      <div key={i} className="flex items-center gap-4">
+                        <span className={clsx(
+                          "text-lg font-black transition-all",
+                          p === variant.word ? "text-blue-400 scale-110" : "text-zinc-700"
+                        )}>
+                          {p}
+                        </span>
+                        {i < (variant.patterns?.length || 0) - 1 && (
+                          <ChevronRight size={14} className="text-zinc-800" />
+                        )}
+                      </div>
+                    )) || null}
+                  </div>
+
+                  <div className="grid grid-3 gap-4 pt-4 border-t border-white/5">
+                    <div className="space-y-1">
+                      <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Prefix</p>
+                      <p className="text-sm font-bold text-white">{variant.morphology?.prefix || "—"}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Root</p>
+                      <p className="text-sm font-bold text-blue-400">{variant.morphology?.root || "—"}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Suffix</p>
+                      <p className="text-sm font-bold text-white">{variant.morphology?.suffix || "—"}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Educational Insights / Tips */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="p-8 rounded-[2.5rem] bg-blue-500/5 border border-blue-500/10 space-y-4">
+                  <div className="flex items-center gap-3 text-blue-400">
+                    <Info size={18} />
+                    <h5 className="text-sm font-black uppercase tracking-widest">Grammar Note</h5>
+                  </div>
+                  <p className="text-xs text-blue-200/60 leading-relaxed italic">
+                    {variant.grammarExplanation}
+                  </p>
+                </div>
+
+                <div className="p-8 rounded-[2.5rem] bg-amber-500/5 border border-amber-500/10 space-y-4">
+                  <div className="flex items-center gap-3 text-amber-400">
+                    <Lightbulb size={18} />
+                    <h5 className="text-sm font-black uppercase tracking-widest">Pro Tip</h5>
+                  </div>
+                  <div className="space-y-2">
+                    {variant.tips?.map((tip, i) => (
+                      <p key={i} className="text-xs text-amber-200/60 leading-relaxed flex gap-2">
+                        <span className="text-amber-500">•</span> {tip}
+                      </p>
+                    )) || (
+                      <p className="text-xs text-amber-200/40 italic">Focus on the root meaning for better recall.</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Common Mistakes */}
+              {variant.commonMistakes && (
+                <div className="p-6 rounded-[2rem] bg-red-500/5 border border-red-500/10 flex items-start gap-4">
+                  <AlertCircle size={20} className="text-red-400 shrink-0 mt-0.5" />
+                  <div>
+                    <h5 className="text-[10px] font-black text-red-400 uppercase tracking-widest mb-1">Watch out!</h5>
+                    <p className="text-xs text-red-200/60 leading-relaxed italic">{variant.commonMistakes}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </motion.div>
   );
 }
