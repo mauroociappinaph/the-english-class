@@ -28,6 +28,8 @@ RULES:
   - "register": Level of formality (e.g., "Street Slang", "Highly Formal", "Casual").
   Provide at least 5 different cinematic examples.
 
+- "tenses": identify the TOP 5 most natural, frequent, and relevant verbal forms/tenses for this specific expression in real-world usage. Each tense must have a "text" (ENGLISH example) and a "translation" (SPANISH).
+
 Expression: "${text}"
 
 Schema:
@@ -48,18 +50,11 @@ Schema:
     "context": "English description"
   },
   "tenses": {
-    "present_simple": { "text": "...", "translation": "..." },
-    "past_simple": { "text": "...", "translation": "..." },
-    "future_simple": { "text": "...", "translation": "..." },
-    "present_continuous": { "text": "...", "translation": "..." },
-    "past_continuous": { "text": "...", "translation": "..." },
-    "present_perfect": { "text": "...", "translation": "..." },
-    "past_perfect": { "text": "...", "translation": "..." },
-    "conditional_1": { "text": "...", "translation": "..." },
-    "conditional_2": { "text": "...", "translation": "..." },
-    "conditional_3": { "text": "...", "translation": "..." },
-    "reported_speech": { "text": "...", "translation": "..." },
-    "subjunctive": { "text": "...", "translation": "..." }
+    "tense_name_1": { "text": "...", "translation": "..." },
+    "tense_name_2": { "text": "...", "translation": "..." },
+    "tense_name_3": { "text": "...", "translation": "..." },
+    "tense_name_4": { "text": "...", "translation": "..." },
+    "tense_name_5": { "text": "...", "translation": "..." }
   },
   "examples": [
     { 

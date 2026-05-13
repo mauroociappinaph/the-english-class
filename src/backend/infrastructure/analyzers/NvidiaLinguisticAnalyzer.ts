@@ -12,8 +12,9 @@ RULES:
 - "meaning": Provide a clear explanation in ENGLISH.
 - "secondaryMeanings": Scan for polysemy. Provide all other significantly different definitions or usages in different domains (e.g., technical, social, scientific, slang) in ENGLISH. Do not include minor nuances, only distinct alternative meanings.
 - "usageTips": All descriptions must be in ENGLISH.
-- "tenses": Each tense must have a "text" (ENGLISH example) and a "translation" (SPANISH).
-  Provide exactly 3 different cinematic examples.
+- "tenses": DO NOT provide a fixed list. Instead, identify the TOP 5 most natural, frequent, and relevant verbal forms/tenses for this specific expression in real-world usage.
+  Each tense must have a "text" (ENGLISH example) and a "translation" (SPANISH).
+  Provide exactly 3 different cinematic examples in the "examples" section.
 
 Expression: "${text}"
 
@@ -34,50 +35,13 @@ Schema:
     "commonMistake": "English description",
     "context": "English description"
   },
-    "tenses": {
-      "present_simple": { "text": "...", "translation": "..." },
-      "past_simple": { "text": "...", "translation": "..." },
-      "future_simple": { "text": "...", "translation": "..." },
-      "present_continuous": { "text": "...", "translation": "..." },
-      "past_continuous": { "text": "...", "translation": "..." },
-      "future_continuous": { "text": "...", "translation": "..." },
-      "present_perfect": { "text": "...", "translation": "..." },
-      "past_perfect": { "text": "...", "translation": "..." },
-      "future_perfect": { "text": "...", "translation": "..." },
-      "present_perfect_continuous": { "text": "...", "translation": "..." },
-      "past_perfect_continuous": { "text": "...", "translation": "..." },
-      "future_perfect_continuous": { "text": "...", "translation": "..." },
-      "present_passive": { "text": "...", "translation": "..." },
-      "past_passive": { "text": "...", "translation": "..." },
-      "future_passive": { "text": "...", "translation": "..." },
-      "present_perfect_passive": { "text": "...", "translation": "..." },
-      "past_perfect_passive": { "text": "...", "translation": "..." },
-      "future_perfect_passive": { "text": "...", "translation": "..." },
-      "conditional_0": { "text": "...", "translation": "..." },
-      "conditional_1": { "text": "...", "translation": "..." },
-      "conditional_2": { "text": "...", "translation": "..." },
-      "conditional_3": { "text": "...", "translation": "..." },
-      "conditional_mixed": { "text": "...", "translation": "..." },
-      "modal_can": { "text": "...", "translation": "..." },
-      "modal_could": { "text": "...", "translation": "..." },
-      "modal_should": { "text": "...", "translation": "..." },
-      "modal_must": { "text": "...", "translation": "..." },
-      "modal_might": { "text": "...", "translation": "..." },
-      "modal_may": { "text": "...", "translation": "..." },
-      "modal_would": { "text": "...", "translation": "..." },
-      "gerund_form": { "text": "...", "translation": "..." },
-      "infinitive_form": { "text": "...", "translation": "..." },
-      "imperative": { "text": "...", "translation": "..." },
-      "question_form": { "text": "...", "translation": "..." },
-      "negative_form": { "text": "...", "translation": "..." },
-      "relative_clause": { "text": "...", "translation": "..." },
-      "phrasal_structure": { "text": "...", "translation": "..." },
-      "used_to": { "text": "...", "translation": "..." },
-      "would_past_habits": { "text": "...", "translation": "..." },
-      "reported_speech": { "text": "...", "translation": "..." },
-      "subjunctive": { "text": "...", "translation": "..." },
-      "imperative": { "text": "...", "translation": "..." }
-    },
+  "tenses": {
+    "tense_name_1": { "text": "...", "translation": "..." },
+    "tense_name_2": { "text": "...", "translation": "..." },
+    "tense_name_3": { "text": "...", "translation": "..." },
+    "tense_name_4": { "text": "...", "translation": "..." },
+    "tense_name_5": { "text": "...", "translation": "..." }
+  },
   "examples": [
     { 
       "text": "English example", 
@@ -189,8 +153,9 @@ RULES:
 - "meaning": Provide a clear explanation in ENGLISH.
 - "secondaryMeanings": Scan for polysemy. Provide all other significantly different definitions or usages in different domains (e.g., technical, social, scientific, slang) in ENGLISH. Do not include minor nuances, only distinct alternative meanings.
 - "usageTips": All descriptions must be in ENGLISH.
-- "tenses": Each tense must have a "text" (ENGLISH example) and a "translation" (SPANISH).
-  Provide exactly 3 different cinematic examples.
+- "tenses": DO NOT provide a fixed list. Instead, identify the TOP 5 most natural, frequent, and relevant verbal forms/tenses for this specific expression in real-world usage.
+  Each tense must have a "text" (ENGLISH example) and a "translation" (SPANISH).
+  Provide exactly 3 different cinematic examples in the "examples" section.
 
 Expression: "${text}"
 
@@ -211,50 +176,13 @@ Schema:
     "commonMistake": "English description",
     "context": "English description"
   },
-    "tenses": {
-      "present_simple": { "text": "...", "translation": "..." },
-      "past_simple": { "text": "...", "translation": "..." },
-      "future_simple": { "text": "...", "translation": "..." },
-      "present_continuous": { "text": "...", "translation": "..." },
-      "past_continuous": { "text": "...", "translation": "..." },
-      "future_continuous": { "text": "...", "translation": "..." },
-      "present_perfect": { "text": "...", "translation": "..." },
-      "past_perfect": { "text": "...", "translation": "..." },
-      "future_perfect": { "text": "...", "translation": "..." },
-      "present_perfect_continuous": { "text": "...", "translation": "..." },
-      "past_perfect_continuous": { "text": "...", "translation": "..." },
-      "future_perfect_continuous": { "text": "...", "translation": "..." },
-      "present_passive": { "text": "...", "translation": "..." },
-      "past_passive": { "text": "...", "translation": "..." },
-      "future_passive": { "text": "...", "translation": "..." },
-      "present_perfect_passive": { "text": "...", "translation": "..." },
-      "past_perfect_passive": { "text": "...", "translation": "..." },
-      "future_perfect_passive": { "text": "...", "translation": "..." },
-      "conditional_0": { "text": "...", "translation": "..." },
-      "conditional_1": { "text": "...", "translation": "..." },
-      "conditional_2": { "text": "...", "translation": "..." },
-      "conditional_3": { "text": "...", "translation": "..." },
-      "conditional_mixed": { "text": "...", "translation": "..." },
-      "modal_can": { "text": "...", "translation": "..." },
-      "modal_could": { "text": "...", "translation": "..." },
-      "modal_should": { "text": "...", "translation": "..." },
-      "modal_must": { "text": "...", "translation": "..." },
-      "modal_might": { "text": "...", "translation": "..." },
-      "modal_may": { "text": "...", "translation": "..." },
-      "modal_would": { "text": "...", "translation": "..." },
-      "gerund_form": { "text": "...", "translation": "..." },
-      "infinitive_form": { "text": "...", "translation": "..." },
-      "imperative": { "text": "...", "translation": "..." },
-      "question_form": { "text": "...", "translation": "..." },
-      "negative_form": { "text": "...", "translation": "..." },
-      "relative_clause": { "text": "...", "translation": "..." },
-      "phrasal_structure": { "text": "...", "translation": "..." },
-      "used_to": { "text": "...", "translation": "..." },
-      "would_past_habits": { "text": "...", "translation": "..." },
-      "reported_speech": { "text": "...", "translation": "..." },
-      "subjunctive": { "text": "...", "translation": "..." },
-      "imperative": { "text": "...", "translation": "..." }
-    },
+  "tenses": {
+    "tense_name_1": { "text": "...", "translation": "..." },
+    "tense_name_2": { "text": "...", "translation": "..." },
+    "tense_name_3": { "text": "...", "translation": "..." },
+    "tense_name_4": { "text": "...", "translation": "..." },
+    "tense_name_5": { "text": "...", "translation": "..." }
+  },
   "examples": [
     { 
       "text": "English example", 
