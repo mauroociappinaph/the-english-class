@@ -70,11 +70,34 @@ export interface SlangData {
   similarWords: string[];
 }
 
+export interface WordVariant {
+  word: string;
+  pronunciation: string;
+  cefr: string; // A1-C2
+  translation: string;
+  simpleExplanation: string;
+  differenceWithSimilar?: string;
+  examples: Example[];
+  grammarExplanation: string;
+  commonCollocations: string[];
+  synonyms: string[];
+  antonyms: string[];
+  commonMistakes: string;
+  naturalContexts: ("formal" | "informal" | "business" | "academic" | "casual conversation")[];
+  patterns: string[]; // e.g. ["favor", "favorable", "favorably"]
+  morphology: {
+    prefix?: string;
+    suffix?: string;
+    root: string;
+  };
+  tips: string[]; // e.g. ["Used mostly in spoken English"]
+}
+
 export interface WordFamilies {
-  noun?: string[];
-  verb?: string[];
-  adjective?: string[];
-  adverb?: string[];
+  noun?: WordVariant[];
+  verb?: WordVariant[];
+  adjective?: WordVariant[];
+  adverb?: WordVariant[];
 }
 
 export interface PhrasalVerbDetails {

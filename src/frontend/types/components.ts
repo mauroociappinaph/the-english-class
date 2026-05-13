@@ -1,5 +1,7 @@
 import { Expression, RegionalVariant } from './store';
 import React from 'react';
+import { WordFamilies, PhrasalVerbDetails, WordVariant } from '@/shared/types/expression';
+import { LucideIcon } from 'lucide-react';
 
 export interface GrammarItem {
   name: string;
@@ -62,23 +64,21 @@ export interface TenseTimelineProps {
   tenses?: Record<string, { text: string; translation: string }> | null;
 }
 
-
-
 export interface WordFamilyListProps {
-  families: {
-    noun?: string[];
-    verb?: string[];
-    adjective?: string[];
-    adverb?: string[];
+  families: WordFamilies;
+}
+
+export interface WordVariantCardProps {
+  variant: WordVariant;
+  category: {
+    label: string;
+    sub: string;
+    color: string;
+    icon: LucideIcon;
   };
+  index: number;
 }
 
 export interface PhrasalVerbDetailsProps {
-  details: {
-    verb: string;
-    particle: string;
-    separable: 'no' | 'optional' | 'mandatory';
-    transitive: boolean;
-    commonCollocations: string[];
-  };
+  details: PhrasalVerbDetails;
 }
