@@ -5,48 +5,34 @@ import { PrismaJournalRepository } from "./repositories/PrismaJournalRepository"
 import { GroqLinguisticAnalyzer } from "./analyzers/GroqLinguisticAnalyzer";
 import { GroqJournalAnalyzer } from "./analyzers/GroqJournalAnalyzer";
 import { GroqSlangAnalyzer } from "./analyzers/GroqSlangAnalyzer";
-import { GeminiLinguisticAnalyzer } from "./analyzers/GeminiLinguisticAnalyzer";
-import { GeminiSlangAnalyzer } from "./analyzers/GeminiSlangAnalyzer";
 import { NvidiaLinguisticAnalyzer } from "./analyzers/NvidiaLinguisticAnalyzer";
 import { NvidiaSlangAnalyzer } from "./analyzers/NvidiaSlangAnalyzer";
 import { withFallback } from "./resilience";
 
 import { NvidiaJournalAnalyzer } from "./analyzers/NvidiaJournalAnalyzer";
 
-import { GeminiJournalAnalyzer } from "./analyzers/GeminiJournalAnalyzer";
-
 // Singleton instances — primary providers
 const expressionRepository = new PrismaExpressionRepository();
 const journalRepository = new PrismaJournalRepository();
 
-// Resilient analyzer for Journal: Nvidia -> Groq -> Gemini
+// Resilient analyzer for Journal: Groq -> Nvidia
 export const journalAnalyzer = withFallback(
+  new GroqJournalAnalyzer(),
   new NvidiaJournalAnalyzer(),
-  withFallback(
-    new GroqJournalAnalyzer(),
-    new GeminiJournalAnalyzer()
-  )
+  { timeoutMs: 1000 }
 );
 
-// Resilient analyzers: Nvidia (35s) → Gemini (15s) → Groq (10s) on 429/503/Timeout
+// Resilient analyzers: Groq -> Nvidia (1s timeout)
 export const linguisticAnalyzer = withFallback(
+  new GroqLinguisticAnalyzer(),
   new NvidiaLinguisticAnalyzer(),
-  withFallback(
-    new GeminiLinguisticAnalyzer(),
-    new GroqLinguisticAnalyzer(),
-    { timeoutMs: 15000 }
-  ),
-  { timeoutMs: 35000 }
+  { timeoutMs: 1000 }
 );
 
 export const slangAnalyzer = withFallback(
+  new GroqSlangAnalyzer(),
   new NvidiaSlangAnalyzer(),
-  withFallback(
-    new GeminiSlangAnalyzer(),
-    new GroqSlangAnalyzer(),
-    { timeoutMs: 15000 }
-  ),
-  { timeoutMs: 35000 }
+  { timeoutMs: 1000 }
 );
 
 export const expressionService = new ExpressionService(
