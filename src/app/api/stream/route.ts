@@ -49,8 +49,6 @@ export async function POST(req: NextRequest) {
       },
       cancel() {
         console.log("[Stream Route] Client disconnected");
-        // We can't directly abort the underlying fetch/Groq call from here without an AbortSignal,
-        // but the async generator will stop pulling if the stream is cancelled.
       }
     });
 
