@@ -12,6 +12,7 @@
     "test:ui": "vitest --ui",
     "analyze:types": "npx tsx scripts/analyze-types.ts",
     "analyze:watch": "npx tsx scripts/utils/watch-mode.ts",
+    "ts-doctor": "npx tsx scripts/ts-doctor/cli.ts",
     "fix:types": "npx tsx scripts/fix-types.ts",
     "clean": "npx tsx scripts/utils/cleaner.ts",
     "prepare": "husky"
@@ -68,6 +69,8 @@
     "@testing-library/react": "^16.3.2",
     "@types/better-sqlite3": "^7.6.13",
     "@vitejs/plugin-react": "^6.0.1",
+    "chalk": "^5.6.2",
+    "fast-levenshtein": "^3.0.0",
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
     "tsx": "^4.21.0",
