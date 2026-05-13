@@ -100,12 +100,32 @@ export interface WordFamilies {
   adverb?: WordVariant[];
 }
 
+export interface Collocation {
+  phrase: string;
+  frequency: 'high' | 'medium' | 'low';
+  naturalness: number; // 0-100
+  usageContext: 'formal' | 'informal' | 'spoken' | 'business' | 'academic';
+  example: string;
+  translation: string;
+  usageNote?: string;
+}
+
 export interface PhrasalVerbDetails {
   verb: string;
   particle: string;
   separable: 'no' | 'optional' | 'mandatory';
   transitive: boolean;
-  commonCollocations: string[];
+  
+  // Pedagogical metadata
+  logicExplanation: string;
+  transitiveExplanation: string;
+  separabilityExplanation: string;
+  
+  // Structural examples for visual logic
+  validExamples: string[];
+  invalidExamples: string[];
+  
+  collocations: Collocation[];
 }
 
 interface ExpressionCore {
