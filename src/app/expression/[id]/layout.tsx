@@ -74,7 +74,7 @@ export default function ExpressionLayout({
       <div 
         className="glow-aura fixed inset-0 pointer-events-none" 
         style={{ 
-          background: `radial-gradient(circle at 50% 30%, rgba(${getCefrStyle(currentAnalysis.cefr).glow}, 0.3) 0%, transparent 70%)`
+          background: `radial-gradient(circle at 50% 30%, rgba(${getCefrStyle(currentAnalysis.metadata.cefr).glow}, 0.3) 0%, transparent 70%)`
         }}
       />
 
@@ -95,15 +95,15 @@ export default function ExpressionLayout({
           className="text-center space-y-6 mb-20"
         >
           <span className="text-[12px] font-black uppercase tracking-[0.6em] text-zinc-500 opacity-50 block">
-            {currentAnalysis.type}
+            {currentAnalysis.metadata.type}
           </span>
           <h1 className="text-7xl md:text-[8rem] font-black tracking-tighter text-white text-glow leading-tight">
             {currentAnalysis.text}
           </h1>
           <div className="flex items-center justify-center gap-8">
-            <p className="text-zinc-500 italic font-mono text-2xl">{currentAnalysis.ipa}</p>
-            <div className={`w-12 h-12 flex items-center justify-center ${getCefrStyle(currentAnalysis.cefr).bg} rounded-full text-white font-black text-xs`}>
-              {currentAnalysis.cefr}
+            <p className="text-zinc-500 italic font-mono text-2xl">{currentAnalysis.metadata.ipa}</p>
+            <div className={`w-12 h-12 flex items-center justify-center ${getCefrStyle(currentAnalysis.metadata.cefr).bg} rounded-full text-white font-black text-xs`}>
+              {currentAnalysis.metadata.cefr}
             </div>
           </div>
         </motion.div>

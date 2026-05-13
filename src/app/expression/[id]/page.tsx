@@ -22,9 +22,9 @@ export default function ExpressionOverview() {
 
   if (!currentAnalysis) return null;
 
-  const slangData = currentAnalysis.slangData;
+  const slangData = currentAnalysis.linguistics.slangData;
   const topVariant = slangData?.regionalVariants?.[0] ?? null;
-  const formalityKey = (currentAnalysis.formality ?? "neutral").toLowerCase();
+  const formalityKey = (currentAnalysis.metadata.formality ?? "neutral").toLowerCase();
   const formalityStyle = FORMALITY_BADGE[formalityKey] ?? FORMALITY_BADGE.neutral;
 
   return (
@@ -50,9 +50,9 @@ export default function ExpressionOverview() {
           {currentAnalysis.meaning}
         </p>
 
-        {currentAnalysis.secondaryMeanings && currentAnalysis.secondaryMeanings.length > 0 && (
+        {currentAnalysis.metadata.secondaryMeanings && currentAnalysis.metadata.secondaryMeanings.length > 0 && (
           <div className="flex flex-wrap justify-center gap-3 pt-4">
-            {currentAnalysis.secondaryMeanings.map((m, i) => (
+            {currentAnalysis.metadata.secondaryMeanings.map((m: string, i: number) => (
               <span key={i} className="px-4 py-1.5 rounded-full bg-white/5 border border-white/5 text-sm text-zinc-500 font-medium italic">
                 &ldquo;{m}&rdquo;
               </span>
@@ -72,7 +72,7 @@ export default function ExpressionOverview() {
 
             {/* Formality badge */}
             <span className={`px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider ${formalityStyle.bg} ${formalityStyle.text}`}>
-              {currentAnalysis.formality ?? "Neutral"}
+              {currentAnalysis.metadata.formality ?? "Neutral"}
             </span>
 
             {/* Regions count + link */}
@@ -86,7 +86,7 @@ export default function ExpressionOverview() {
             )}
 
             {/* Similar words */}
-            {slangData.similarWords.slice(0, 3).map((word) => (
+            {slangData.similarWords.slice(0, 3).map((word: string) => (
               <span key={word} className="px-2.5 py-0.5 bg-zinc-900 border border-zinc-800 rounded-full text-zinc-500 text-xs">
                 {word}
               </span>
@@ -97,7 +97,7 @@ export default function ExpressionOverview() {
 
       <div className="w-full max-w-5xl">
         <VisualCard 
-          mnemonic={currentAnalysis.mnemonic} 
+          mnemonic={currentAnalysis.metadata.mnemonic} 
           text={currentAnalysis.text} 
         />
       </div>
