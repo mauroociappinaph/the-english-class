@@ -7,6 +7,7 @@ export interface IExpressionRepository {
   findAll(): Promise<ExpressionDetail[]>;
   findDueForReview(limit: number): Promise<ExpressionDetail[]>;
   save(expression: CreateExpressionDto): Promise<ExpressionDetail>;
+  update(id: string, expression: CreateExpressionDto): Promise<ExpressionDetail>;
   updateStudyProgress(id: string, performance: StudyPerformance): Promise<ExpressionDetail>;
   delete(id: string): Promise<void>;
 }

@@ -6,7 +6,8 @@ import {
   CreateExpressionDto as SharedCreateExpressionDto,
   SlangData,
   WordFamilies,
-  PhrasalVerbDetails
+  PhrasalVerbDetails,
+  ChronologyData
 } from "@/shared/types/expression";
 
 export interface GroqExample extends Omit<SharedExample, 'id' | 'expressionId' | 'createdAt' | 'updatedAt'> {}
@@ -31,6 +32,7 @@ export interface GroqExpressionResponse {
   tenses: Record<string, GroqTense>;
   wordFamilies: WordFamilies;
   phrasalVerbDetails: PhrasalVerbDetails;
+  chronology: ChronologyData;
   examples: GroqExample[];
 }
 
