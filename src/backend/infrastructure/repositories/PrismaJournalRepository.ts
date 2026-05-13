@@ -11,22 +11,26 @@ import {
 } from "@/shared/types/journal";
 
 
-export class PrismaJournalRepository implements IJournalRepository {
+import { BasePrismaRepository } from "./BasePrismaRepository";
+
+export class PrismaJournalRepository extends BasePrismaRepository implements IJournalRepository {
   async findById(id: string): Promise<JournalEntry | null> {
-    const entry = await prisma.journalEntry.findUnique({
-      where: { id },
-      include: { corrections: true },
-    });
-    return entry ? this.formatEntry(entry) : null;
+    return this.findUnique(
+      prisma.journalEntry,
+      { id },
+      { corrections: true },
+      this.formatEntry.bind(this)
+    );
   }
 
   async findByUserId(userId: string): Promise<JournalEntry[]> {
-    const entries = await prisma.journalEntry.findMany({
-      where: { userId },
-      include: { corrections: true },
-      orderBy: { createdAt: "desc" },
-    });
-    return entries.map(e => this.formatEntry(e));
+    return this.findMany(
+      prisma.journalEntry,
+      { userId },
+      { corrections: true },
+      { createdAt: "desc" },
+      this.formatEntry.bind(this)
+    );
   }
 
   async save(userId: string, data: CreateJournalEntryDto): Promise<JournalEntry> {

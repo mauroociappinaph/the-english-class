@@ -5,40 +5,45 @@ import { Prisma } from "@prisma/client";
 import { CollisionError } from "../../domain/errors";
 import { StudyPerformance } from "@/shared/types/expression";
 
-export class PrismaExpressionRepository implements IExpressionRepository {
+import { BasePrismaRepository } from "./BasePrismaRepository";
+
+export class PrismaExpressionRepository extends BasePrismaRepository implements IExpressionRepository {
+  private async findExpressionBy(where: Prisma.ExpressionWhereUniqueInput): Promise<ExpressionDetail | null> {
+    return this.findUnique(
+      prisma.expression,
+      where,
+      { examples: true },
+      this.formatExpression.bind(this)
+    );
+  }
+
   async findByText(text: string): Promise<ExpressionDetail | null> {
-    const expression = await prisma.expression.findUnique({
-      where: { text },
-      include: { examples: true },
-    });
-    return expression ? this.formatExpression(expression) : null;
+    return this.findExpressionBy({ text });
   }
 
   async findById(id: string): Promise<ExpressionDetail | null> {
-    const expression = await prisma.expression.findUnique({
-      where: { id },
-      include: { examples: true },
-    });
-    return expression ? this.formatExpression(expression) : null;
+    return this.findExpressionBy({ id });
   }
 
   async findAll(): Promise<ExpressionDetail[]> {
-    const expressions = await prisma.expression.findMany({
-      include: { examples: true },
-      orderBy: { createdAt: "desc" },
-    });
-    return expressions.map(e => this.formatExpression(e)).filter((e): e is ExpressionDetail => e !== null);
+    return this.findMany(
+      prisma.expression,
+      undefined,
+      { examples: true },
+      { createdAt: "desc" },
+      this.formatExpression.bind(this)
+    );
   }
 
   async findDueForReview(limit: number): Promise<ExpressionDetail[]> {
-    const now = new Date();
-    const expressions = await prisma.expression.findMany({
-      where: { nextReviewAt: { lte: now } },
-      include: { examples: true },
-      orderBy: { nextReviewAt: "asc" },
-      take: limit,
-    });
-    return expressions.map(e => this.formatExpression(e)).filter((e): e is ExpressionDetail => e !== null);
+    return this.findMany(
+      prisma.expression,
+      { nextReviewAt: { lte: new Date() } },
+      { examples: true },
+      { nextReviewAt: "asc" },
+      this.formatExpression.bind(this),
+      limit
+    );
   }
 
   async save(expression: CreateExpressionDto): Promise<ExpressionDetail> {
