@@ -13,10 +13,12 @@ import { ExpressionLibrary } from "@/frontend/components/ExpressionLibrary";
 import { StudySection } from "@/frontend/components/StudySection";
 import { getCefrStyle } from "@/frontend/components/cefr-styles";
 
+import { GrammarSection } from "@/frontend/components/GrammarSection";
+
 export default function Home() {
   const router = useRouter();
   const [input, setInput] = useState("");
-  const [activeTab, setActiveTab] = useState<"search" | "library" | "study">("search");
+  const [activeTab, setActiveTab] = useState<"search" | "library" | "study" | "grammar">("search");
   const { isAnalyzing, setAnalyzing, setCurrentAnalysis, expressions, setExpressions, addExpression, removeExpression } = useStudyStore();
   const { streamedText, startStream } = useAiStream();
 
@@ -27,6 +29,15 @@ export default function Home() {
     };
     fetchLibrary();
   }, [setExpressions]);
+
+  // Sync tab with query param for deep linking (e.g. from TenseTimeline)
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const tab = searchParams.get("tab");
+    if (tab === "grammar" || tab === "library" || tab === "study" || tab === "search") {
+      setActiveTab(tab as "search" | "library" | "study" | "grammar");
+    }
+  }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,7 +96,7 @@ export default function Home() {
 
       {/* Navigation Tabs */}
       <div className="flex p-1 bg-white/5 rounded-2xl border border-white/10 w-fit">
-        {(["search", "library", "study"] as const).map((tab) => (
+        {(["search", "library", "study", "grammar"] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -148,6 +159,7 @@ export default function Home() {
       )}
 
       {activeTab === "study" && <StudySection />}
+      {activeTab === "grammar" && <GrammarSection />}
     </div>
   );
 }
