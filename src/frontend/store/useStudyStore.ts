@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { StudyState } from '@/frontend/types/store';
+import { StudyState, ExpressionDataState, ExpressionProcessState, ReviewSessionState } from '@/frontend/types/store';
 
 export const useStudyStore = create<StudyState>((set) => ({
   expressions: [],

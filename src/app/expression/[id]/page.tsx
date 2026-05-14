@@ -30,7 +30,16 @@ export default function ExpressionPage() {
 
   return (
     <div className="w-full max-w-6xl mx-auto space-y-32 pb-40">
-      <ExpressionHero expressionId={id} analysis={currentAnalysis} />
+      <ExpressionHero 
+        expressionId={id} 
+        text={currentAnalysis.text}
+        translation={currentAnalysis.translation}
+        type={currentAnalysis.metadata.type}
+        cefr={currentAnalysis.metadata.cefr}
+        ipa={currentAnalysis.metadata.ipa}
+        formality={currentAnalysis.metadata.formality}
+        slangData={currentAnalysis.linguistics.slangData}
+      />
 
       <SectionDivider label="meaning" />
       <ExpressionMeaning

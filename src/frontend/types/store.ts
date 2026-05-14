@@ -34,17 +34,21 @@ export interface SlangState {
   clearFilters: () => void;
 }
 
-export interface StudyState {
+export interface ExpressionDataState {
   expressions: Expression[];
-  isAnalyzing: boolean;
-  currentAnalysis: Expression | null;
   setExpressions: (exprs: Expression[]) => void;
   addExpression: (expr: Expression) => void;
   removeExpression: (id: string) => void;
+}
+
+export interface ExpressionProcessState {
+  isAnalyzing: boolean;
+  currentAnalysis: Expression | null;
   setAnalyzing: (val: boolean) => void;
   setCurrentAnalysis: (analysis: Expression | null) => void;
+}
 
-  // Review session state
+export interface ReviewSessionState {
   reviewQueue: Expression[];
   currentReviewIndex: number;
   isReviewing: boolean;
@@ -55,3 +59,5 @@ export interface StudyState {
   nextCard: (updatedExpression: Expression) => void;
   endReview: () => void;
 }
+
+export interface StudyState extends ExpressionDataState, ExpressionProcessState, ReviewSessionState {}

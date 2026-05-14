@@ -9,6 +9,7 @@ import { ExampleSection } from "./word-variant/ExampleSection";
 import { AdvancedMechanics } from "./word-variant/AdvancedMechanics";
 import { MorphologyPattern } from "./word-variant/MorphologyPattern";
 import { EducationalInsights } from "./word-variant/EducationalInsights";
+import { TagList } from "./ui/TagList";
 
 export function WordVariantCard({ variant, category, index }: WordVariantCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -41,18 +42,11 @@ export function WordVariantCard({ variant, category, index }: WordVariantCardPro
           </p>
 
           <div className="mt-6 flex items-center justify-between">
-            <div className="flex gap-2">
-              {variant.naturalContexts?.slice(0, 2).map(ctx => (
-                <span key={ctx} className="px-3 py-1 rounded-full bg-zinc-900 border border-white/5 text-[9px] font-bold text-zinc-500 uppercase tracking-widest">
-                  {ctx}
-                </span>
-              )) || null}
-              {(variant.naturalContexts?.length || 0) > 2 && (
-                <span className="text-[9px] font-bold text-zinc-700 flex items-center italic">
-                  +{(variant.naturalContexts?.length || 0) - 2} more
-                </span>
-              )}
-            </div>
+            <TagList 
+              tags={variant.naturalContexts || []} 
+              limit={2} 
+              tagClassName="px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest"
+            />
             
             {!isExpanded && (
               <div className="flex -space-x-2">

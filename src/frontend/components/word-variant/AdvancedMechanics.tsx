@@ -1,5 +1,6 @@
 import { Info, ArrowRightLeft } from "lucide-react";
 import { TagChip } from "../ui/TagChip";
+import { TagList } from "../ui/TagList";
 import { AdvancedMechanicsProps } from "./types";
 
 export function AdvancedMechanics({ variant }: AdvancedMechanicsProps) {
@@ -10,13 +11,11 @@ export function AdvancedMechanics({ variant }: AdvancedMechanicsProps) {
           <Info size={14} className="text-blue-400" />
           <span className="text-[10px] font-black uppercase tracking-widest text-blue-400/50">Common Partners</span>
         </div>
-        <div className="flex flex-wrap gap-2">
-          {variant.commonCollocations?.map((coll) => (
-            <TagChip key={coll} variant="blue">
-              {coll}
-            </TagChip>
-          )) || null}
-        </div>
+        <TagList 
+          tags={variant.commonCollocations || []} 
+          variant="blue" 
+          showCount={false}
+        />
       </div>
 
       <div className="space-y-4">
@@ -25,16 +24,8 @@ export function AdvancedMechanics({ variant }: AdvancedMechanicsProps) {
           <span className="text-[10px] font-black uppercase tracking-widest text-purple-400/50">Synonyms & Antonyms</span>
         </div>
         <div className="flex flex-wrap gap-2">
-          {variant.synonyms?.slice(0, 3).map(syn => (
-            <TagChip key={syn} variant="purple">
-              {syn}
-            </TagChip>
-          )) || null}
-          {variant.antonyms?.slice(0, 2).map(ant => (
-            <TagChip key={ant} variant="zinc">
-              {ant}
-            </TagChip>
-          )) || null}
+          <TagList tags={variant.synonyms || []} limit={3} variant="purple" />
+          <TagList tags={variant.antonyms || []} limit={2} variant="zinc" />
         </div>
       </div>
     </div>

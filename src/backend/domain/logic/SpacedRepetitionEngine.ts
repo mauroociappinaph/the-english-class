@@ -1,13 +1,7 @@
 import { StudyPerformance } from "@/shared/types/expression";
+import { StudyMetadata } from "../types/study";
 
-export interface StudyMetadata {
-  status: 'pending' | 'learning' | 'mastered';
-  difficulty: number;
-  timesStudied: number;
-  nextReviewAt: Date;
-  interval: number;
-  easiness: number;
-}
+export { type StudyMetadata };
 
 /**
  * Spaced Repetition Engine (SM-2 Algorithm)

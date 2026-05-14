@@ -82,3 +82,12 @@ export interface WordVariantCardProps {
 export interface PhrasalVerbDetailsProps {
   details: PhrasalVerbDetails;
 }
+
+export interface TagListProps {
+  tags: string[];
+  limit?: number;
+  variant?: 'zinc' | 'blue' | 'purple' | 'glass' | 'emerald';
+  showCount?: boolean;
+  className?: string;
+  tagClassName?: string;
+}

@@ -1,9 +1,21 @@
 import { Expression, Example, PhrasalVerbDetails, WordFamilies, UsageTips } from "@/shared/types/expression";
+import { RegionalVariant } from "@/frontend/types/store";
 import { Variants } from "framer-motion";
 
 export interface ExpressionHeroProps {
   expressionId: string;
-  analysis: Expression;
+  text: string;
+  translation: string;
+  type: string;
+  cefr: string;
+  ipa?: string | null;
+  formality?: string | null;
+  slangData?: {
+    isSlang: boolean;
+    detectedSlangLevel: number;
+    regionalVariants: RegionalVariant[];
+    similarWords: string[];
+  } | null;
 }
 
 export interface ExpressionMeaningProps {

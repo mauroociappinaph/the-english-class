@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ChronologyModule } from '@/shared/types/expression';
 import { LucideIcon, Info, ChevronRight, History, Play, FastForward } from 'lucide-react';
 import { TagChip } from '../ui/TagChip';
+import { TagList } from '../ui/TagList';
 
 
 const ZONE_CONFIG = {
@@ -86,13 +87,12 @@ const TemporalModule: React.FC<{ module: ChronologyModule; accentColor: string; 
         <h4 className={`text-sm font-bold uppercase tracking-wider ${accentColor}`}>
           {module.tense}
         </h4>
-        <div className="flex gap-1">
-          {module.grammarTags.slice(0, 2).map(tag => (
-            <span key={tag} className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-white/5 border border-white/10 opacity-60">
-              {tag}
-            </span>
-          ))}
-        </div>
+        <TagList 
+          tags={module.grammarTags || []} 
+          limit={2} 
+          tagClassName="text-[8px] font-mono px-1.5 py-0.5 rounded bg-white/5 border border-white/10 opacity-60"
+          showCount={false}
+        />
       </div>
 
       <div className="relative mb-4 p-4 rounded-xl bg-black/30 border border-white/5 group-hover:border-white/10 transition-colors">
@@ -116,13 +116,11 @@ const TemporalModule: React.FC<{ module: ChronologyModule; accentColor: string; 
         </div>
 
         {module.visualIndicators && module.visualIndicators.length > 0 && (
-          <div className="flex flex-wrap gap-2 pt-2 border-t border-white/5">
-            {module.visualIndicators.map(indicator => (
-              <TagChip key={indicator} variant="glass">
-                {indicator}
-              </TagChip>
-            ))}
-          </div>
+          <TagList 
+            tags={module.visualIndicators} 
+            variant="glass" 
+            className="pt-2 border-t border-white/5" 
+          />
         )}
       </div>
     </motion.div>

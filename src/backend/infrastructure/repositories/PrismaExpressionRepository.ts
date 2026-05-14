@@ -74,7 +74,7 @@ export class PrismaExpressionRepository extends BasePrismaRepository implements 
   }
 
   private mapToPrismaData(expression: CreateExpressionDto, isUpdate = false): Prisma.ExpressionCreateInput | Prisma.ExpressionUpdateInput {
-    const data: any = {
+    const data: Prisma.ExpressionUpdateInput & { text?: string } = {
       translation: expression.translation,
       meaning: expression.meaning,
       secondaryMeanings: JSON.stringify(expression.metadata.secondaryMeanings),

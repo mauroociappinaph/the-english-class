@@ -15,13 +15,21 @@ const FORMALITY_BADGE: Record<string, { border: string; text: string }> = {
   "old-fashioned": { border: "border-stone-500/30", text: "text-stone-400" },
 };
 
-export function ExpressionHero({ expressionId, analysis }: ExpressionHeroProps) {
-  const slangData = analysis.linguistics?.slangData;
+export function ExpressionHero({ 
+  expressionId, 
+  text, 
+  translation, 
+  type, 
+  cefr, 
+  ipa, 
+  formality, 
+  slangData 
+}: ExpressionHeroProps) {
   const regionalVariants = slangData?.regionalVariants ?? [];
   const topVariant = regionalVariants[0] ?? null;
-  const formalityKey = (analysis.metadata?.formality ?? "neutral").toLowerCase();
+  const formalityKey = (formality ?? "neutral").toLowerCase();
   const formalityStyle = FORMALITY_BADGE[formalityKey] ?? FORMALITY_BADGE.neutral;
-  const cefrStyle = getCefrStyle(analysis.metadata.cefr);
+  const cefrStyle = getCefrStyle(cefr);
 
   return (
     <motion.section
@@ -32,27 +40,26 @@ export function ExpressionHero({ expressionId, analysis }: ExpressionHeroProps) 
       className="text-center space-y-8 pt-8"
     >
       <span className="text-[10px] font-black uppercase tracking-[0.6em] text-zinc-600 block">
-        {analysis.metadata.type}
+        {type}
       </span>
 
       <h1 className="font-display text-8xl md:text-[10rem] font-black tracking-tighter text-white leading-none">
-        {analysis.text}
+        {text}
       </h1>
 
-      {/* Translation / Meaning - Pedagogical immediate feedback */}
       <motion.p 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         className="text-4xl md:text-6xl font-black text-white italic tracking-tight py-4"
       >
-        {analysis.translation}
+        {translation}
       </motion.p>
 
       <div className="flex items-center justify-center gap-6 flex-wrap">
-        <p className="text-zinc-500 italic font-mono text-xl">{analysis.metadata.ipa}</p>
+        <p className="text-zinc-500 italic font-mono text-xl">{ipa}</p>
         <div className={`px-4 py-1.5 rounded-full border ${cefrStyle.bg} text-white text-xs font-black uppercase tracking-widest`}>
-          {analysis.metadata.cefr}
+          {cefr}
         </div>
         {topVariant && (
           <div className="flex items-center gap-2 text-sm text-zinc-500 font-bold">
@@ -64,7 +71,7 @@ export function ExpressionHero({ expressionId, analysis }: ExpressionHeroProps) 
 
       <div className="flex flex-wrap items-center justify-center gap-3">
         <span className={`px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider ${formalityStyle.border} ${formalityStyle.text}`}>
-          {analysis.metadata.formality ?? "Neutral"}
+          {formality ?? "Neutral"}
         </span>
         {slangData?.isSlang && (
           <span className="px-3 py-1 rounded-full border border-purple-500/30 text-purple-300 text-xs font-bold uppercase tracking-wider">
