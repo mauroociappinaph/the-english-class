@@ -211,9 +211,9 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
           </div>
         </div>
 
-        <div className="p-6 rounded-3xl bg-zinc-900/50 border border-white/5">
+        <div className="p-6 rounded-2xl bg-zinc-900/50 border border-white/5">
           <div className="flex gap-4">
-            <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-zinc-500 shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center text-zinc-500 shrink-0">
               <Info size={20} />
             </div>
             <div className="space-y-1">
