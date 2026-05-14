@@ -22,7 +22,7 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
   return (
     <div className="space-y-8 w-full">
       {/* Search & Filter Header */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-zinc-900/50 p-6 rounded-[2rem] border border-white/5">
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-zinc-900/50 p-6 rounded-[3rem] border border-white/5">
         <div className="relative flex-1 w-full">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
           <input 
@@ -30,14 +30,14 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search in your library..."
-            className="w-full bg-black/40 border border-white/10 rounded-2xl py-3 pl-12 pr-4 text-sm outline-none focus:border-blue-500/50 transition-colors"
+            className="w-full bg-black/40 border border-white/10 rounded-3xl py-3 pl-12 pr-4 text-sm outline-none focus:border-blue-500/50 transition-colors"
           />
         </div>
         
         <div className="flex gap-2 items-center overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
           <button 
             onClick={() => setSelectedLevel(null)}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+            className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all whitespace-nowrap ${
               selectedLevel === null ? "bg-white text-black" : "bg-white/5 text-zinc-500 hover:bg-white/10"
             }`}
           >
@@ -47,7 +47,7 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
             <button 
               key={level}
               onClick={() => setSelectedLevel(level)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+              className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all whitespace-nowrap ${
                 selectedLevel === level ? getCefrStyle(level).bg + " text-white" : "bg-white/5 text-zinc-500 hover:bg-white/10"
               }`}
             >
@@ -70,7 +70,7 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="glass p-6 rounded-2xl space-y-3 relative group overflow-hidden h-full flex flex-col"
+              className="glass p-6 rounded-3xl space-y-3 relative group overflow-hidden h-full flex flex-col"
             >
               <div 
                 className={`absolute top-0 right-0 w-2 h-full ${getCefrStyle(ex?.metadata.cefr || 'A1').bg}`} 
