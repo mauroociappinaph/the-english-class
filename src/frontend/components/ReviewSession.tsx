@@ -9,6 +9,7 @@ import { useState } from "react";
 import { getCefrStyle } from "./cefr-styles";
 import { WordFamilyList } from "./WordFamilyList";
 import { PhrasalVerbDetails } from "./PhrasalVerbDetails";
+import { Flashcard } from "./review/Flashcard";
 
 const performanceConfig: { value: StudyPerformance; label: string; emoji: string; color: string; sublabel: string }[] = [
   { value: "hard", label: "Hard", emoji: "😤", color: "bg-red-500/20 text-red-400 border-red-500/30 hover:bg-red-500/30", sublabel: "Again soon" },
@@ -76,73 +77,64 @@ export function ReviewSession() {
       </div>
 
       {/* Flashcard */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentExpression.id + (isFlipped ? "-back" : "-front")}
-          initial={{ rotateY: 90, opacity: 0 }}
-          animate={{ rotateY: 0, opacity: 1 }}
-          exit={{ rotateY: -90, opacity: 0 }}
-          transition={{ duration: 0.25 }}
-          onClick={() => !isFlipped && flipCard()}
-          className="w-full min-h-[350px] glass rounded-[2rem] p-10 flex flex-col items-center justify-center text-center gap-6 cursor-pointer border border-white/10 hover:border-white/20 transition-colors shadow-2xl"
-        >
-          {!isFlipped ? (
-            /* FRONT: Expression */
-            <>
-              <p className="text-4xl font-black tracking-tight leading-tight">
-                {currentExpression.text}
-              </p>
-              {currentExpression.metadata.ipa && (
-                <p className="text-zinc-500 text-sm font-mono">{currentExpression.metadata.ipa}</p>
-              )}
-              <div className="flex items-center gap-2 text-zinc-400 text-sm mt-4">
-                <RotateCcw size={14} />
-                <span>Tap to reveal</span>
-              </div>
-            </>
-          ) : (
-            /* BACK: Translation + Meaning */
-            <div className="space-y-6 w-full">
-              <div className="space-y-2">
-                <p className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Translation</p>
-                <p className="text-2xl font-bold text-blue-400">
-                  {currentExpression.translation}
-                </p>
-              </div>
-              <div className="w-full h-px bg-white/10" />
-              <div className="space-y-2">
-                <p className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Meaning</p>
-                <p className="text-zinc-300 text-base leading-relaxed">
-                  {currentExpression.meaning}
-                </p>
-              </div>
-              {currentExpression.linguistics.wordFamilies && (
-                <>
-                  <div className="w-full h-px bg-white/10" />
-                  <WordFamilyList families={currentExpression.linguistics.wordFamilies} />
-                </>
-              )}
-              {currentExpression.linguistics.phrasalVerbDetails && (
-                <>
-                  <div className="w-full h-px bg-white/10" />
-                  <PhrasalVerbDetails details={currentExpression.linguistics.phrasalVerbDetails} />
-                </>
-              )}
-              {currentExpression.linguistics.examples.length > 0 && (
-                <>
-                  <div className="w-full h-px bg-white/10" />
-                  <div className="space-y-2 text-left">
-                    <p className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Example</p>
-                    <p className="text-zinc-400 text-sm italic">
-                      &ldquo;{currentExpression.linguistics.examples[0].text}&rdquo;
-                    </p>
-                  </div>
-                </>
-              )}
+      <Flashcard
+        isFlipped={isFlipped}
+        onFlip={() => !isFlipped && flipCard()}
+        front={
+          <>
+            <p className="text-4xl font-black tracking-tight leading-tight">
+              {currentExpression.text}
+            </p>
+            {currentExpression.metadata.ipa && (
+              <p className="text-zinc-500 text-sm font-mono mt-2">{currentExpression.metadata.ipa}</p>
+            )}
+            <div className="flex items-center gap-2 text-zinc-400 text-sm mt-8">
+              <RotateCcw size={14} />
+              <span>Tap to reveal</span>
             </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
+          </>
+        }
+        back={
+          <div className="space-y-6 w-full">
+            <div className="space-y-2">
+              <p className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Translation</p>
+              <p className="text-2xl font-bold text-blue-400">
+                {currentExpression.translation}
+              </p>
+            </div>
+            <div className="w-full h-px bg-white/10" />
+            <div className="space-y-2">
+              <p className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Meaning</p>
+              <p className="text-zinc-300 text-base leading-relaxed">
+                {currentExpression.meaning}
+              </p>
+            </div>
+            {currentExpression.linguistics.wordFamilies && (
+              <>
+                <div className="w-full h-px bg-white/10" />
+                <WordFamilyList families={currentExpression.linguistics.wordFamilies} />
+              </>
+            )}
+            {currentExpression.linguistics.phrasalVerbDetails && (
+              <>
+                <div className="w-full h-px bg-white/10" />
+                <PhrasalVerbDetails details={currentExpression.linguistics.phrasalVerbDetails} />
+              </>
+            )}
+            {currentExpression.linguistics.examples.length > 0 && (
+              <>
+                <div className="w-full h-px bg-white/10" />
+                <div className="space-y-2 text-left">
+                  <p className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Example</p>
+                  <p className="text-zinc-400 text-sm italic">
+                    &ldquo;{currentExpression.linguistics.examples[0].text}&rdquo;
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+        }
+      />
 
       {/* Rating buttons (only when flipped) */}
       <AnimatePresence>
