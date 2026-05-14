@@ -4,6 +4,7 @@ import { ISlangAnalyzer } from "../domain/interfaces/ISlangAnalyzer";
 import { ExpressionDetail, GroqExample } from "../domain/types";
 import { CollisionError } from "../domain/errors";
 import { StudyPerformance } from "@/shared/types/expression";
+import { SpacedRepetitionEngine, StudyMetadata } from "../domain/logic/SpacedRepetitionEngine";
 
 /**
  * Service to handle Expression business logic
@@ -121,7 +122,26 @@ export class ExpressionService {
   }
 
   async submitReview(id: string, performance: StudyPerformance): Promise<ExpressionDetail> {
-    return this.repository.updateStudyProgress(id, performance);
+    const current = await this.repository.findById(id);
+    if (!current) {
+      throw new Error(`Expression with ID ${id} not found`);
+    }
+
+    // Adapt types if necessary (handle string dates from JSON)
+    const currentStudy: StudyMetadata = {
+      status: current.study.status || 'pending',
+      difficulty: current.study.difficulty ?? 3,
+      timesStudied: current.study.timesStudied ?? 0,
+      nextReviewAt: typeof current.study.nextReviewAt === 'string' 
+        ? new Date(current.study.nextReviewAt) 
+        : current.study.nextReviewAt || new Date(),
+      interval: current.study.interval ?? 0,
+      easiness: current.study.easiness ?? 2.5,
+    };
+
+    const nextStudy = SpacedRepetitionEngine.calculate(currentStudy, performance);
+    
+    return this.repository.updateStudyProgress(id, nextStudy);
   }
 
   async deleteExpression(id: string): Promise<void> {
