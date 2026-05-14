@@ -1,8 +1,6 @@
 import { isTransientProviderError } from "./utils/errors";
+import { FallbackOptions } from "./types";
 
-export interface FallbackOptions {
-  timeoutMs?: number;
-}
 
 /**
  * Proxy-based decorator to provide transparent fallback for services.
