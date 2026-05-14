@@ -63,10 +63,10 @@ Schema:
     }
   ],
   "wordFamilies": {
-    "noun": [{ "word": "...", "translation": "...", "simpleExplanation": "...", "examples": [{"text": "...", "translation": "..."}] }],
-    "verb": [{ "word": "...", "translation": "...", "simpleExplanation": "...", "examples": [{"text": "...", "translation": "..."}] }],
-    "adjective": [{ "word": "...", "translation": "...", "simpleExplanation": "...", "examples": [{"text": "...", "translation": "..."}] }],
-    "adverb": [{ "word": "...", "translation": "...", "simpleExplanation": "...", "examples": [{"text": "...", "translation": "..."}] }]
+    "noun": [{ "word": "...", "translation": "...", "simpleExplanation": "...", "examples": [{"text": "...", "translation": "..."}], "commonCollocations": ["string", "string"] }],
+    "verb": [{ "word": "...", "translation": "...", "simpleExplanation": "...", "examples": [{"text": "...", "translation": "..."}], "commonCollocations": ["string", "string"] }],
+    "adjective": [{ "word": "...", "translation": "...", "simpleExplanation": "...", "examples": [{"text": "...", "translation": "..."}], "commonCollocations": ["string", "string"] }],
+    "adverb": [{ "word": "...", "translation": "...", "simpleExplanation": "...", "examples": [{"text": "...", "translation": "..."}], "commonCollocations": ["string", "string"] }]
   },
   "phrasalVerbDetails": {
     "verb": "base verb",
@@ -76,8 +76,8 @@ Schema:
     "logicExplanation": "...",
     "transitiveExplanation": "...",
     "separabilityExplanation": "...",
-    "validExamples": ["..."],
-    "invalidExamples": ["..."],
+    "validExamples": ["He sets the table up", "He sets up the table"], // ALWAYS array of STRINGS, never objects
+    "invalidExamples": ["He sets up it"], // ALWAYS array of STRINGS, never objects
     "collocations": [{ "phrase": "...", "frequency": "high|medium|low", "example": "...", "translation": "..." }]
   },
   "slangData": {
