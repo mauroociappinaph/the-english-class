@@ -1,14 +1,9 @@
 import React from 'react';
+import { TemporalZoneProps } from './types';
 import { motion } from 'framer-motion';
 import { ChronologyModule } from '@/shared/types/expression';
 import { LucideIcon, Info, ChevronRight, History, Play, FastForward } from 'lucide-react';
 
-interface TemporalZoneProps {
-  id: 'retrospective' | 'active' | 'projection';
-  title: string;
-  subtitle: string;
-  data: Record<string, ChronologyModule>;
-}
 
 const ZONE_CONFIG = {
   retrospective: {
