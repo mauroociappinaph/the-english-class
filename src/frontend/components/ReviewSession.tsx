@@ -11,6 +11,7 @@ import { WordFamilyList } from "./WordFamilyList";
 import { PhrasalVerbDetails } from "./PhrasalVerbDetails";
 import { Flashcard } from "./review/Flashcard";
 import { createCloze } from "@/frontend/utils/linguistics";
+import { SessionSummary } from "./study/SessionSummary";
 
 const performanceConfig: { value: StudyPerformance; label: string; emoji: string; color: string; sublabel: string }[] = [
   { value: "hard", label: "Hard", emoji: "😤", color: "bg-red-500/20 text-red-400 border-red-500/30 hover:bg-red-500/30", sublabel: "Again soon" },
@@ -27,11 +28,16 @@ export function ReviewSession() {
     nextCard, 
     endReview,
     isTestMode,
-    toggleTestMode
+    toggleTestMode,
+    isFinished
   } = useStudyStore();
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userInput, setUserInput] = useState("");
+
+  if (isFinished) {
+    return <SessionSummary />;
+  }
 
   const currentExpression = reviewQueue[currentReviewIndex];
   const progress = ((currentReviewIndex) / reviewQueue.length) * 100;
@@ -43,8 +49,9 @@ export function ReviewSession() {
     setIsSubmitting(true);
     try {
       const updated = await submitReview(currentExpression.id, performance);
+      const wasError = performance === "hard" || (isTestMode && !isCorrect);
       setUserInput(""); // Reset input for next card
-      nextCard(updated);
+      nextCard(updated, wasError);
     } catch (err) {
       console.error("Failed to submit review:", err);
     } finally {

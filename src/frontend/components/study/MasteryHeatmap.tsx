@@ -10,9 +10,9 @@ interface MasteryHeatmapProps {
 
 export function MasteryHeatmap({ expressions }: { expressions: Expression[] }) {
   const stats = useMemo(() => {
-    const mastered = expressions.filter(e => e.study.repetitions >= 5).length;
-    const learning = expressions.filter(e => e.study.repetitions > 0 && e.study.repetitions < 5).length;
-    const new_count = expressions.filter(e => e.study.repetitions === 0).length;
+    const mastered = expressions.filter(e => (e.study.timesStudied ?? 0) >= 5).length;
+    const learning = expressions.filter(e => (e.study.timesStudied ?? 0) > 0 && (e.study.timesStudied ?? 0) < 5).length;
+    const new_count = expressions.filter(e => (e.study.timesStudied ?? 0) === 0).length;
     
     return { mastered, learning, new_count, total: expressions.length };
   }, [expressions]);
@@ -49,11 +49,11 @@ export function MasteryHeatmap({ expressions }: { expressions: Expression[] }) {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: i * 0.01 }}
-            className={`aspect-square rounded-[3px] ${getCellColor(exp.study.repetitions)} transition-colors cursor-help group relative`}
+            className={`aspect-square rounded-[3px] ${getCellColor(exp.study.timesStudied ?? 0)} transition-colors cursor-help group relative`}
           >
             {/* Tooltip */}
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-zinc-900 border border-white/10 rounded-lg text-[10px] font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 shadow-2xl">
-              {exp.text} • {exp.study.repetitions} reps
+              {exp.text} • {exp.study.timesStudied ?? 0} reps
             </div>
           </motion.div>
         ))}

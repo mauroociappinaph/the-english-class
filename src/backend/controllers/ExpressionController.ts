@@ -45,4 +45,8 @@ export class ExpressionController {
   static async delete(id: string) {
     return withTelemetry("deleteExpression", () => expressionService.deleteExpression(id), { id });
   }
+
+  static async getAdaptivePath(failedIds: string[]) {
+    return withTelemetry("getAdaptivePath", () => expressionService.getAdaptivePath(failedIds), { failedIds });
+  }
 }

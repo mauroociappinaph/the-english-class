@@ -42,7 +42,7 @@ export interface SlangRegionCardProps {
 
 export interface ExpressionLibraryProps {
   expressions: Expression[];
-  getCefrStyle: (level: string) => { bg: string; glow: string };
+  getCefrStyle: (level: string) => { bg: string; glow: string; text: string };
   onDelete: (id: string) => Promise<void>;
   onViewDetail: (ex: Expression) => void;
 }

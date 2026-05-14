@@ -1,4 +1,4 @@
-import { GroqExpressionResponse } from "../../domain/types";
+import { GroqExpressionResponse, AdaptivePathResponse } from "../../domain/types";
 import { ILinguisticAnalyzer } from "../../domain/interfaces/ILinguisticAnalyzer";
 import { IStreamable } from "../../domain/interfaces/IStreamable";
 
@@ -99,4 +99,32 @@ Schema:
   }
 }`;
   }
+
+  /**
+   * Generates a prompt for adaptive learning path recommendations.
+   */
+  protected getAdaptivePathPrompt(failedTexts: string[]): string {
+    return `You are a Senior English Language Coach.
+The student has struggled with the following expressions during a review session:
+${failedTexts.map(t => `- ${t}`).join('\n')}
+
+Based on these errors, design an "Adaptive Learning Path". 
+Identify the common linguistic root, grammatical pattern, or contextual overlap causing confusion.
+Suggest 3-5 NEW related expressions or grammatical structures they should study next to reinforce this specific area.
+
+Return a strictly valid JSON object with:
+{
+  "diagnosis": "A concise pedagogical explanation of WHY they are struggling with these specific items in Spanish.",
+  "recommendedExpressions": [
+    {
+      "text": "The new expression",
+      "reason": "Why this specific recommendation helps fix the detected gap (in Spanish).",
+      "level": "CEFR Level"
+    }
+  ],
+  "learningTip": "A actionable tip to overcome this specific hurdle in Spanish."
+}`;
+  }
+
+  abstract suggestRelated(failedTexts: string[]): Promise<AdaptivePathResponse>;
 }

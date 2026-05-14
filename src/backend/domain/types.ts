@@ -40,4 +40,14 @@ export type { SlangData };
 
 export interface ExpressionDetail extends SharedExpression {}
 
+export type Expression = SharedExpression;
 export type CreateExpressionDto = SharedCreateExpressionDto;
+export interface AdaptivePathResponse {
+  diagnosis: string;
+  recommendedExpressions: {
+    text: string;
+    reason: string;
+    level: string;
+  }[];
+  learningTip: string;
+}

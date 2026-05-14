@@ -30,6 +30,10 @@ export async function submitReview(id: string, performance: StudyPerformance) {
   return ExpressionController.submitReview(id, performance);
 }
 
+export async function getAdaptivePath(failedIds: string[]) {
+  return ExpressionController.getAdaptivePath(failedIds);
+}
+
 
 // Journal Actions
 export async function createJournalEntry(data: CreateJournalEntryDto) {

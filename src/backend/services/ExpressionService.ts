@@ -1,7 +1,7 @@
 import { IExpressionRepository } from "../domain/repositories/IExpressionRepository";
 import { ILinguisticAnalyzer } from "../domain/interfaces/ILinguisticAnalyzer";
 import { ISlangAnalyzer } from "../domain/interfaces/ISlangAnalyzer";
-import { ExpressionDetail, GroqExample } from "../domain/types";
+import { Expression, CreateExpressionDto, AdaptivePathResponse, ExpressionDetail, GroqExample } from "../domain/types";
 import { CollisionError } from "../domain/errors";
 import { StudyPerformance } from "@/shared/types/expression";
 import { SpacedRepetitionEngine, StudyMetadata } from "../domain/logic/SpacedRepetitionEngine";
@@ -146,5 +146,17 @@ export class ExpressionService {
 
   async deleteExpression(id: string): Promise<void> {
     return this.repository.delete(id);
+  }
+
+  async getAdaptivePath(failedIds: string[]): Promise<AdaptivePathResponse | null> {
+    const failedExpressions = await Promise.all(
+      failedIds.map(id => this.repository.findById(id))
+    );
+    const texts = failedExpressions.filter(Boolean).map(e => e!.text);
+    
+    if (texts.length === 0) return null;
+
+    console.log(`[ExpressionService] Generating adaptive path for: ${texts.join(', ')}`);
+    return this.analyzer.suggestRelated(texts);
   }
 }

@@ -13,7 +13,7 @@ interface FlashcardProps {
   disableFlipClick?: boolean;
 }
 
-export function Flashcard({ isFlipped, onFlip, front, back, className }: FlashcardProps) {
+export function Flashcard({ isFlipped, onFlip, front, back, className, disableFlipClick }: FlashcardProps) {
   return (
     <div className={clsx("relative w-full min-h-[420px] [perspective:1500px] group", className)}>
       <motion.div

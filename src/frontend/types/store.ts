@@ -55,11 +55,23 @@ export interface ReviewSessionState {
   isFlipped: boolean;
   isLoadingReview: boolean;
   isTestMode: boolean;
+  isFinished: boolean;
+  sessionErrors: Expression[];
   startReview: (expressions: Expression[]) => void;
   flipCard: () => void;
   toggleTestMode: () => void;
-  nextCard: (updatedExpression: Expression) => void;
+  nextCard: (updatedExpression: Expression, wasError?: boolean) => void;
   endReview: () => void;
+}
+
+export interface AdaptivePathResponse {
+  diagnosis: string;
+  recommendedExpressions: {
+    text: string;
+    reason: string;
+    level: string;
+  }[];
+  learningTip: string;
 }
 
 export interface StudyState extends ExpressionDataState, ExpressionProcessState, ReviewSessionState {}

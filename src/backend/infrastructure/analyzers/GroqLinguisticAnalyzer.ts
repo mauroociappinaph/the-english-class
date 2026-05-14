@@ -1,5 +1,6 @@
 import { getGroqClient } from "../groq";
-import { GroqExpressionResponse } from "../../domain/types";
+import { ILinguisticAnalyzer } from "../../domain/interfaces/ILinguisticAnalyzer";
+import { GroqExpressionResponse, AdaptivePathResponse } from "../../domain/types";
 import { BaseLinguisticAnalyzer } from "./BaseLinguisticAnalyzer";
 
 export class GroqLinguisticAnalyzer extends BaseLinguisticAnalyzer {
@@ -44,5 +45,22 @@ export class GroqLinguisticAnalyzer extends BaseLinguisticAnalyzer {
     const result = JSON.parse(completion.choices[0]?.message?.content || "{}");
     console.log(`[GroqLinguisticAnalyzer] Analysis finished. Has chronology: ${!!result.chronology}`);
     return result;
+  }
+
+  async suggestRelated(failedTexts: string[]): Promise<AdaptivePathResponse> {
+    const prompt = this.getAdaptivePathPrompt(failedTexts);
+
+    const client = getGroqClient();
+    const completion = await client.chat.completions.create({
+      messages: [
+        { role: "system", content: "Return ONLY a valid JSON object." },
+        { role: "user", content: prompt }
+      ],
+      model: "llama-3.3-70b-versatile",
+      response_format: { type: "json_object" },
+      temperature: 0.1,
+    });
+
+    return JSON.parse(completion.choices[0]?.message?.content || "{}") as AdaptivePathResponse;
   }
 }
