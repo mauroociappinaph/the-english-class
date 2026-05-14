@@ -101,7 +101,7 @@ export const GrammarSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
-            className="p-8 rounded-[2rem] bg-white/[0.02] border border-white/5 space-y-6"
+            className="p-8 rounded-[3rem] bg-white/[0.02] border border-white/5 space-y-6"
           >
             <div className="flex items-center gap-3 border-b border-white/5 pb-4">
               {section.icon}
@@ -116,7 +116,7 @@ export const GrammarSection = () => {
                       {item.name}
                     </span>
                   </div>
-                  <p className="text-zinc-200 font-medium italic bg-white/5 p-3 rounded-xl border border-white/5">
+                  <p className="text-zinc-200 font-medium italic bg-white/5 p-3 rounded-2xl border border-white/5">
                     "{item.example}"
                   </p>
                   <p className="text-[10px] text-zinc-500 font-medium uppercase tracking-tighter">

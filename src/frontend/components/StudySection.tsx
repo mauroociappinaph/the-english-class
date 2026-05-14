@@ -54,7 +54,7 @@ export function StudySection() {
       <button 
         onClick={handleStartSession}
         disabled={isLoading || dueCount === 0}
-        className="w-full bg-white text-black font-black py-4 rounded-2xl hover:bg-zinc-200 transition-colors shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full bg-white text-black font-black py-4 rounded-3xl hover:bg-zinc-200 transition-colors shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {isLoading ? (
           <>
