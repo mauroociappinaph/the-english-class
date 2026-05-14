@@ -48,7 +48,7 @@ export function WordFamilyList({ families }: WordFamilyListProps) {
       {/* Educational Header & Introduction */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div className="space-y-4">
-          <div className="flex items-center gap-2 px-6 py-2 rounded-full bg-blue-500/5 border border-blue-500/10 w-fit">
+          <div className="flex items-center gap-2 px-6 py-2 rounded-lg bg-blue-500/5 border border-blue-500/10 w-fit">
             <ListTree size={14} className="text-blue-400" />
             <p className="text-sm font-black text-blue-400/90 uppercase tracking-[0.3em]">
               Morphology Map & Word Families
