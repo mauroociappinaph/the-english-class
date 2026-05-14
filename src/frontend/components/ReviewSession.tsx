@@ -59,7 +59,7 @@ export function ReviewSession() {
         </div>
         <button
           onClick={endReview}
-          className="p-2 rounded-xl hover:bg-white/10 transition-colors text-zinc-500 hover:text-white"
+          className="p-2 rounded-lg hover:bg-white/10 transition-colors text-zinc-500 hover:text-white"
         >
           <X size={20} />
         </button>
@@ -84,7 +84,7 @@ export function ReviewSession() {
           exit={{ rotateY: -90, opacity: 0 }}
           transition={{ duration: 0.25 }}
           onClick={() => !isFlipped && flipCard()}
-          className="w-full min-h-[350px] glass rounded-[3rem] p-10 flex flex-col items-center justify-center text-center gap-6 cursor-pointer border border-white/10 hover:border-white/20 transition-colors shadow-2xl"
+          className="w-full min-h-[350px] glass rounded-[2rem] p-10 flex flex-col items-center justify-center text-center gap-6 cursor-pointer border border-white/10 hover:border-white/20 transition-colors shadow-2xl"
         >
           {!isFlipped ? (
             /* FRONT: Expression */
@@ -158,7 +158,7 @@ export function ReviewSession() {
                 key={value}
                 onClick={() => handleRate(value)}
                 disabled={isSubmitting}
-                className={`flex flex-col items-center gap-1 py-4 px-3 rounded-3xl border transition-all font-bold ${color} disabled:opacity-50`}
+                className={`flex flex-col items-center gap-1 py-4 px-3 rounded-2xl border transition-all font-bold ${color} disabled:opacity-50`}
               >
                 <span className="text-2xl">{emoji}</span>
                 <span className="text-sm">{label}</span>
