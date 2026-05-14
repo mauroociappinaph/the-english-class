@@ -36,7 +36,7 @@ const posConfig: Record<string, { label: string; sub: string; color: string; ico
 export function WordFamilyList({ families }: WordFamilyListProps) {
   // Cast families to rich type if needed, or handle both for backward compatibility
   const richFamilies = families as unknown as WordFamilies;
-  const entries = Object.entries(richFamilies).filter(([_, variants]) => variants && variants.length > 0);
+  const entries = Object.entries(richFamilies || {}).filter(([_, variants]) => variants && variants.length > 0);
 
   if (entries.length === 0) return null;
 
@@ -50,7 +50,7 @@ export function WordFamilyList({ families }: WordFamilyListProps) {
         <div className="space-y-4">
           <div className="flex items-center gap-2 px-6 py-2 rounded-full bg-blue-500/5 border border-blue-500/10 w-fit">
             <ListTree size={14} className="text-blue-400" />
-            <p className="text-[10px] font-black text-blue-400/80 uppercase tracking-[0.3em]">
+            <p className="text-xs font-black text-blue-400/80 uppercase tracking-[0.3em]">
               Morphology Map & Word Families
             </p>
           </div>
@@ -69,11 +69,11 @@ export function WordFamilyList({ families }: WordFamilyListProps) {
             <Sparkles size={28} />
           </div>
           <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Linguistic Boost</p>
+            <p className="text-xs font-black uppercase tracking-widest text-zinc-600">Linguistic Boost</p>
             <p className="text-xl font-black text-white">
               Learn 1, Unlock {allVariants.length}
             </p>
-            <p className="text-[10px] font-bold text-blue-500/50 uppercase mt-1">Efficiency +{allVariants.length * 100}%</p>
+            <p className="text-xs font-bold text-blue-500/50 uppercase mt-1">Efficiency +{allVariants.length * 100}%</p>
           </div>
         </div>
       </div>
@@ -108,10 +108,10 @@ export function WordFamilyList({ families }: WordFamilyListProps) {
                     <config.icon size={16} />
                   </div>
                   <div>
-                    <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-white">
+                    <h4 className="text-xs font-black uppercase tracking-[0.2em] text-white">
                       {config.label}s
                     </h4>
-                    <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-tighter">
+                    <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-tighter">
                       {config.sub}
                     </p>
                   </div>
@@ -157,18 +157,18 @@ export function WordFamilyList({ families }: WordFamilyListProps) {
             <div className="flex items-center gap-6">
               <div className="flex flex-col">
                 <span className="text-2xl font-black text-white">400%</span>
-                <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Retention Speed</span>
+                <span className="text-xs font-bold text-zinc-600 uppercase tracking-widest">Retention Speed</span>
               </div>
               <div className="w-px h-10 bg-white/10" />
               <div className="flex flex-col">
                 <span className="text-2xl font-black text-white">x4</span>
-                <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Word Capacity</span>
+                <span className="text-xs font-bold text-zinc-600 uppercase tracking-widest">Word Capacity</span>
               </div>
             </div>
           </div>
 
           <div className="space-y-4">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500">Learning Strategy</p>
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-blue-500">Learning Strategy</p>
             <div className="space-y-3">
               {[
                 { title: "Spot the Root", desc: "Identify the core meaning that stays constant." },
@@ -181,7 +181,7 @@ export function WordFamilyList({ families }: WordFamilyListProps) {
                   </div>
                   <div>
                     <h5 className="text-sm font-bold text-white tracking-tight">{item.title}</h5>
-                    <p className="text-[11px] text-zinc-500">{item.desc}</p>
+                    <p className="text-xs text-zinc-500">{item.desc}</p>
                   </div>
                 </div>
               ))}
