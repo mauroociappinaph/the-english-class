@@ -103,19 +103,19 @@ export default function Home() {
       </motion.div>
 
       {/* Navigation Tabs */}
-      <div className="flex p-1 bg-zinc-950 rounded-2xl border border-white/10 w-fit relative overflow-hidden">
+      <div className="flex p-1 bg-zinc-950 rounded-3xl border border-white/10 w-fit relative overflow-hidden">
         {(["search", "library", "study", "grammar"] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`relative px-8 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-colors z-10 ${
+            className={`relative px-8 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-colors z-10 ${
               activeTab === tab ? "text-black" : "text-zinc-500 hover:text-zinc-300"
             }`}
           >
             {activeTab === tab && (
               <motion.div
                 layoutId="active-tab"
-                className="absolute inset-0 bg-white rounded-xl -z-10"
+                className="absolute inset-0 bg-white rounded-2xl -z-10"
                 transition={{ type: "spring", stiffness: 500, damping: 30 }}
               />
             )}
