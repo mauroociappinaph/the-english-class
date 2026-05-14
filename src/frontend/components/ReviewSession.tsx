@@ -53,7 +53,7 @@ export function ReviewSession() {
           <span className="text-sm font-bold text-zinc-500">
             {currentReviewIndex + 1} / {reviewQueue.length}
           </span>
-          <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${cefrStyle.bg} text-white`}>
+          <span className={`text-sm font-bold px-3 py-1 rounded-full ${cefrStyle.bg} text-white`}>
             {currentExpression.metadata.cefr}
           </span>
         </div>
@@ -95,7 +95,7 @@ export function ReviewSession() {
               {currentExpression.metadata.ipa && (
                 <p className="text-zinc-500 text-sm font-mono">{currentExpression.metadata.ipa}</p>
               )}
-              <div className="flex items-center gap-2 text-zinc-600 text-sm mt-4">
+              <div className="flex items-center gap-2 text-zinc-400 text-sm mt-4">
                 <RotateCcw size={14} />
                 <span>Tap to reveal</span>
               </div>
@@ -104,14 +104,14 @@ export function ReviewSession() {
             /* BACK: Translation + Meaning */
             <div className="space-y-6 w-full">
               <div className="space-y-2">
-                <p className="text-sm uppercase tracking-widest text-zinc-600 font-bold">Translation</p>
+                <p className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Translation</p>
                 <p className="text-2xl font-bold text-blue-400">
                   {currentExpression.translation}
                 </p>
               </div>
               <div className="w-full h-px bg-white/10" />
               <div className="space-y-2">
-                <p className="text-sm uppercase tracking-widest text-zinc-600 font-bold">Meaning</p>
+                <p className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Meaning</p>
                 <p className="text-zinc-300 text-base leading-relaxed">
                   {currentExpression.meaning}
                 </p>
@@ -132,7 +132,7 @@ export function ReviewSession() {
                 <>
                   <div className="w-full h-px bg-white/10" />
                   <div className="space-y-2 text-left">
-                    <p className="text-sm uppercase tracking-widest text-zinc-600 font-bold">Example</p>
+                    <p className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Example</p>
                     <p className="text-zinc-400 text-sm italic">
                       &ldquo;{currentExpression.linguistics.examples[0].text}&rdquo;
                     </p>
@@ -162,7 +162,7 @@ export function ReviewSession() {
               >
                 <span className="text-2xl">{emoji}</span>
                 <span className="text-sm">{label}</span>
-                <span className="text-xs opacity-60">{sublabel}</span>
+                <span className="text-xs text-zinc-400 font-medium">{sublabel}</span>
               </button>
             ))}
           </motion.div>
