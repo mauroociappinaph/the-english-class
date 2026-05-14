@@ -67,7 +67,10 @@ export default function ExpressionPage() {
       </motion.section>
 
       <SectionDivider label="scenarios" />
-      <ExpressionScenarios examples={currentAnalysis.linguistics.examples} />
+      <ExpressionScenarios 
+        examples={currentAnalysis.linguistics.examples} 
+        rootText={currentAnalysis.text} 
+      />
 
       <SectionDivider label="mastery" />
       <ExpressionMastery

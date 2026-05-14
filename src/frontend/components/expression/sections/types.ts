@@ -31,6 +31,7 @@ export interface ExpressionMechanicsProps {
 
 export interface ExpressionScenariosProps {
   examples?: Example[];
+  rootText: string;
 }
 
 export interface ExpressionMasteryProps {
