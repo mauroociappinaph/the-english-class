@@ -58,7 +58,7 @@ export function ExpressionHero({
 
       <div className="flex items-center justify-center gap-6 flex-wrap">
         <p className="text-zinc-500 italic font-mono text-xl">{ipa}</p>
-        <div className={`px-4 py-1.5 rounded-full border ${cefrStyle.bg} text-white text-sm font-black uppercase tracking-widest`}>
+        <div className={`px-4 py-1.5 rounded-lg border ${cefrStyle.bg} text-white text-sm font-black uppercase tracking-widest`}>
           {cefr}
         </div>
         {topVariant && (
@@ -70,18 +70,18 @@ export function ExpressionHero({
       </div>
 
       <div className="flex flex-wrap items-center justify-center gap-3">
-        <span className={`px-4 py-1.5 rounded-full border text-sm font-bold uppercase tracking-wider ${formalityStyle.border} ${formalityStyle.text}`}>
+        <span className={`px-4 py-1.5 rounded-lg border text-sm font-bold uppercase tracking-wider ${formalityStyle.border} ${formalityStyle.text}`}>
           {formality ?? "Neutral"}
         </span>
         {slangData?.isSlang && (
-          <span className="px-4 py-1.5 rounded-full border border-purple-500/30 text-purple-300 text-sm font-bold uppercase tracking-wider">
+          <span className="px-4 py-1.5 rounded-lg border border-purple-500/30 text-purple-300 text-sm font-bold uppercase tracking-wider">
             Slang · Level {slangData.detectedSlangLevel}/3
           </span>
         )}
         {regionalVariants.length > 0 && (
           <Link
             href={`/expression/${expressionId}/slang`}
-            className="px-4 py-1.5 rounded-full border border-white/10 text-zinc-400 text-sm font-semibold hover:text-white hover:border-white/30 transition-all"
+            className="px-4 py-1.5 rounded-lg border border-white/10 text-zinc-400 text-sm font-semibold hover:text-white hover:border-white/30 transition-all"
           >
             🌍 {regionalVariants.length} regional variants →
           </Link>
