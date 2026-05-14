@@ -1,11 +1,9 @@
 import React from 'react';
+import { TimelineVisualizerProps, TimelinePointProps } from './types';
 import { motion } from 'framer-motion';
 import { ChronologyData } from '@/shared/types/expression';
 import { MousePointer2, ArrowRight, ArrowLeft } from 'lucide-react';
 
-interface TimelineVisualizerProps {
-  data: ChronologyData;
-}
 
 export const TimelineVisualizer: React.FC<TimelineVisualizerProps> = ({ data }) => {
   return (
@@ -75,7 +73,7 @@ export const TimelineVisualizer: React.FC<TimelineVisualizerProps> = ({ data }) 
   );
 };
 
-const TimelinePoint: React.FC<{ module: any; position: 'top' | 'bottom'; color: string }> = ({ module, position, color }) => {
+const TimelinePoint: React.FC<TimelinePointProps> = ({ module, position, color }) => {
   const colorMap: Record<string, string> = {
     rose: 'bg-rose-500 shadow-rose-500/40',
     orange: 'bg-orange-500 shadow-orange-500/40',
