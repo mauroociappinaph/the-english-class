@@ -1,9 +1,10 @@
 import { isTransientProviderError } from "./utils/errors";
 import { FallbackOptions } from "./types";
 
-
 /**
  * Proxy-based decorator to provide transparent fallback for services.
+ * Automatically handles timeouts and transient errors for both standard Promises
+ * and AsyncGenerators (streaming).
  */
 export function withFallback<T extends object>(
   target: T,
@@ -13,25 +14,29 @@ export function withFallback<T extends object>(
   const { timeoutMs = 10000 } = options;
 
   return new Proxy(target, {
-    get(target: T, prop: string | symbol, receiver: any) {
-      const originalValue = Reflect.get(target, prop, receiver);
-      console.log(`[Resilience Proxy] Accessing: ${String(prop)} on ${target.constructor.name}`);
+    get(targetObj: T, prop: string | symbol, receiver: unknown) {
+      const originalValue = Reflect.get(targetObj, prop, receiver);
 
       if (typeof originalValue !== "function") {
         return originalValue;
       }
 
-      // Handle Streaming methods (AsyncGenerators)
+      const methodName = String(prop);
+      console.log(`[Resilience Proxy] Intercepting: ${methodName} on ${targetObj.constructor.name}`);
+
+      // 1. Handle Streaming methods (AsyncGenerators)
       if (prop === "analyzeStream") {
-        return function (...args: any[]) {
+        return function (this: unknown, ...args: unknown[]) {
+          // eslint-disable-next-line @typescript-eslint/no-this-alias
+          const self = this;
           return (async function* () {
             const start = performance.now();
-            let generator: AsyncGenerator<any, any, any>;
+            let generator: AsyncGenerator<unknown, unknown, unknown>;
             
             try {
               const primaryStream = async () => {
-                // Call the original generator function
-                return (originalValue as (...a: unknown[]) => AsyncGenerator<any, any, any>).apply(target, args);
+                const fn = originalValue as (...a: unknown[]) => AsyncGenerator<unknown, unknown, unknown>;
+                return fn.apply(self || targetObj, args);
               };
 
               if (timeoutMs) {
@@ -54,11 +59,13 @@ export function withFallback<T extends object>(
                 
                 const firstResult = await Promise.race([nextWithTimeout(), chunkTimeoutPromise]);
                 console.log(`[Resilient Stream] FIRST chunk arrived (done: ${firstResult.done})`);
+                
                 if (!firstResult.done) {
                   innerChunkCount++;
                   yield firstResult.value;
-                } else {
-                  throw new Error("EMPTY_STREAM: Primary provider returned an empty response");
+                } else if (innerChunkCount === 0) {
+                  // If it's already done and we have 0 chunks, it might be an issue depending on usage
+                  // but we let it complete normally if it's a valid empty stream.
                 }
               }
 
@@ -67,7 +74,7 @@ export function withFallback<T extends object>(
                 yield chunk;
               }
               const end = performance.now();
-              console.log(`[Resilient Stream] Primary provider (${target.constructor.name}) COMPLETED in ${((end - start) / 1000).toFixed(2)}s with ${innerChunkCount} chunks`);
+              console.log(`[Resilient Stream] Primary provider COMPLETED in ${((end - start) / 1000).toFixed(2)}s with ${innerChunkCount} chunks`);
             } catch (err: unknown) {
               const endPrimary = performance.now();
               const isTimeout = (err as Error).message?.includes("TIMEOUT");
@@ -75,17 +82,18 @@ export function withFallback<T extends object>(
               
               if (isTransientProviderError(err) || isTimeout) {
                 console.warn(
-                  `[Resilient Stream] Primary provider (${target.constructor.name}) ${isTimeout ? 'TIMED OUT' : 'FAILED'} in ${((endPrimary - start) / 1000).toFixed(2)}s (${errMsg}). Switching to fallback.`
+                  `[Resilient Stream] Primary provider ${isTimeout ? 'TIMED OUT' : 'FAILED'} in ${((endPrimary - start) / 1000).toFixed(2)}s (${errMsg}). Switching to fallback.`
                 );
                 
-                const fallbackFn = fallback[prop as keyof T];
+                const fallbackFn = (fallback as Record<string | symbol, unknown>)[prop];
                 if (typeof fallbackFn === "function") {
                   const startFallback = performance.now();
-                  const fallbackGenerator = (fallbackFn as (...a: unknown[]) => AsyncGenerator<any, any, any>).apply(fallback, args);
+                  const fn = fallbackFn as (...a: unknown[]) => AsyncGenerator<unknown, unknown, unknown>;
+                  const fallbackGenerator = fn.apply(fallback, args);
                   
                   yield* fallbackGenerator;
                   const endFallback = performance.now();
-                  console.log(`[Resilient Stream] Fallback provider (${fallback.constructor.name}) COMPLETED in ${((endFallback - startFallback) / 1000).toFixed(2)}s`);
+                  console.log(`[Resilient Stream] Fallback provider COMPLETED in ${((endFallback - startFallback) / 1000).toFixed(2)}s`);
                   return;
                 }
               }
@@ -95,23 +103,25 @@ export function withFallback<T extends object>(
         };
       }
 
-      // Handle standard methods (Promises)
-      return async function (...args: any[]) {
+      // 2. Handle standard methods (Promises)
+      return async function (this: unknown, ...args: unknown[]) {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        const self = this;
         const start = performance.now();
         try {
-          const primaryCall = async () => await originalValue.apply(target, args);
+          const primaryCall = async () => await originalValue.apply(self || targetObj, args);
           
           if (timeoutMs) {
             const timeoutPromise = new Promise<never>((_, reject) => 
               setTimeout(() => reject(new Error(`TIMEOUT: Primary provider took > ${timeoutMs}ms`)), timeoutMs)
             );
-            const result = await Promise.race([primaryCall(), timeoutPromise]);
+            const result = (await Promise.race([primaryCall(), timeoutPromise])) as unknown;
             const end = performance.now();
-            console.log(`[Resilient] Primary provider (${target.constructor.name}) SUCCESS in ${((end - start) / 1000).toFixed(2)}s`);
+            console.log(`[Resilient] Primary provider SUCCESS in ${((end - start) / 1000).toFixed(2)}s`);
             return result;
           }
           
-          return await primaryCall();
+          return (await primaryCall()) as unknown;
         } catch (err: unknown) {
           const endPrimary = performance.now();
           const isTimeout = (err as Error).message?.includes("TIMEOUT");
@@ -119,15 +129,16 @@ export function withFallback<T extends object>(
 
           if (isTransientProviderError(err) || isTimeout) {
             console.warn(
-              `[Resilient] Primary provider (${target.constructor.name}) ${isTimeout ? 'TIMED OUT' : 'FAILED'} in ${((endPrimary - start) / 1000).toFixed(2)}s (${errMsg}). Switching to fallback.`
+              `[Resilient] Primary provider ${isTimeout ? 'TIMED OUT' : 'FAILED'} in ${((endPrimary - start) / 1000).toFixed(2)}s (${errMsg}). Switching to fallback.`
             );
             
-            const fallbackFn = fallback[prop as keyof T];
+            const fallbackFn = (fallback as Record<string | symbol, unknown>)[prop];
             if (typeof fallbackFn === "function") {
               const startFallback = performance.now();
-              const result = await (fallbackFn as (...a: unknown[]) => Promise<unknown>).apply(fallback, args);
+              const fn = fallbackFn as (...a: unknown[]) => Promise<unknown>;
+              const result = await fn.apply(fallback, args);
               const endFallback = performance.now();
-              console.log(`[Resilient] Fallback provider (${fallback.constructor.name}) SUCCESS in ${((endFallback - startFallback) / 1000).toFixed(2)}s`);
+              console.log(`[Resilient] Fallback provider SUCCESS in ${((endFallback - startFallback) / 1000).toFixed(2)}s`);
               return result;
             }
           }
