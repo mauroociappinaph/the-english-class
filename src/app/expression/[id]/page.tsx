@@ -11,6 +11,7 @@ import { ExpressionMechanics } from "@/frontend/components/expression/sections/E
 import { ExpressionScenarios } from "@/frontend/components/expression/sections/ExpressionScenarios";
 import { ExpressionMastery } from "@/frontend/components/expression/sections/ExpressionMastery";
 import { ChronologyEngine } from "@/frontend/components/chronology/ChronologyEngine";
+import { OnboardingTour } from "@/frontend/components/onboarding/OnboardingTour";
 
 const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 32 },
@@ -77,6 +78,9 @@ export default function ExpressionPage() {
         usageTips={currentAnalysis.linguistics.usageTips ?? undefined}
         formality={currentAnalysis.metadata.formality ?? "Neutral"}
       />
+      
+      {/* Educational Onboarding */}
+      <OnboardingTour />
     </div>
   );
 }
