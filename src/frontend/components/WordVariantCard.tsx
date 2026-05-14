@@ -23,7 +23,7 @@ export function WordVariantCard({ variant, category, index }: WordVariantCardPro
       className="group relative"
     >
       <div className={clsx(
-        "relative overflow-hidden rounded-[2.5rem] border transition-all duration-500",
+        "relative overflow-hidden rounded-[2rem] border transition-all duration-500",
         isExpanded ? "bg-white/[0.03] border-white/10" : "bg-white/[0.01] border-white/5 hover:border-white/10"
       )}>
         {/* Progress Line */}
@@ -45,14 +45,14 @@ export function WordVariantCard({ variant, category, index }: WordVariantCardPro
             <TagList 
               tags={variant.naturalContexts || []} 
               limit={2} 
-              tagClassName="px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest"
+              tagClassName="px-3 py-1 rounded-lg text-[9px] font-bold uppercase tracking-widest"
             />
             
             {!isExpanded && (
               <div className="flex -space-x-2">
                 {[1, 2, 3].map(i => (
                   <div key={i} className="w-6 h-6 rounded-lg bg-zinc-800 border-2 border-zinc-950 flex items-center justify-center">
-                    <div className="w-1 h-1 rounded-full bg-zinc-600" />
+                    <div className="w-1 h-1 rounded-lg bg-zinc-600" />
                   </div>
                 ))}
               </div>
