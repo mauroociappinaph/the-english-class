@@ -11,7 +11,7 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
   const { verb, particle } = details;
 
   return (
-    <div className="relative w-full glass rounded-[4rem] border border-white/10 overflow-hidden shadow-2xl">
+    <div className="relative w-full glass rounded-[2rem] border border-white/10 overflow-hidden shadow-2xl">
       {/* Background Blueprint Grid */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
            style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
@@ -44,7 +44,7 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
           {/* Core Assembly - Visualized structural link */}
           <section className="space-y-12">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500">
+              <div className="w-10 h-10 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500">
                 <GitMerge size={20} />
               </div>
               <span className="text-sm font-black uppercase tracking-[0.2em] text-white">Core Assembly</span>
@@ -52,7 +52,7 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
             </div>
             
             <div className="flex flex-col md:flex-row items-center gap-4 md:gap-2">
-              <div className="w-full md:flex-1 p-12 rounded-[3rem] bg-white/[0.02] border border-white/5 flex flex-col items-center justify-center space-y-4 group hover:bg-white/[0.05] hover:border-white/10 transition-all duration-500">
+              <div className="w-full md:flex-1 p-12 rounded-[2rem] bg-white/[0.02] border border-white/5 flex flex-col items-center justify-center space-y-4 group hover:bg-white/[0.05] hover:border-white/10 transition-all duration-500">
                 <span className="text-xs font-mono uppercase tracking-widest text-zinc-500 group-hover:text-blue-400 transition-colors">Verbal Module</span>
                 <span className="text-6xl md:text-8xl font-black text-white tracking-tighter italic transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-2">
                   {verb}
@@ -90,7 +90,7 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
                 </div>
               </div>
 
-              <div className="w-full md:flex-1 p-12 rounded-[3rem] bg-blue-500/5 border border-blue-500/10 flex flex-col items-center justify-center space-y-4 group hover:bg-blue-500/10 hover:border-blue-500/20 transition-all duration-500">
+              <div className="w-full md:flex-1 p-12 rounded-[2rem] bg-blue-500/5 border border-blue-500/10 flex flex-col items-center justify-center space-y-4 group hover:bg-blue-500/10 hover:border-blue-500/20 transition-all duration-500">
                 <span className="text-xs font-mono uppercase tracking-widest text-blue-500/60 group-hover:text-blue-400 transition-colors">Particle Component</span>
                 <span className="text-6xl md:text-8xl font-black text-blue-400 tracking-tighter italic transition-transform duration-500 group-hover:scale-105 group-hover:rotate-2">
                   {particle}
