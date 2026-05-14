@@ -20,3 +20,14 @@ export interface TimelinePointProps {
   position: 'top' | 'bottom';
   color: string;
 }
+
+export interface TimelineSliderProps {
+  data: ChronologyData;
+  activeModule: ChronologyModule;
+  onModuleChange: (module: ChronologyModule) => void;
+}
+
+export interface LiveModuleViewProps {
+  module: ChronologyModule;
+  accentColor: string;
+}

@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ChronologyEngineProps } from './types';
 import { motion } from 'framer-motion';
-import { ChronologyData } from '@/shared/types/expression';
+import { ChronologyData, ChronologyModule } from '@/shared/types/expression';
 import { ChronologyHeader } from './ChronologyHeader';
 import { TemporalZone } from './TemporalZone';
-import { TimelineVisualizer } from './TimelineVisualizer';
+import { TimelineSlider } from './TimelineSlider';
+import { LiveModuleView } from './LiveModuleView';
 import { GrammarAtlasCTA } from './GrammarAtlasCTA';
 import { AlertCircle } from 'lucide-react';
 
-
 export const ChronologyEngine: React.FC<ChronologyEngineProps> = ({ data }) => {
+  const [activeModule, setActiveModule] = useState<ChronologyModule | null>(
+    data?.active?.presentSimple || null
+  );
+
   if (!data) {
     return (
       <div className="p-12 rounded-3xl bg-white/5 border border-white/10 flex flex-col items-center justify-center text-center">
@@ -24,17 +28,42 @@ export const ChronologyEngine: React.FC<ChronologyEngineProps> = ({ data }) => {
     );
   }
 
+  // Map active module to an accent color for the LiveView
+  const getAccentColor = () => {
+    if (!activeModule) return 'text-emerald-400';
+    const tense = activeModule.tense.toLowerCase();
+    if (tense.includes('past')) return 'text-orange-400';
+    if (tense.includes('present')) return 'text-emerald-400';
+    if (tense.includes('future')) return 'text-blue-400';
+    return 'text-emerald-400';
+  };
+
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-12 pb-12">
       <ChronologyHeader />
       
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-      >
-        <TimelineVisualizer data={data} />
-      </motion.div>
+      {/* Interactive Timeline Simulation Section */}
+      <div className="space-y-6">
+        <div className="flex items-center gap-2 px-4">
+          <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+          <span className="text-[10px] font-mono text-white/40 uppercase tracking-[0.3em]">
+            Interactive_Simulation_Mode
+          </span>
+        </div>
+
+        {activeModule && (
+          <LiveModuleView 
+            module={activeModule} 
+            accentColor={getAccentColor()} 
+          />
+        )}
+
+        <TimelineSlider 
+          data={data} 
+          activeModule={activeModule || data.active.presentSimple}
+          onModuleChange={setActiveModule}
+        />
+      </div>
 
       <div className="flex flex-col xl:flex-row gap-6 items-stretch">
         <TemporalZone 
