@@ -37,8 +37,8 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
         <div className="flex gap-2 items-center overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
           <button 
             onClick={() => setSelectedLevel(null)}
-            className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all whitespace-nowrap ${
-              selectedLevel === null ? "bg-white text-black" : "bg-white/5 text-zinc-500 hover:bg-white/10"
+            className={`px-4 py-2 rounded-2xl text-sm font-bold transition-all whitespace-nowrap ${
+              selectedLevel === null ? "bg-white text-black" : "bg-white/5 text-zinc-400 hover:bg-white/10"
             }`}
           >
             All
@@ -47,8 +47,8 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
             <button 
               key={level}
               onClick={() => setSelectedLevel(level)}
-              className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all whitespace-nowrap ${
-                selectedLevel === level ? getCefrStyle(level).bg + " text-white" : "bg-white/5 text-zinc-500 hover:bg-white/10"
+              className={`px-4 py-2 rounded-2xl text-sm font-bold transition-all whitespace-nowrap ${
+                selectedLevel === level ? getCefrStyle(level).bg + " text-white" : "bg-white/5 text-zinc-400 hover:bg-white/10"
               }`}
             >
               {level}
@@ -88,8 +88,8 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
               </button>
 
               <div className="flex justify-between items-center">
-                <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{ex?.metadata.type}</span>
-                <span className={`text-xs font-black ${getCefrStyle(ex?.metadata.cefr || 'A1').text}`}>{ex?.metadata.cefr}</span>
+                <span className="text-sm font-bold text-zinc-400 uppercase tracking-wider">{ex?.metadata.type}</span>
+                <span className={`text-sm font-black ${getCefrStyle(ex?.metadata.cefr || 'A1').text}`}>{ex?.metadata.cefr}</span>
               </div>
               
               <div className="flex-1 space-y-2">
@@ -99,7 +99,7 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
 
               <button 
                 onClick={() => onViewDetail(ex)}
-                className="text-xs text-blue-400 font-bold flex items-center gap-1 mt-4 hover:translate-x-1 transition-transform"
+                className="text-sm text-blue-400 font-bold flex items-center gap-1 mt-4 hover:translate-x-1 transition-transform"
               >
                 Ver detalle <ChevronRight size={14} />
               </button>
@@ -120,7 +120,7 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
           </div>
           <div className="text-center">
             <h3 className="text-xl font-bold text-zinc-400">No expressions found</h3>
-            <p className="text-sm text-zinc-600">Try adjusting your filters or search query.</p>
+            <p className="text-sm text-zinc-400">Try adjusting your filters or search query.</p>
           </div>
         </motion.div>
       )}
