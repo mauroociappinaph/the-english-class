@@ -12,6 +12,7 @@ import { ExpressionScenarios } from "@/frontend/components/expression/sections/E
 import { ExpressionMastery } from "@/frontend/components/expression/sections/ExpressionMastery";
 import { ChronologyEngine } from "@/frontend/components/chronology/ChronologyEngine";
 import { OnboardingTour } from "@/frontend/components/onboarding/OnboardingTour";
+import { Loader2 } from "lucide-react";
 
 const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 32 },
@@ -27,7 +28,18 @@ export default function ExpressionPage() {
   const params = useParams();
   const id = params.id as string;
 
-  if (!currentAnalysis || !currentAnalysis.metadata || !currentAnalysis.linguistics) return null;
+  if (!currentAnalysis || !currentAnalysis.metadata || !currentAnalysis.linguistics) {
+    return (
+      <div className="w-full max-w-6xl mx-auto min-h-[60vh] flex flex-col items-center justify-center gap-6">
+        <div className="w-20 h-20 bg-white/5 rounded-[2rem] border border-white/5 flex items-center justify-center">
+          <Loader2 className="animate-spin text-blue-500" size={32} />
+        </div>
+        <p className="text-zinc-500 font-black uppercase tracking-[0.3em] text-[10px]">
+          Calibrating Linguistic Engine...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-6xl mx-auto space-y-32 pb-40">

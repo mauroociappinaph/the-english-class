@@ -18,8 +18,8 @@ export const TagList: React.FC<TagListProps> = ({
 
   return (
     <div className={clsx("flex flex-wrap gap-2 items-center", className)}>
-      {visibleTags.map((tag) => (
-        <TagChip key={tag} variant={variant} className={tagClassName}>
+      {visibleTags.map((tag, idx) => (
+        <TagChip key={`${tag}-${idx}`} variant={variant} className={tagClassName}>
           {tag}
         </TagChip>
       ))}
