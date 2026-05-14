@@ -1,4 +1,5 @@
 import React from 'react';
+import { ChronologyEngineProps } from './types';
 import { motion } from 'framer-motion';
 import { ChronologyData } from '@/shared/types/expression';
 import { ChronologyHeader } from './ChronologyHeader';
@@ -7,9 +8,6 @@ import { TimelineVisualizer } from './TimelineVisualizer';
 import { GrammarAtlasCTA } from './GrammarAtlasCTA';
 import { AlertCircle } from 'lucide-react';
 
-interface ChronologyEngineProps {
-  data?: ChronologyData | null;
-}
 
 export const ChronologyEngine: React.FC<ChronologyEngineProps> = ({ data }) => {
   if (!data) {
