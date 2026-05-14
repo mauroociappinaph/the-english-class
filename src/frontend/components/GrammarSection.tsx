@@ -112,14 +112,14 @@ export const GrammarSection = () => {
               {section.items.map((item) => (
                 <div key={item.name} className="group space-y-2">
                   <div className="flex items-baseline justify-between gap-4">
-                    <span className="text-xs font-black uppercase tracking-widest text-zinc-500 group-hover:text-zinc-300 transition-colors">
+                    <span className="text-sm font-black uppercase tracking-widest text-zinc-400 group-hover:text-zinc-200 transition-colors">
                       {item.name}
                     </span>
                   </div>
                   <p className="text-zinc-200 font-medium italic bg-white/5 p-3 rounded-2xl border border-white/5">
                     "{item.example}"
                   </p>
-                  <p className="text-[10px] text-zinc-500 font-medium uppercase tracking-tighter">
+                  <p className="text-xs text-zinc-400 font-medium uppercase tracking-tight">
                     {item.description}
                   </p>
                 </div>
