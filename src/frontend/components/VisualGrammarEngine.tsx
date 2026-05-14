@@ -45,12 +45,12 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
               <Clock size={20} />
             </div>
             <div>
-              <h4 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-500">Temporal Analysis</h4>
+              <h4 className="text-sm font-black uppercase tracking-[0.3em] text-zinc-400">Temporal Analysis</h4>
               <p className="text-lg font-bold text-white">Visual Grammar Engine</p>
             </div>
           </div>
           <div className="text-right flex flex-col items-end">
-            <span className="text-xs font-mono text-zinc-600 uppercase tracking-widest">VGE v4.1</span>
+            <span className="text-sm font-mono text-zinc-400 uppercase tracking-widest">VGE v4.1</span>
             <div className="flex gap-1 mt-1">
               <div className="w-1 h-1 rounded-full bg-emerald-500/40" />
               <div className="w-1 h-1 rounded-full bg-emerald-500/20" />
@@ -73,7 +73,7 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
                     <div className="w-3 h-3 rounded-full bg-zinc-900 border-2 border-zinc-700 z-10 relative group-hover:border-emerald-500 transition-colors shadow-[0_0_15px_rgba(0,0,0,1)]" />
                     <div className="flex items-center gap-2">
                       <ZoneIcon size={12} className={zoneLabels[cat].color} />
-                      <span className={`text-xs font-mono font-black tracking-[0.2em] uppercase ${zoneLabels[cat].color}`}>
+                      <span className={`text-sm font-mono font-black tracking-[0.2em] uppercase ${zoneLabels[cat].color}`}>
                         {zoneLabels[cat].label}
                       </span>
                     </div>
@@ -91,7 +91,7 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
                         className="p-6 rounded-3xl bg-white/5 border border-white/5 hover:border-white/10 transition-all space-y-3 group/module"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-mono text-zinc-500 uppercase tracking-tighter group-hover/module:text-emerald-400 transition-colors">
+                          <span className="text-sm font-mono text-zinc-400 uppercase tracking-tighter group-hover/module:text-emerald-400 transition-colors">
                             MOD_{tense.key.toUpperCase()}
                           </span>
                           <Activity size={10} className="text-zinc-800 group-hover/module:text-emerald-500/30 transition-colors" />
@@ -106,7 +106,7 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
                     {categories[cat].length === 0 && (
                       <div className="p-8 rounded-3xl border border-dashed border-white/5 flex flex-col items-center justify-center opacity-30">
                         <div className="w-1 h-1 rounded-full bg-zinc-700 mb-2" />
-                        <span className="text-xs font-mono uppercase tracking-widest text-zinc-600">No Data Detected</span>
+                        <span className="text-sm font-mono uppercase tracking-widest text-zinc-400">No Data Detected</span>
                       </div>
                     )}
                   </div>
@@ -121,23 +121,23 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
           <div className="flex gap-8">
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-rose-400/20 border border-rose-400/40" />
-              <span className="text-xs font-mono text-zinc-500 uppercase">Past Matrix</span>
+              <span className="text-sm font-mono text-zinc-400 uppercase">Past Matrix</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-blue-400/20 border border-blue-400/40" />
-              <span className="text-xs font-mono text-zinc-500 uppercase">Current Flow</span>
+              <span className="text-sm font-mono text-zinc-400 uppercase">Current Flow</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-400/20 border border-emerald-400/40" />
-              <span className="text-xs font-mono text-zinc-500 uppercase">Future Vector</span>
+              <span className="text-sm font-mono text-zinc-400 uppercase">Future Vector</span>
             </div>
           </div>
           <button 
             onClick={() => window.location.href = '/?tab=grammar'}
-            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-zinc-500 hover:text-white transition-colors"
+            className="flex items-center gap-2 text-sm font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-colors"
           >
             Access Full Grammar Atlas
-            <FastForward size={12} />
+            <FastForward size={14} />
           </button>
         </div>
       </div>
