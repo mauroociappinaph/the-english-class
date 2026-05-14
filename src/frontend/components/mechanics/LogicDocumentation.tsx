@@ -16,10 +16,13 @@ import { clsx } from "clsx";
 export function LogicDocumentation({ details }: PhrasalVerbDetailsProps) {
   const { verb, particle, separable, transitive, transitiveExplanation, separabilityExplanation, logicExplanation } = details || {};
 
-  const safeVal = (v: any) => {
+  const safeVal = (v: unknown): string => {
     if (typeof v === 'string') return v;
-    if (v && typeof v === 'object') return v.phrase || v.text || v.explanation || v.logic || "";
-    return v;
+    if (v && typeof v === 'object') {
+      const obj = v as Record<string, string>;
+      return obj.phrase || obj.text || obj.explanation || obj.logic || "";
+    }
+    return String(v ?? "");
   };
 
   const docs = [

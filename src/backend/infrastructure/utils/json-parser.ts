@@ -2,7 +2,7 @@
  * Utility to extract and parse JSON from LLM responses that might contain
  * markdown code blocks or other noise.
  */
-export function parseRobustJson(text: string): any {
+export function parseRobustJson(text: string): Record<string, unknown> {
   if (!text) return {};
 
   let cleaned = text.trim();

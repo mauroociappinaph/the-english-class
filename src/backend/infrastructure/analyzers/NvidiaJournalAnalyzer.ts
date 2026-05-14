@@ -150,7 +150,7 @@ Schema:
 
     const data = await response.json();
     const content = data.choices[0]?.message?.content || "{}";
-    const parsed = parseRobustJson(content);
+    const parsed = parseRobustJson(content) as unknown as LinguisticAnalysis;
     
     return {
       cefrLevel: parsed.cefrLevel || "B1",

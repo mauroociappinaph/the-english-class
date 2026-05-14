@@ -63,7 +63,7 @@ export class ExpressionService {
       }) ?? Promise.resolve(null),
     ]);
 
-    const expressionData: any = {
+    const expressionData = {
       text: normalizedText,
       translation: result.translation || "",
       meaning: result.meaning || "",

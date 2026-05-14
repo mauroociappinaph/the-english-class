@@ -86,7 +86,7 @@ export class NvidiaLinguisticAnalyzer extends BaseLinguisticAnalyzer {
     const data = await response.json();
     const content = data.choices[0]?.message?.content || "{}";
     try {
-      const result = parseRobustJson(content);
+      const result = parseRobustJson(content) as unknown as GroqExpressionResponse;
       console.log(`[NvidiaLinguisticAnalyzer] Analysis finished. Has chronology: ${!!result.chronology}`);
       return result;
     } catch (e) {

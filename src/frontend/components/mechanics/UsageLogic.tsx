@@ -26,10 +26,13 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
 
   const currentSep = separableLabels[separable] || separableLabels.no;
 
-  const safeExample = (ex: any) => {
+  const safeExample = (ex: unknown): string => {
     if (typeof ex === 'string') return ex;
-    if (ex && typeof ex === 'object') return ex.phrase || ex.text || ex.example || "";
-    return ex;
+    if (ex && typeof ex === 'object') {
+      const obj = ex as Record<string, string>;
+      return obj.phrase || obj.text || obj.example || "";
+    }
+    return String(ex ?? "");
   };
 
   return (

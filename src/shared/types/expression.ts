@@ -100,7 +100,7 @@ export interface WordFamilies {
   adverb?: WordVariant[];
 }
 
-export interface Collocation {
+interface Collocation {
   phrase: string;
   frequency: 'high' | 'medium' | 'low';
   naturalness: number; // 0-100
