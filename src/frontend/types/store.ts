@@ -54,8 +54,10 @@ export interface ReviewSessionState {
   isReviewing: boolean;
   isFlipped: boolean;
   isLoadingReview: boolean;
+  isTestMode: boolean;
   startReview: (expressions: Expression[]) => void;
   flipCard: () => void;
+  toggleTestMode: () => void;
   nextCard: (updatedExpression: Expression) => void;
   endReview: () => void;
 }

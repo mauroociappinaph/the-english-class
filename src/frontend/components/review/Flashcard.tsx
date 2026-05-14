@@ -10,6 +10,7 @@ interface FlashcardProps {
   front: ReactNode;
   back: ReactNode;
   className?: string;
+  disableFlipClick?: boolean;
 }
 
 export function Flashcard({ isFlipped, onFlip, front, back, className }: FlashcardProps) {
@@ -24,7 +25,7 @@ export function Flashcard({ isFlipped, onFlip, front, back, className }: Flashca
           rotateX: { duration: 0.2 }
         }}
         className="relative w-full h-full [transform-style:preserve-3d] cursor-pointer"
-        onClick={onFlip}
+        onClick={() => !disableFlipClick && onFlip()}
       >
         {/* Front Face */}
         <div className="absolute inset-0 [backface-visibility:hidden] [-webkit-backface-visibility:hidden] w-full h-full">

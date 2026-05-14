@@ -19,6 +19,7 @@ export const useStudyStore = create<StudyState>((set) => ({
   isReviewing: false,
   isFlipped: false,
   isLoadingReview: false,
+  isTestMode: false,
   startReview: (expressions) => set({
     reviewQueue: expressions,
     currentReviewIndex: 0,
@@ -27,6 +28,7 @@ export const useStudyStore = create<StudyState>((set) => ({
     isLoadingReview: false,
   }),
   flipCard: () => set((state) => ({ isFlipped: !state.isFlipped })),
+  toggleTestMode: () => set((state) => ({ isTestMode: !state.isTestMode, isFlipped: false })),
   nextCard: (updatedExpression) => set((state) => {
     const nextIndex = state.currentReviewIndex + 1;
     const isFinished = nextIndex >= state.reviewQueue.length;
