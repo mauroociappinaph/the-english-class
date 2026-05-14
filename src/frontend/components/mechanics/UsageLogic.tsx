@@ -38,7 +38,12 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Transitivity Section */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
         className="p-10 rounded-[2rem] bg-white/[0.02] border border-white/5 space-y-8 relative overflow-hidden group"
+      >
         <div className="absolute top-0 left-0 w-1 h-24 bg-blue-500/40 rounded-full mt-10" />
         
         <div className="flex items-center justify-between">
@@ -126,7 +131,13 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
       </motion.div>
 
       {/* Separability Section */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.2 }}
         className="p-10 rounded-[2rem] bg-white/[0.02] border border-white/5 space-y-8 relative overflow-hidden group"
+      >
         <div className={clsx(
           "absolute top-0 left-0 w-1 h-24 rounded-full mt-10 opacity-40",
           separable === 'no' ? "bg-red-500" : separable === 'optional' ? "bg-amber-500" : "bg-emerald-500"
