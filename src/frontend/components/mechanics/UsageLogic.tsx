@@ -38,12 +38,7 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Transitivity Section */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="p-10 rounded-[3rem] bg-white/[0.02] border border-white/5 space-y-8 relative overflow-hidden group"
-      >
+        className="p-10 rounded-[2rem] bg-white/[0.02] border border-white/5 space-y-8 relative overflow-hidden group"
         <div className="absolute top-0 left-0 w-1 h-24 bg-blue-500/40 rounded-full mt-10" />
         
         <div className="flex items-center justify-between">
@@ -70,7 +65,7 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
           </p>
 
           {/* Visual Specimen */}
-          <div className="p-6 rounded-[2rem] bg-zinc-950/50 border border-white/5 font-mono text-xs space-y-4">
+          <div className="p-6 rounded-2xl bg-zinc-950/50 border border-white/5 font-mono text-xs space-y-4">
             <div className="flex items-center gap-2 text-zinc-600">
               <motion.div 
                 animate={{ opacity: [0.3, 1, 0.3] }}
@@ -107,32 +102,31 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
           <div className="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 space-y-2">
             <div className="flex items-center gap-2 text-emerald-500">
               <CheckCircle2 size={12} />
-              <span className="text-[9px] font-black uppercase">Valid</span>
+              <span className="text-[9px] font-black uppercase tracking-widest">Valid Instance</span>
             </div>
             <p className="text-[11px] text-zinc-300 font-medium leading-relaxed italic">
-              {safeExample(validExamples?.[0]) || `He ${verb}s ${transitive ? 'it ' : ''}${particle}.`}
+              {/* Ensure example contains the verb/particle or fallback to template */}
+              {(validExamples?.[0] && safeExample(validExamples[0]).toLowerCase().includes(verb.toLowerCase()))
+                ? safeExample(validExamples[0])
+                : `He ${verb}s ${transitive ? 'it ' : ''}${particle}.`}
             </p>
           </div>
           <div className="p-4 rounded-2xl bg-red-500/5 border border-red-500/10 space-y-2">
             <div className="flex items-center gap-2 text-red-500">
               <XCircle size={12} />
-              <span className="text-[9px] font-black uppercase">Invalid</span>
+              <span className="text-[9px] font-black uppercase tracking-widest">Invalid Path</span>
             </div>
             <p className="text-[11px] text-zinc-500 font-medium leading-relaxed italic line-through opacity-60">
-              {safeExample(invalidExamples?.[0]) || `He ${verb}s ${transitive ? '' : 'it '}${particle}.`}
+              {(invalidExamples?.[0] && safeExample(invalidExamples[0]).toLowerCase().includes(verb.toLowerCase()))
+                ? safeExample(invalidExamples[0])
+                : `He ${verb}s ${transitive ? '' : 'it '}${particle}.`}
             </p>
           </div>
         </div>
       </motion.div>
 
       {/* Separability Section */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.2 }}
-        className="p-10 rounded-[3rem] bg-white/[0.02] border border-white/5 space-y-8 relative overflow-hidden group"
-      >
+        className="p-10 rounded-[2rem] bg-white/[0.02] border border-white/5 space-y-8 relative overflow-hidden group"
         <div className={clsx(
           "absolute top-0 left-0 w-1 h-24 rounded-full mt-10 opacity-40",
           separable === 'no' ? "bg-red-500" : separable === 'optional' ? "bg-amber-500" : "bg-emerald-500"
@@ -172,7 +166,7 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
             </div>
 
             <div className="space-y-2">
-              <div className="p-5 rounded-[2rem] bg-emerald-500/5 border border-emerald-500/10 relative group/valid">
+              <div className="p-5 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 relative group/valid">
                 <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 group-hover/valid:opacity-100 transition-opacity">
                   <CheckCircle2 size={20} className="text-emerald-500/40" />
                 </div>
@@ -186,7 +180,7 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
               </div>
 
               <div className={clsx(
-                "p-5 rounded-[2rem] bg-red-500/5 border border-red-500/10 relative group/invalid transition-all",
+                "p-5 rounded-2xl bg-red-500/5 border border-red-500/10 relative group/invalid transition-all",
                 separable === 'mandatory' ? "opacity-100" : "opacity-40"
               )}>
                 <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 group-hover/invalid:opacity-100 transition-opacity">
