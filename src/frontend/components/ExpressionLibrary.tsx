@@ -22,7 +22,7 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
   return (
     <div className="space-y-8 w-full">
       {/* Search & Filter Header */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-zinc-900/50 p-6 rounded-[3rem] border border-white/5">
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-zinc-900/50 p-6 rounded-[2rem] border border-white/5">
         <div className="relative flex-1 w-full">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
           <input 
@@ -30,7 +30,7 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search in your library..."
-            className="w-full bg-black/40 border border-white/10 rounded-3xl py-3 pl-12 pr-4 text-sm outline-none focus:border-blue-500/50 transition-colors"
+            className="w-full bg-black/40 border border-white/10 rounded-2xl py-3 pl-12 pr-4 text-sm outline-none focus:border-blue-500/50 transition-colors"
           />
         </div>
         
@@ -70,7 +70,7 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="glass p-6 rounded-3xl space-y-3 relative group overflow-hidden h-full flex flex-col"
+              className="glass p-6 rounded-2xl space-y-3 relative group overflow-hidden h-full flex flex-col"
             >
               <div 
                 className={`absolute top-0 right-0 w-2 h-full ${getCefrStyle(ex?.metadata.cefr || 'A1').bg}`} 
@@ -113,7 +113,7 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="py-20 flex flex-col items-center justify-center space-y-4 border border-dashed border-white/10 rounded-[3rem]"
+          className="py-20 flex flex-col items-center justify-center space-y-4 border border-dashed border-white/10 rounded-[2rem]"
         >
           <div className="p-6 rounded-full bg-white/5 text-zinc-600">
             <Filter size={32} />
