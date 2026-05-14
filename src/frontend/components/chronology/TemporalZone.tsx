@@ -3,6 +3,7 @@ import { TemporalZoneProps } from './types';
 import { motion } from 'framer-motion';
 import { ChronologyModule } from '@/shared/types/expression';
 import { LucideIcon, Info, ChevronRight, History, Play, FastForward } from 'lucide-react';
+import { TagChip } from '../ui/TagChip';
 
 
 const ZONE_CONFIG = {
@@ -117,9 +118,9 @@ const TemporalModule: React.FC<{ module: ChronologyModule; accentColor: string; 
         {module.visualIndicators && module.visualIndicators.length > 0 && (
           <div className="flex flex-wrap gap-2 pt-2 border-t border-white/5">
             {module.visualIndicators.map(indicator => (
-              <span key={indicator} className="text-[9px] font-mono px-2 py-1 rounded-md bg-white/5 text-white/50 border border-white/5">
+              <TagChip key={indicator} variant="glass">
                 {indicator}
-              </span>
+              </TagChip>
             ))}
           </div>
         )}
