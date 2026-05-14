@@ -15,6 +15,7 @@ import { WordVariant } from "@/shared/types/expression";
 import { useState } from "react";
 import { clsx } from "clsx";
 import { WordVariantCardProps } from "../types/components";
+import { TagChip } from "./ui/TagChip";
 
 export function WordVariantCard({ variant, category, index }: WordVariantCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -160,9 +161,9 @@ export function WordVariantCard({ variant, category, index }: WordVariantCardPro
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {variant.commonCollocations?.map((coll: any) => (
-                      <span key={typeof coll === 'string' ? coll : coll.phrase || Math.random().toString()} className="px-3 py-1.5 rounded-xl bg-blue-500/5 border border-blue-500/10 text-[11px] font-bold text-blue-400">
+                      <TagChip key={typeof coll === 'string' ? coll : coll.phrase || Math.random().toString()} variant="blue">
                         {typeof coll === 'string' ? coll : coll.phrase || coll.word || ""}
-                      </span>
+                      </TagChip>
                     )) || null}
                   </div>
                 </div>
@@ -174,14 +175,14 @@ export function WordVariantCard({ variant, category, index }: WordVariantCardPro
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {variant.synonyms?.slice(0, 3).map(syn => (
-                      <span key={syn} className="px-3 py-1.5 rounded-xl bg-purple-500/5 border border-blue-500/10 text-[11px] font-bold text-purple-400">
+                      <TagChip key={syn} variant="purple">
                         {syn}
-                      </span>
+                      </TagChip>
                     )) || null}
                     {variant.antonyms?.slice(0, 2).map(ant => (
-                      <span key={ant} className="px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/5 text-[11px] font-bold text-zinc-600">
+                      <TagChip key={ant} variant="zinc">
                         {ant}
-                      </span>
+                      </TagChip>
                     )) || null}
                   </div>
                 </div>
