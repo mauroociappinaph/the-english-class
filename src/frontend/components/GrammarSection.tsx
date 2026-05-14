@@ -101,7 +101,7 @@ export const GrammarSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
-            className="p-8 rounded-[3rem] bg-white/[0.02] border border-white/5 space-y-6"
+            className="p-8 rounded-[2rem] bg-white/[0.02] border border-white/5 space-y-6"
           >
             <div className="flex items-center gap-3 border-b border-white/5 pb-4">
               {section.icon}
