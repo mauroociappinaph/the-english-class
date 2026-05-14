@@ -7,10 +7,23 @@ import { useStudyStore } from "@/frontend/store/useStudyStore";
 import { getReviewSession } from "@/app/actions";
 import { ReviewSession } from "./ReviewSession";
 import { MasteryHeatmap } from "./study/MasteryHeatmap";
+import { BadgeGallery } from "./study/BadgeGallery";
+import { getAchievements } from "@/app/actions";
+import { useAchievementStore } from "@/frontend/store/useAchievementStore";
+import { useEffect } from "react";
 
 export function StudySection() {
   const { isReviewing, startReview, expressions } = useStudyStore();
+  const { achievements, setAchievements } = useAchievementStore();
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchAchievements = async () => {
+      const data = await getAchievements();
+      setAchievements(data as unknown as import("@/frontend/store/useAchievementStore").Achievement[]);
+    };
+    fetchAchievements();
+  }, [setAchievements]);
 
   const handleStartSession = async () => {
     setIsLoading(true);
@@ -38,7 +51,7 @@ export function StudySection() {
   const dueCount = dueExpressions.length;
 
   return (
-    <div className="w-full max-w-5xl mx-auto space-y-10">
+    <div className="w-full max-w-5xl mx-auto space-y-12">
       {/* Dashboard Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-4">
         <div className="space-y-2">
@@ -60,8 +73,9 @@ export function StudySection() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Progress (Heatmap) */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-12">
           <MasteryHeatmap expressions={expressions} />
+          <BadgeGallery unlockedAchievements={achievements} />
         </div>
 
         {/* Action Card */}

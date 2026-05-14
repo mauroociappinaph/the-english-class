@@ -85,3 +85,12 @@ model Correction {
   entry           JournalEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
 }
 
+model Achievement {
+  id          String   @id @default(cuid())
+  slug        String   @unique // e.g. "cefr-a1-explorer"
+  title       String
+  description String
+  type        String   // "CEFR" | "FAMILY" | "STREAK"
+  unlockedAt  DateTime @default(now())
+}
+

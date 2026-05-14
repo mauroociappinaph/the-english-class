@@ -2,13 +2,15 @@
 
 import { motion } from "framer-motion";
 import { useStudyStore } from "@/frontend/store/useStudyStore";
-import { getAdaptivePath } from "@/app/actions";
+import { useAchievementStore } from "@/frontend/store/useAchievementStore";
+import { getAdaptivePath, checkAchievements } from "@/app/actions";
 import { useEffect, useState } from "react";
 import { AdaptivePathResponse } from "@/frontend/types/store";
 import { Loader2, Sparkles, AlertCircle, ArrowRight, CheckCircle2, TrendingUp } from "lucide-react";
 
 export function SessionSummary() {
   const { sessionErrors, reviewQueue, endReview } = useStudyStore();
+  const { addAchievement } = useAchievementStore();
   const [recommendations, setRecommendations] = useState<AdaptivePathResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,8 +33,21 @@ export function SessionSummary() {
         }
       }
     }
+
+    async function verifyAchievements() {
+      try {
+        const newAchievements = await checkAchievements();
+        if (newAchievements && newAchievements.length > 0) {
+          newAchievements.forEach((a: any) => addAchievement(a as unknown as import("@/frontend/store/useAchievementStore").Achievement));
+        }
+      } catch (err) {
+        console.error("Failed to check achievements:", err);
+      }
+    }
+
     fetchRecommendations();
-  }, [errorsCount, sessionErrors]);
+    verifyAchievements();
+  }, [errorsCount, sessionErrors, addAchievement]);
 
   return (
     <motion.div

@@ -1,27 +1,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import { useStudyStore } from "@/frontend/store/useStudyStore";
-import { useAiStream } from "@/frontend/hooks/useAiStream";
-import { analyzeExpression, getExpressions, deleteExpression } from "./actions";
+import { getExpressions, deleteExpression } from "./actions";
 import { Expression } from "@/shared/types/expression";
 
-import { SearchBar } from "@/frontend/components/SearchBar";
 import { ExpressionLibrary } from "@/frontend/components/ExpressionLibrary";
 import { StudySection } from "@/frontend/components/StudySection";
 import { getCefrStyle } from "@/frontend/components/cefr-styles";
 
 import { GrammarSection } from "@/frontend/components/GrammarSection";
-import { Loader2 } from "lucide-react";
+import { AchievementToast } from "@/frontend/components/study/AchievementToast";
+import { AnalysisHero } from "@/frontend/components/home/AnalysisHero";
 
 export default function Home() {
-  const router = useRouter();
-  const [input, setInput] = useState("");
   const [activeTab, setActiveTab] = useState<"search" | "library" | "study" | "grammar">("search");
-  const { isAnalyzing, setAnalyzing, setCurrentAnalysis, expressions, setExpressions, addExpression, removeExpression } = useStudyStore();
-  const { streamedText, startStream } = useAiStream();
+  const { expressions, setExpressions, removeExpression } = useStudyStore();
 
   useEffect(() => {
     const fetchLibrary = async () => {
@@ -39,151 +33,52 @@ export default function Home() {
     }
   }, []);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-
-    setAnalyzing(true);
-    const clientStart = performance.now();
-    console.log(`[Client] Starting analysis for: "${input}"`);
-    
+  const handleDelete = async (id: string) => {
     try {
-      startStream(input.toLowerCase(), { type: 'expression' });
-      
-      const result = await analyzeExpression(input.toLowerCase());
-      const clientEnd = performance.now();
-      console.log(`[Client] Analysis COMPLETED in ${((clientEnd - clientStart) / 1000).toFixed(2)}s`);
-
-      if (result) {
-        setCurrentAnalysis(result);
-        if (!expressions.find(e => e.id === result.id)) {
-          addExpression(result);
-        }
-        setTimeout(() => {
-          router.push(`/expression/${result.id}`);
-        }, 800);
-      }
-
+      await deleteExpression(id);
+      removeExpression(id);
     } catch (err) {
       console.error(err);
-    } finally {
-      setAnalyzing(false);
     }
   };
 
-  const handleDelete = async (id: string) => {
-    await deleteExpression(id);
-    removeExpression(id);
-  };
-
-  const handleViewDetail = (ex: Expression) => {
-    setCurrentAnalysis(ex);
-    router.push(`/expression/${ex.id}`);
+  const handleViewDetail = (expr: Expression) => {
+    window.location.href = `/expression/${expr.id}`;
   };
 
   return (
-    <div className="flex flex-col items-center gap-12 w-full max-w-4xl mx-auto pt-16 pb-32">
-      {/* Header */}
-      <motion.div 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="text-center space-y-6"
-        layoutId="header-container"
-      >
-        <span className="text-[10px] font-black uppercase tracking-[0.6em] text-zinc-600 block">
-          Linguistic Analysis Engine
-        </span>
-        <h1 className="font-display text-6xl md:text-8xl font-black tracking-tighter text-white leading-none">
-          The English Class
-        </h1>
-        <p className="text-zinc-500 text-xl font-medium max-w-lg mx-auto leading-relaxed">
-          Your Intelligent Guide to Mastery. Decode syntax, pronunciation, and contextual mechanics instantly.
-        </p>
-      </motion.div>
+    <div className="min-h-screen bg-black text-white selection:bg-blue-500/30">
+      <nav className="fixed top-0 left-0 w-full z-50 border-b border-white/5 bg-black/50 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-8">
+            <span className="text-sm font-black uppercase tracking-[0.4em] text-white">Chronos <span className="text-blue-500">v4.0</span></span>
+          </div>
+          
+          <div className="flex bg-zinc-900/50 p-1 rounded-2xl border border-white/5">
+            {[
+              { id: "search", label: "Neural Engine" },
+              { id: "library", label: "Archive" },
+              { id: "study", label: "Study" },
+              { id: "grammar", label: "Grammar" }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as "search" | "library" | "study" | "grammar")}
+                className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-500 ${
+                  activeTab === tab.id 
+                    ? "bg-white text-black shadow-2xl shadow-white/10" 
+                    : "text-zinc-500 hover:text-white"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </nav>
 
-      {/* Navigation Tabs */}
-      <div className="flex p-1 bg-zinc-950 rounded-3xl border border-white/10 w-fit relative overflow-hidden">
-        {(["search", "library", "study", "grammar"] as const).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`relative px-8 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-colors z-10 ${
-              activeTab === tab ? "text-black" : "text-zinc-500 hover:text-zinc-300"
-            }`}
-          >
-            {activeTab === tab && (
-              <motion.div
-                layoutId="active-tab"
-                className="absolute inset-0 bg-white rounded-2xl -z-10"
-                transition={{ type: "spring", stiffness: 500, damping: 30 }}
-              />
-            )}
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      <div className="w-full relative">
-        {activeTab === "search" && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          >
-            <SearchBar 
-              input={input} 
-              setInput={setInput} 
-              handleSearch={handleSearch} 
-              isAnalyzing={isAnalyzing} 
-            />
-
-            <AnimatePresence mode="wait">
-              {isAnalyzing && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  className="w-full max-w-2xl mx-auto mt-8 flex flex-col items-center gap-6 py-12 px-8 border border-white/10 rounded-[3rem] bg-black relative overflow-hidden"
-                >
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50" />
-                  
-                  <div className="flex items-center gap-3 text-zinc-400">
-                    <Loader2 size={16} className="animate-spin text-blue-500" />
-                    <span className="text-xs font-black uppercase tracking-[0.4em]">Neural Engine Active</span>
-                  </div>
-                  
-                  <div className="w-full p-6 border border-white/5 rounded-2xl bg-zinc-950/50 relative">
-                    <p className="text-zinc-400 font-mono text-sm leading-relaxed text-left min-h-[120px]">
-                      {streamedText || "Initializing deep linguistic analysis... Connecting to Chronos Engine..."}
-                      <motion.span 
-                        animate={{ opacity: [0, 1, 0] }} 
-                        transition={{ repeat: Infinity, duration: 0.8 }}
-                        className="inline-block w-2 h-4 bg-white ml-1 align-middle"
-                      />
-                    </p>
-                  </div>
-
-                  {/* Educational Onboarding Tip */}
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1 }}
-                    className="flex flex-col items-center gap-3 text-center"
-                  >
-                    <div className="flex items-center gap-2 text-blue-400">
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em]">Learning Hack</span>
-                    </div>
-                    <p className="text-xs text-zinc-500 italic max-w-sm">
-                      "Did you know? Understanding the <strong>root</strong> of a word multiplies your vocabulary by 4x. We're currently mapping its morphology for you."
-                    </p>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        )}
+      <div className="max-w-7xl mx-auto px-6 pt-40 pb-20">
+        {activeTab === "search" && <AnalysisHero />}
 
         {activeTab === "library" && (
           <ExpressionLibrary 
@@ -197,6 +92,7 @@ export default function Home() {
         {activeTab === "study" && <StudySection />}
         {activeTab === "grammar" && <GrammarSection />}
       </div>
+      <AchievementToast />
     </div>
   );
 }

@@ -2,6 +2,8 @@ import { ExpressionService } from "../services/ExpressionService";
 import { JournalService } from "../services/JournalService";
 import { PrismaExpressionRepository } from "./repositories/PrismaExpressionRepository";
 import { PrismaJournalRepository } from "./repositories/PrismaJournalRepository";
+import { PrismaAchievementRepository } from "./repositories/PrismaAchievementRepository";
+import { AchievementService } from "../services/AchievementService";
 import { GroqLinguisticAnalyzer } from "./analyzers/GroqLinguisticAnalyzer";
 import { GroqJournalAnalyzer } from "./analyzers/GroqJournalAnalyzer";
 import { GroqSlangAnalyzer } from "./analyzers/GroqSlangAnalyzer";
@@ -13,6 +15,7 @@ import { NvidiaJournalAnalyzer } from "./analyzers/NvidiaJournalAnalyzer";
 // Singleton instances — primary providers
 const expressionRepository = new PrismaExpressionRepository();
 const journalRepository = new PrismaJournalRepository();
+const achievementRepository = new PrismaAchievementRepository();
 
 const timeout = { timeoutMs: 10000 };
 
@@ -45,4 +48,9 @@ export const expressionService = new ExpressionService(
 export const journalService = new JournalService(
   journalRepository,
   journalAnalyzer
+);
+
+export const achievementService = new AchievementService(
+  achievementRepository,
+  expressionRepository
 );
