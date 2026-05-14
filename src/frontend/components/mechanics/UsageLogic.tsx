@@ -26,6 +26,12 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
 
   const currentSep = separableLabels[separable] || separableLabels.no;
 
+  const safeExample = (ex: any) => {
+    if (typeof ex === 'string') return ex;
+    if (ex && typeof ex === 'object') return ex.phrase || ex.text || ex.example || "";
+    return ex;
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Transitivity Section */}
@@ -101,7 +107,7 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
               <span className="text-[9px] font-black uppercase">Valid</span>
             </div>
             <p className="text-[11px] text-zinc-300 font-medium leading-relaxed italic">
-              {validExamples?.[0] || `He ${verb}s ${transitive ? 'it ' : ''}${particle}.`}
+              {safeExample(validExamples?.[0]) || `He ${verb}s ${transitive ? 'it ' : ''}${particle}.`}
             </p>
           </div>
           <div className="p-4 rounded-2xl bg-red-500/5 border border-red-500/10 space-y-2">
@@ -110,7 +116,7 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
               <span className="text-[9px] font-black uppercase">Invalid</span>
             </div>
             <p className="text-[11px] text-zinc-500 font-medium leading-relaxed italic line-through opacity-60">
-              {invalidExamples?.[0] || `He ${verb}s ${transitive ? '' : 'it '}${particle}.`}
+              {safeExample(invalidExamples?.[0]) || `He ${verb}s ${transitive ? '' : 'it '}${particle}.`}
             </p>
           </div>
         </div>

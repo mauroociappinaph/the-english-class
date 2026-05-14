@@ -159,9 +159,9 @@ export function WordVariantCard({ variant, category, index }: WordVariantCardPro
                     <span className="text-[10px] font-black uppercase tracking-widest text-blue-400/50">Common Partners</span>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {variant.commonCollocations?.map(coll => (
-                      <span key={coll} className="px-3 py-1.5 rounded-xl bg-blue-500/5 border border-blue-500/10 text-[11px] font-bold text-blue-400">
-                        {coll}
+                    {variant.commonCollocations?.map((coll: any) => (
+                      <span key={typeof coll === 'string' ? coll : coll.phrase || Math.random().toString()} className="px-3 py-1.5 rounded-xl bg-blue-500/5 border border-blue-500/10 text-[11px] font-bold text-blue-400">
+                        {typeof coll === 'string' ? coll : coll.phrase || coll.word || ""}
                       </span>
                     )) || null}
                   </div>

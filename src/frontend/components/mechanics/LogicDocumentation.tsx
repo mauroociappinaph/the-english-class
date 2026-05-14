@@ -16,13 +16,19 @@ import { clsx } from "clsx";
 export function LogicDocumentation({ details }: PhrasalVerbDetailsProps) {
   const { verb, particle, separable, transitive, transitiveExplanation, separabilityExplanation, logicExplanation } = details || {};
 
+  const safeVal = (v: any) => {
+    if (typeof v === 'string') return v;
+    if (v && typeof v === 'object') return v.phrase || v.text || v.explanation || v.logic || "";
+    return v;
+  };
+
   const docs = [
     {
       id: "01",
       title: "Transitividad",
       description: "Define whether the verb requires an object to complete the action logically.",
       techNote: transitive ? "Linguistic Requirement: Object Dependent" : "Linguistic Requirement: Standalone Action",
-      details: transitiveExplanation || (transitive ? "Needs an object to close the sense circuit." : "Standalone operation."),
+      details: safeVal(transitiveExplanation) || (transitive ? "Needs an object to close the sense circuit." : "Standalone operation."),
       icon: Cpu,
       color: "text-blue-400 bg-blue-500/10"
     },
@@ -31,7 +37,7 @@ export function LogicDocumentation({ details }: PhrasalVerbDetailsProps) {
       title: "Separabilidad",
       description: "Determines whether the object can be inserted inside the verbal structure.",
       techNote: `Structure: ${separable?.toUpperCase() || "N/A"}`,
-      details: separabilityExplanation || (separable === 'no' ? "Fixed unit." : "Flexible unit."),
+      details: safeVal(separabilityExplanation) || (separable === 'no' ? "Fixed unit." : "Flexible unit."),
       icon: Terminal,
       color: "text-purple-400 bg-purple-500/10"
     }
@@ -117,7 +123,7 @@ export function LogicDocumentation({ details }: PhrasalVerbDetailsProps) {
         <div className="flex items-center gap-4">
           <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
           <p className="text-xs font-bold text-zinc-500 tracking-tight">
-            Overall System Logic: <span className="text-zinc-300 italic">"{logicExplanation || "Context-dependent structural behavior."}"</span>
+            Overall System Logic: <span className="text-zinc-300 italic">"{safeVal(logicExplanation) || "Context-dependent structural behavior."}"</span>
           </p>
         </div>
         <div className="flex items-center gap-6">
