@@ -32,7 +32,7 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
   };
 
   return (
-    <div className="relative w-full bg-black rounded-[3rem] border border-white/10 overflow-hidden min-h-[600px]">
+    <div className="relative w-full bg-black rounded-[2rem] border border-white/10 overflow-hidden min-h-[600px]">
       {/* Background Blueprint Grid */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
            style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
@@ -41,7 +41,7 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/5 pb-8">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-emerald-500/10 rounded-xl text-emerald-400">
+            <div className="p-3 bg-emerald-500/10 rounded-2xl text-emerald-400">
               <Clock size={20} />
             </div>
             <div>
@@ -88,7 +88,7 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: (idx * 0.2) + (tIdx * 0.1) }}
-                        className="p-6 rounded-3xl bg-white/5 border border-white/5 hover:border-white/10 transition-all space-y-3 group/module"
+                        className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-all space-y-3 group/module"
                       >
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-mono text-zinc-400 uppercase tracking-tighter group-hover/module:text-emerald-400 transition-colors">
@@ -104,7 +104,7 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
                       </motion.div>
                     ))}
                     {categories[cat].length === 0 && (
-                      <div className="p-8 rounded-3xl border border-dashed border-white/5 flex flex-col items-center justify-center opacity-30">
+                      <div className="p-8 rounded-2xl border border-dashed border-white/5 flex flex-col items-center justify-center opacity-30">
                         <div className="w-1 h-1 rounded-full bg-zinc-700 mb-2" />
                         <span className="text-sm font-mono uppercase tracking-widest text-zinc-400">No Data Detected</span>
                       </div>
