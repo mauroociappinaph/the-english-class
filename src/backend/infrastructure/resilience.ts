@@ -32,15 +32,15 @@ export function withFallback<T extends object>(
           return (async function* () {
             const start = performance.now();
             let generator: AsyncGenerator<unknown, unknown, unknown>;
-            
+
             try {
               const primaryStream = async () => {
                 const fn = originalValue as (...a: unknown[]) => AsyncGenerator<unknown, unknown, unknown>;
-                return fn.apply(self || targetObj, args);
+                return fn.apply(targetObj, args);
               };
 
               if (timeoutMs) {
-                const timeoutPromise = new Promise<never>((_, reject) => 
+                const timeoutPromise = new Promise<never>((_, reject) =>
                   setTimeout(() => reject(new Error(`TIMEOUT: Primary provider took > ${timeoutMs}ms to initialize stream`)), timeoutMs)
                 );
                 generator = await Promise.race([primaryStream(), timeoutPromise]);
@@ -53,13 +53,13 @@ export function withFallback<T extends object>(
 
               if (timeoutMs) {
                 console.log(`[Resilient Stream] Waiting up to ${timeoutMs}ms for FIRST chunk...`);
-                const chunkTimeoutPromise = new Promise<never>((_, reject) => 
+                const chunkTimeoutPromise = new Promise<never>((_, reject) =>
                   setTimeout(() => reject(new Error(`TIMEOUT: Primary stream took > ${timeoutMs}ms to produce first chunk`)), timeoutMs)
                 );
-                
+
                 const firstResult = await Promise.race([nextWithTimeout(), chunkTimeoutPromise]);
                 console.log(`[Resilient Stream] FIRST chunk arrived (done: ${firstResult.done})`);
-                
+
                 if (!firstResult.done) {
                   innerChunkCount++;
                   yield firstResult.value;
@@ -79,18 +79,18 @@ export function withFallback<T extends object>(
               const endPrimary = performance.now();
               const isTimeout = (err as Error).message?.includes("TIMEOUT");
               const errMsg = (err as Error).message || "Unknown error";
-              
+
               if (isTransientProviderError(err) || isTimeout) {
                 console.warn(
                   `[Resilient Stream] Primary provider ${isTimeout ? 'TIMED OUT' : 'FAILED'} in ${((endPrimary - start) / 1000).toFixed(2)}s (${errMsg}). Switching to fallback.`
                 );
-                
+
                 const fallbackFn = (fallback as Record<string | symbol, unknown>)[prop];
                 if (typeof fallbackFn === "function") {
                   const startFallback = performance.now();
                   const fn = fallbackFn as (...a: unknown[]) => AsyncGenerator<unknown, unknown, unknown>;
                   const fallbackGenerator = fn.apply(fallback, args);
-                  
+
                   yield* fallbackGenerator;
                   const endFallback = performance.now();
                   console.log(`[Resilient Stream] Fallback provider COMPLETED in ${((endFallback - startFallback) / 1000).toFixed(2)}s`);
@@ -109,10 +109,10 @@ export function withFallback<T extends object>(
         const self = this;
         const start = performance.now();
         try {
-          const primaryCall = async () => await originalValue.apply(self || targetObj, args);
-          
+          const primaryCall = async () => await originalValue.apply(targetObj, args);
+
           if (timeoutMs) {
-            const timeoutPromise = new Promise<never>((_, reject) => 
+            const timeoutPromise = new Promise<never>((_, reject) =>
               setTimeout(() => reject(new Error(`TIMEOUT: Primary provider took > ${timeoutMs}ms`)), timeoutMs)
             );
             const result = (await Promise.race([primaryCall(), timeoutPromise])) as unknown;
@@ -120,7 +120,7 @@ export function withFallback<T extends object>(
             console.log(`[Resilient] Primary provider SUCCESS in ${((end - start) / 1000).toFixed(2)}s`);
             return result;
           }
-          
+
           return (await primaryCall()) as unknown;
         } catch (err: unknown) {
           const endPrimary = performance.now();
@@ -131,7 +131,7 @@ export function withFallback<T extends object>(
             console.warn(
               `[Resilient] Primary provider ${isTimeout ? 'TIMED OUT' : 'FAILED'} in ${((endPrimary - start) / 1000).toFixed(2)}s (${errMsg}). Switching to fallback.`
             );
-            
+
             const fallbackFn = (fallback as Record<string | symbol, unknown>)[prop];
             if (typeof fallbackFn === "function") {
               const startFallback = performance.now();
