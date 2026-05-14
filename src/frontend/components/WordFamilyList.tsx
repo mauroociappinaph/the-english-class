@@ -64,7 +64,7 @@ export function WordFamilyList({ families }: WordFamilyListProps) {
         </div>
 
         {/* "Learn one, unlock many" Mini Stats */}
-        <div className="p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 flex items-center gap-6">
+        <div className="p-6 rounded-[3rem] bg-white/[0.02] border border-white/5 flex items-center gap-6">
           <div className="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400">
             <Sparkles size={28} />
           </div>
@@ -175,7 +175,7 @@ export function WordFamilyList({ families }: WordFamilyListProps) {
                 { title: "Attach the Suffix", desc: "Notice how -ly makes it an adverb, -able makes it an adjective." },
                 { title: "Contextual Shift", desc: "Observe how the word changes role in a sentence." }
               ].map((item, i) => (
-                <div key={i} className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors flex items-center gap-4 group">
+                <div key={i} className="p-4 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors flex items-center gap-4 group">
                   <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-white/10 flex items-center justify-center text-xs font-black text-zinc-500 group-hover:text-blue-400 group-hover:border-blue-500/30 transition-all">
                     {i + 1}
                   </div>
