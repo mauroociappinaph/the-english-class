@@ -145,14 +145,16 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
-                  className="w-full max-w-2xl mx-auto mt-8 flex flex-col items-center gap-6 py-12 px-8 border border-white/10 rounded-3xl bg-black"
+                  className="w-full max-w-2xl mx-auto mt-8 flex flex-col items-center gap-6 py-12 px-8 border border-white/10 rounded-[3rem] bg-black relative overflow-hidden"
                 >
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50" />
+                  
                   <div className="flex items-center gap-3 text-zinc-400">
-                    <Loader2 size={16} className="animate-spin" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em]">Neural Engine Active</span>
+                    <Loader2 size={16} className="animate-spin text-blue-500" />
+                    <span className="text-xs font-black uppercase tracking-[0.4em]">Neural Engine Active</span>
                   </div>
                   
-                  <div className="w-full p-6 border border-white/5 rounded-2xl bg-zinc-950/50">
+                  <div className="w-full p-6 border border-white/5 rounded-2xl bg-zinc-950/50 relative">
                     <p className="text-zinc-400 font-mono text-sm leading-relaxed text-left min-h-[120px]">
                       {streamedText || "Initializing deep linguistic analysis... Connecting to Chronos Engine..."}
                       <motion.span 
@@ -162,6 +164,21 @@ export default function Home() {
                       />
                     </p>
                   </div>
+
+                  {/* Educational Onboarding Tip */}
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1 }}
+                    className="flex flex-col items-center gap-3 text-center"
+                  >
+                    <div className="flex items-center gap-2 text-blue-400">
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em]">Learning Hack</span>
+                    </div>
+                    <p className="text-xs text-zinc-500 italic max-w-sm">
+                      "Did you know? Understanding the <strong>root</strong> of a word multiplies your vocabulary by 4x. We're currently mapping its morphology for you."
+                    </p>
+                  </motion.div>
                 </motion.div>
               )}
             </AnimatePresence>
