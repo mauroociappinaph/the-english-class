@@ -118,7 +118,6 @@ export class NvidiaLinguisticAnalyzer extends BaseLinguisticAnalyzer {
     const content = data.choices[0]?.message?.content || "{}";
     return LinguisticSanitizer.safeJsonParse<Partial<GroqExpressionResponse>>(content);
   }
-  }
 
   async suggestRelated(failedTexts: string[]): Promise<AdaptivePathResponse> {
     const prompt = this.getAdaptivePathPrompt(failedTexts);
