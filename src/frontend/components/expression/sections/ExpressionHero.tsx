@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { SimilarWords } from "@/frontend/components/expression/SimilarWords";
 import { getCefrStyle } from "@/frontend/components/cefr-styles";
+import { InteractiveText } from "@/frontend/components/InteractiveText";
 import { ExpressionHeroProps, sectionVariants } from "./types";
 
 const FORMALITY_BADGE: Record<string, { border: string; text: string }> = {
@@ -47,14 +48,14 @@ export function ExpressionHero({
         {text}
       </h1>
 
-      <motion.p 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="text-4xl md:text-6xl font-black text-white italic tracking-tight py-4"
-      >
-        {translation}
-      </motion.p>
+      <div className="py-4">
+        <InteractiveText 
+          text="How would you translate this?"
+          translation={translation}
+          label="Main Translation"
+          className="text-4xl md:text-6xl font-black text-white italic tracking-tight cursor-pointer hover:text-blue-400 transition-colors"
+        />
+      </div>
 
       <div className="flex items-center justify-center gap-6 flex-wrap">
         <p className="text-zinc-500 italic font-mono text-xl">{ipa}</p>
