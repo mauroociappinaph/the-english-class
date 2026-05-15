@@ -9,12 +9,63 @@ import { useStudyStore } from "@/frontend/store/useStudyStore";
 import { useAchievementStore } from "@/frontend/store/useAchievementStore";
 import { analyzeExpression, checkAchievements } from "@/app/actions";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
+const ANALYSIS_STEPS = [
+  { id: "neural", label: "Neural Engine Warmup", detail: "Initializing language model and context buffers..." },
+  { id: "morph", label: "Morphological Mapping", detail: "Analyzing word roots, families and phrasal structures..." },
+  { id: "chronos", label: "Temporal Sync", detail: "Synchronizing Chronos Engine for tense and timeline mapping..." },
+  { id: "cefr", label: "CEFR Calibration", detail: "Finalizing metadata and level proficiency metrics..." },
+];
+
+const LEARNING_HACKS = [
+  "Did you know? Understanding the root of a word multiplies your vocabulary by 4x.",
+  "Phrasal verbs aren't just words; they are 'lego' blocks of English communication.",
+  "Visualizing tenses on a timeline reduces cognitive friction by 30% compared to rules.",
+  "Context is king: the same word can change meaning entirely based on its neighbor.",
+];
 
 export const AnalysisHero: React.FC = () => {
   const router = useRouter();
   const [input, setInput] = useState("");
   const { isAnalyzing, setAnalyzing, setCurrentAnalysis, addExpression, clearCurrentAnalysis } = useStudyStore();
   const { streamedText, startStream } = useAiStream();
+  
+  const [progress, setProgress] = useState(0);
+  const [activeStep, setActiveStep] = useState(0);
+  const [activeTip, setActiveTip] = useState(0);
+
+  // Progress Simulation Logic
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isAnalyzing) {
+      setProgress(0);
+      setActiveStep(0);
+      setActiveTip(0);
+
+      interval = setInterval(() => {
+        setProgress((prev) => {
+          const next = prev + (100 / 23) * 0.5; // Roughly 23s total
+          if (next >= 100) return 99;
+          
+          if (next > 75) setActiveStep(3);
+          else if (next > 50) setActiveStep(2);
+          else if (next > 25) setActiveStep(1);
+          
+          return next;
+        });
+      }, 500);
+
+      const tipInterval = setInterval(() => {
+        setActiveTip((prev) => (prev + 1) % LEARNING_HACKS.length);
+      }, 5500);
+
+      return () => {
+        clearInterval(interval);
+        clearInterval(tipInterval);
+      };
+    }
+  }, [isAnalyzing]);
 
   const handleAnalyze = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,35 +131,94 @@ export const AnalysisHero: React.FC = () => {
           >
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50" />
             
-            <div className="flex items-center gap-3 text-zinc-400">
-              <Loader2 size={16} className="animate-spin text-blue-500" />
-              <span className="text-xs font-black uppercase tracking-[0.4em]">Smart Analysis Active</span>
+            {/* Animated Background Pulse */}
+            <div className="absolute inset-0 bg-blue-500/5 animate-pulse" />
+            
+            <div className="w-full flex flex-col items-center gap-4 relative z-10">
+              <div className="flex items-center gap-3 text-blue-400">
+                <Loader2 size={16} className="animate-spin" />
+                <span className="text-[10px] font-black uppercase tracking-[0.4em]">Neural Processing in Progress</span>
+              </div>
+
+              {/* Progress Bar Container */}
+              <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                <motion.div 
+                  className="h-full bg-gradient-to-r from-blue-600 via-blue-400 to-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+                  initial={{ width: "0%" }}
+                  animate={{ width: `${progress}%` }}
+                  transition={{ ease: "linear" }}
+                />
+              </div>
+              <div className="flex justify-between w-full px-1">
+                <span className="text-[9px] font-mono text-zinc-600">SYST_INIT</span>
+                <span className="text-[10px] font-mono text-blue-500 font-bold">{Math.round(progress)}%</span>
+                <span className="text-[9px] font-mono text-zinc-600">LANG_SYNC</span>
+              </div>
+            </div>
+
+            {/* Steps Visualizer */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full relative z-10">
+              {ANALYSIS_STEPS.map((step, idx) => (
+                <div 
+                  key={step.id}
+                  className={`p-4 rounded-2xl border transition-all duration-500 ${
+                    idx <= activeStep 
+                      ? "border-blue-500/30 bg-blue-500/5" 
+                      : "border-white/5 bg-zinc-950/30 opacity-40"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-2 h-2 rounded-full ${
+                      idx < activeStep ? "bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]" : 
+                      idx === activeStep ? "bg-blue-400 animate-pulse" : "bg-zinc-800"
+                    }`} />
+                    <span className={`text-[10px] font-bold uppercase tracking-wider ${
+                      idx <= activeStep ? "text-blue-100" : "text-zinc-600"
+                    }`}>
+                      {step.label}
+                    </span>
+                  </div>
+                  {idx === activeStep && (
+                    <motion.p 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-[10px] text-zinc-500 mt-2 font-mono leading-tight"
+                    >
+                      {step.detail}
+                    </motion.p>
+                  )}
+                </div>
+              ))}
             </div>
             
-            <div className="w-full p-6 border border-white/5 rounded-2xl bg-zinc-950/50 relative">
-              <p className="text-zinc-400 font-mono text-sm leading-relaxed text-left min-h-[120px]">
-                {streamedText || "Initializing deep linguistic analysis... Connecting to Chronos Engine..."}
+            <div className="w-full p-6 border border-white/5 rounded-2xl bg-zinc-950/50 relative z-10">
+              <p className="text-zinc-400 font-mono text-xs leading-relaxed text-left min-h-[60px]">
+                {streamedText || "Initializing deep linguistic analysis..."}
                 <motion.span 
                   animate={{ opacity: [0, 1, 0] }} 
                   transition={{ repeat: Infinity, duration: 0.8 }}
-                  className="inline-block w-2 h-4 bg-white ml-1 align-middle"
+                  className="inline-block w-1.5 h-3 bg-white ml-1 align-middle"
                 />
               </p>
             </div>
 
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
-              className="flex flex-col items-center gap-3 text-center"
-            >
-              <div className="flex items-center gap-2 text-blue-400">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Learning Hack</span>
-              </div>
-              <p className="text-xs text-zinc-500 italic max-w-sm">
-                "Did you know? Understanding the <strong>root</strong> of a word multiplies your vocabulary by 4x. We're currently mapping its morphology for you."
-              </p>
-            </motion.div>
+            {/* Dynamic Learning Hack */}
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={activeTip}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="flex flex-col items-center gap-2 text-center relative z-10"
+              >
+                <div className="flex items-center gap-2 text-blue-500/80">
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em]">Neural Insight #{activeTip + 1}</span>
+                </div>
+                <p className="text-[11px] text-zinc-400 italic max-w-sm px-4">
+                  "{LEARNING_HACKS[activeTip]}"
+                </p>
+              </motion.div>
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
