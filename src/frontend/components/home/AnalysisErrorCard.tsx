@@ -2,13 +2,7 @@
 
 import { motion } from "framer-motion";
 import { AlertCircle, RotateCcw, XCircle } from "lucide-react";
-import { AnalysisError } from "@/shared/types/analysis";
-
-interface AnalysisErrorCardProps {
-  error: AnalysisError;
-  onRetry: () => void;
-  onClear: () => void;
-}
+import { AnalysisErrorCardProps } from "@/frontend/types/components";
 
 export const AnalysisErrorCard: React.FC<AnalysisErrorCardProps> = ({ error, onRetry, onClear }) => {
   return (

@@ -1,18 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { LucideIcon, Search, Sparkles } from 'lucide-react';
-
-interface PedagogicalEmptyStateProps {
-  icon?: LucideIcon;
-  title: string;
-  description: string;
-  suggestion?: {
-    text: string;
-    action: string;
-  };
-  illustrationPath?: string;
-  onAction?: (action: string) => void;
-}
+import { PedagogicalEmptyStateProps } from '@/frontend/types/components';
 
 export const PedagogicalEmptyState: React.FC<PedagogicalEmptyStateProps> = ({ 
   icon: Icon = Search, 

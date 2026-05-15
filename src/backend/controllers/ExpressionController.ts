@@ -16,7 +16,7 @@ export class ExpressionController {
     return withTelemetry("getExpressionById", () => expressionService.getExpressionById(id), { id });
   }
 
-  static async analyze(text: string): Promise<AnalysisResponse<any>> {
+  static async analyze(text: string): Promise<AnalysisResponse<import("../domain/types").ExpressionDetail>> {
     console.log(`[Controller] Starting analysis for: "${text}"`);
     return withTelemetry("analyzeExpression", async () => {
       try {
@@ -30,8 +30,9 @@ export class ExpressionController {
         let code: AnalysisErrorCode = "UNKNOWN";
         let pedagogicalTip = "Tuvimos un problema técnico. ¿Podés intentar de nuevo?";
         
-        if (error instanceof AnalysisPipelineError) {
-          code = error.code;
+        if (error && typeof error === 'object' && 'code' in error && (error as Record<string, unknown>).name === 'AnalysisPipelineError') {
+          const pipelineError = error as { code: AnalysisErrorCode };
+          code = pipelineError.code;
           switch (code) {
             case "INPUT_TOO_SHORT":
               pedagogicalTip = "La frase es muy corta. ¡Intentá con algo un poco más completo!";
@@ -51,7 +52,7 @@ export class ExpressionController {
           }
         }
 
-        return { 
+        const errorResponse: AnalysisResponse<unknown> = { 
           success: false, 
           error: {
             code,
@@ -59,6 +60,8 @@ export class ExpressionController {
             pedagogicalTip
           }
         };
+        console.log(`[Controller] Returning error response:`, JSON.stringify(errorResponse, null, 2));
+        return errorResponse as AnalysisResponse<import("../domain/types").ExpressionDetail>;
       }
     }, { text });
   }

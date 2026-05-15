@@ -98,8 +98,13 @@ export const AnalysisHero: React.FC = () => {
           router.push(`/expression/${result.id}`);
         }, 800);
       } else {
-        console.error("[AnalysisHero] Failed to analyze expression:", response.error);
-        setErrorState(response.error);
+        const errorData = response?.error || {
+          code: "UNKNOWN",
+          message: "Empty error received from server",
+          pedagogicalTip: "El motor neuronal devolvió un error vacío. Intentá de nuevo."
+        };
+        console.error("[AnalysisHero] Failed to analyze expression:", errorData);
+        setErrorState(errorData as AnalysisError);
       }
     } catch (err) {
       console.error(err);

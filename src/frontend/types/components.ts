@@ -92,3 +92,21 @@ export interface TagListProps {
   className?: string;
   tagClassName?: string;
 }
+
+export interface PedagogicalEmptyStateProps {
+  icon?: LucideIcon;
+  title: string;
+  description: string;
+  suggestion?: {
+    text: string;
+    action: string;
+  };
+  illustrationPath?: string;
+  onAction?: (action: string) => void;
+}
+
+export interface AnalysisErrorCardProps {
+  error: import('@/shared/types/analysis').AnalysisError;
+  onRetry: () => void;
+  onClear: () => void;
+}
