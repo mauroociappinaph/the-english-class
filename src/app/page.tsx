@@ -49,12 +49,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-black text-white selection:bg-blue-500/30">
       <nav className="fixed top-0 left-0 w-full z-50 border-b border-white/5 bg-black/50 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-8">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:h-20 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8">
+          <div className="flex items-center">
             <span className="text-sm font-black uppercase tracking-[0.4em] text-white">Chronos <span className="text-blue-500">v4.0</span></span>
           </div>
           
-          <div className="flex bg-zinc-900/50 p-1 rounded-2xl border border-white/5">
+          <div className="flex bg-zinc-900/50 p-1 rounded-2xl border border-white/5 w-full md:w-auto overflow-x-auto no-scrollbar">
             {[
               { id: "search", label: "Neural Engine" },
               { id: "library", label: "Archive" },
@@ -64,7 +64,7 @@ export default function Home() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as "search" | "library" | "study" | "grammar")}
-                className={`px-6 py-2 rounded-xl text-sm font-black uppercase tracking-widest transition-all duration-500 ${
+                className={`flex-1 md:flex-none px-3 md:px-6 py-2 rounded-xl text-[10px] md:text-sm font-black uppercase tracking-widest transition-all duration-500 whitespace-nowrap ${
                   activeTab === tab.id 
                     ? "bg-white text-black shadow-2xl shadow-white/10" 
                     : "text-zinc-500 hover:text-white"
