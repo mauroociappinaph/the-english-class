@@ -10,6 +10,8 @@ import { useAchievementStore } from "@/frontend/store/useAchievementStore";
 import { analyzeExpression, checkAchievements } from "@/app/actions";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { AnalysisErrorCard } from "./AnalysisErrorCard";
+import { AnalysisError } from "@/shared/types/analysis";
 
 const ANALYSIS_STEPS = [
   { id: "neural", label: "Neural Engine Warmup", detail: "Initializing language model and context buffers..." },
@@ -34,6 +36,7 @@ export const AnalysisHero: React.FC = () => {
   const [progress, setProgress] = useState(0);
   const [activeStep, setActiveStep] = useState(0);
   const [activeTip, setActiveTip] = useState(0);
+  const [errorState, setErrorState] = useState<AnalysisError | null>(null);
 
   // Progress Simulation Logic
   useEffect(() => {
@@ -67,17 +70,20 @@ export const AnalysisHero: React.FC = () => {
     }
   }, [isAnalyzing]);
 
-  const handleAnalyze = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAnalyze = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!input.trim()) return;
 
     try {
+      setErrorState(null);
       clearCurrentAnalysis();
       setAnalyzing(true);
       startStream(input);
       
-      const result = await analyzeExpression(input);
-      if (result) {
+      const response = await analyzeExpression(input);
+      
+      if (response.success) {
+        const result = response.data;
         addExpression(result);
         setCurrentAnalysis(result);
         
@@ -92,11 +98,16 @@ export const AnalysisHero: React.FC = () => {
           router.push(`/expression/${result.id}`);
         }, 800);
       } else {
-        console.error("[AnalysisHero] Failed to analyze expression");
-        alert("The analysis engine could not process this phrase. Please try a different one.");
+        console.error("[AnalysisHero] Failed to analyze expression:", response.error);
+        setErrorState(response.error);
       }
     } catch (err) {
       console.error(err);
+      setErrorState({
+        code: "UNKNOWN",
+        message: err instanceof Error ? err.message : String(err),
+        pedagogicalTip: "Algo salió mal en el motor de análisis. ¿Probamos de nuevo?"
+      });
     } finally {
       setAnalyzing(false);
     }
@@ -134,7 +145,6 @@ export const AnalysisHero: React.FC = () => {
           >
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50" />
             
-            {/* Animated Background Pulse */}
             <div className="absolute inset-0 bg-blue-500/5 animate-pulse" />
             
             <div className="w-full flex flex-col items-center gap-4 relative z-10">
@@ -143,7 +153,6 @@ export const AnalysisHero: React.FC = () => {
                 <span className="text-sm font-black uppercase tracking-[0.4em]">Neural Processing in Progress</span>
               </div>
 
-              {/* Progress Bar Container */}
               <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
                 <motion.div 
                   className="h-full bg-gradient-to-r from-blue-600 via-blue-400 to-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.5)]"
@@ -159,7 +168,6 @@ export const AnalysisHero: React.FC = () => {
               </div>
             </div>
 
-            {/* Steps Visualizer */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full relative z-10">
               {ANALYSIS_STEPS.map((step, idx) => (
                 <div 
@@ -205,7 +213,6 @@ export const AnalysisHero: React.FC = () => {
               </p>
             </div>
 
-            {/* Dynamic Learning Hack */}
             <AnimatePresence mode="wait">
               <motion.div 
                 key={activeTip}
@@ -223,6 +230,14 @@ export const AnalysisHero: React.FC = () => {
               </motion.div>
             </AnimatePresence>
           </motion.div>
+        )}
+
+        {errorState && !isAnalyzing && (
+          <AnalysisErrorCard 
+            error={errorState} 
+            onRetry={() => handleAnalyze()}
+            onClear={() => setErrorState(null)}
+          />
         )}
       </AnimatePresence>
     </motion.div>
