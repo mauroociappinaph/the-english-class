@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { GitMerge, Activity, Info } from "lucide-react";
 import { PhrasalVerbDetailsProps } from "../../types/components";
-import { UsageLogic } from "./UsageLogic";
 import { LogicDocumentation } from "./LogicDocumentation";
 import { CollocationMap } from "./CollocationMap";
 
@@ -28,14 +27,14 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
               <Activity size={28} />
             </div>
             <div>
-              <h4 className="text-sm font-black uppercase tracking-[0.4em] text-zinc-400">System Analysis</h4>
-              <p className="text-2xl font-black text-white tracking-tight italic">Structural Decomposition</p>
+              <h4 className="text-sm font-black uppercase tracking-[0.4em] text-zinc-400">How this phrasal verb works</h4>
+              <p className="text-2xl font-black text-white tracking-tight italic">Structural Secrets</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <span className="text-sm font-mono text-zinc-500 uppercase tracking-[0.3em]">Blueprint Revision</span>
-              <p className="text-sm font-black text-zinc-400">v3.0.1 (Pedagogical Optimized)</p>
+              <span className="text-sm font-mono text-zinc-500 uppercase tracking-[0.3em]">Learning Level</span>
+              <p className="text-sm font-black text-zinc-400">Interactive Visual Guide</p>
             </div>
           </div>
         </div>
@@ -99,12 +98,7 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
             </div>
           </section>
 
-          {/* Usage Logic Overhaul */}
-          <section className="space-y-12">
-            <UsageLogic details={details} />
-          </section>
-
-          {/* Logic Documentation Section */}
+          {/* Logic Documentation Section (Primary Explanation Hub) */}
           <section className="space-y-12">
             <LogicDocumentation details={details} />
           </section>
