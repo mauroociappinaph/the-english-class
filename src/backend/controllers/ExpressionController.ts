@@ -1,5 +1,5 @@
 import { withTelemetry } from "@/backend/infrastructure/telemetry";
-import { expressionService } from "@/backend/infrastructure/registry";
+import { expressionService, achievementService } from "@/backend/infrastructure/registry";
 import { StudyPerformance } from "@/shared/types/expression";
 
 /**
@@ -18,7 +18,10 @@ export class ExpressionController {
     console.log(`[Controller] Starting analysis for: "${text}"`);
     return withTelemetry("analyzeExpression", async () => {
       try {
-        return await expressionService.analyzeExpression(text);
+        const result = await expressionService.analyzeExpression(text);
+        // Fire and forget achievement check
+        achievementService.checkAchievements().catch(e => console.error("Achievement sync failed", e));
+        return result;
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         console.error(`[Controller] CRITICAL: Analysis pipeline failed for "${text}":`, errorMessage);
@@ -39,7 +42,12 @@ export class ExpressionController {
   }
 
   static async submitReview(id: string, performance: StudyPerformance) {
-    return withTelemetry("submitReview", () => expressionService.submitReview(id, performance), { id, performance });
+    return withTelemetry("submitReview", async () => {
+      const result = await expressionService.submitReview(id, performance);
+      // Fire and forget achievement check after potential mastery change
+      achievementService.checkAchievements().catch(e => console.error("Achievement sync failed", e));
+      return result;
+    }, { id, performance });
   }
 
   static async delete(id: string) {

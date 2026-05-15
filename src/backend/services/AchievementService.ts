@@ -75,6 +75,41 @@ export class AchievementService {
       }
     }
 
+    // 3. Linguistic Specialization
+    const phrasalVerbs = expressions.filter((e) => e.metadata.type === 'phrasal_verb');
+    const idioms = expressions.filter((e) => e.metadata.type === 'idiom');
+    const slangs = expressions.filter((e) => e.metadata.formality === 'slang');
+
+    // Master of Phrasal Verbs: 10 phrasal verbs analyzed
+    if (phrasalVerbs.length >= 10 && !existingSlugs.has('phrasal-verb-master')) {
+      newAchievements.push({
+        slug: 'phrasal-verb-master',
+        title: 'Master of Phrasal Verbs',
+        description: 'Analyzed 10 different phrasal verbs and their structural logic.',
+        type: 'LINGUISTIC'
+      });
+    }
+
+    // Idiom Enthusiast: 10 idioms analyzed
+    if (idioms.length >= 10 && !existingSlugs.has('idiom-enthusiast')) {
+      newAchievements.push({
+        slug: 'idiom-enthusiast',
+        title: 'Idiom Enthusiast',
+        description: 'Deeply explored 10 idiomatic expressions.',
+        type: 'LINGUISTIC'
+      });
+    }
+
+    // Slang Guru: 10 slang terms analyzed
+    if (slangs.length >= 10 && !existingSlugs.has('slang-guru')) {
+      newAchievements.push({
+        slug: 'slang-guru',
+        title: 'Slang Guru',
+        description: 'Mastered the art of informal street English with 10 slang terms.',
+        type: 'LINGUISTIC'
+      });
+    }
+
     // Persist new achievements
     const results = [];
     for (const achievement of newAchievements) {
