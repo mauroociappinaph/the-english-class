@@ -1,7 +1,7 @@
 import { ILinguisticAnalyzer } from "../../domain/interfaces/ILinguisticAnalyzer";
 import { GroqExpressionResponse, AdaptivePathResponse } from "../../domain/types";
-import { parseRobustJson } from "../utils/json-parser";
 import { BaseLinguisticAnalyzer } from "./BaseLinguisticAnalyzer";
+import { LinguisticSanitizer } from "../utils/LinguisticSanitizer";
 
 export class NvidiaLinguisticAnalyzer extends BaseLinguisticAnalyzer {
   async *analyzeStream(text: string): AsyncGenerator<string, void, unknown> {
@@ -86,13 +86,38 @@ export class NvidiaLinguisticAnalyzer extends BaseLinguisticAnalyzer {
 
     const data = await response.json();
     const content = data.choices[0]?.message?.content || "{}";
-    try {
-      const result = parseRobustJson(content) as unknown as GroqExpressionResponse;
-      console.log(`[NvidiaLinguisticAnalyzer] Analysis finished. Has chronology: ${!!result.chronology}`);
-      return result;
-    } catch (e) {
-      throw e;
+    const result = LinguisticSanitizer.safeJsonParse<GroqExpressionResponse>(content);
+    console.log(`[NvidiaLinguisticAnalyzer] Analysis finished. Has chronology: ${!!result.chronology}`);
+    return result;
+  }
+
+  async analyzeExpressionBasic(text: string): Promise<Partial<GroqExpressionResponse>> {
+    const prompt = this.getBasicPedagogicalPrompt(text);
+
+    const response = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.NVIDIA_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "meta/llama-3.1-8b-instruct",
+        messages: [
+          { role: "system", content: "Return ONLY a valid JSON object." },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.1,
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Nvidia API error: ${response.status} ${response.statusText}`);
     }
+
+    const data = await response.json();
+    const content = data.choices[0]?.message?.content || "{}";
+    return LinguisticSanitizer.safeJsonParse<Partial<GroqExpressionResponse>>(content);
+  }
   }
 
   async suggestRelated(failedTexts: string[]): Promise<AdaptivePathResponse> {
@@ -120,6 +145,6 @@ export class NvidiaLinguisticAnalyzer extends BaseLinguisticAnalyzer {
 
     const data = await response.json();
     const content = data.choices[0]?.message?.content || "{}";
-    return parseRobustJson(content) as unknown as AdaptivePathResponse;
+    return LinguisticSanitizer.safeJsonParse<AdaptivePathResponse>(content);
   }
 }

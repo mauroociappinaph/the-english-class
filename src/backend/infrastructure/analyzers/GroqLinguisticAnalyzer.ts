@@ -2,6 +2,7 @@ import { getGroqClient } from "../groq";
 import { ILinguisticAnalyzer } from "../../domain/interfaces/ILinguisticAnalyzer";
 import { GroqExpressionResponse, AdaptivePathResponse } from "../../domain/types";
 import { BaseLinguisticAnalyzer } from "./BaseLinguisticAnalyzer";
+import { LinguisticSanitizer } from "../utils/LinguisticSanitizer";
 
 export class GroqLinguisticAnalyzer extends BaseLinguisticAnalyzer {
   async *analyzeStream(text: string): AsyncGenerator<string, void, unknown> {
@@ -42,9 +43,28 @@ export class GroqLinguisticAnalyzer extends BaseLinguisticAnalyzer {
       temperature: 0.1,
     });
 
-    const result = JSON.parse(completion.choices[0]?.message?.content || "{}");
+    const content = completion.choices[0]?.message?.content || "{}";
+    const result = LinguisticSanitizer.safeJsonParse<GroqExpressionResponse>(content);
     console.log(`[GroqLinguisticAnalyzer] Analysis finished. Has chronology: ${!!result.chronology}`);
     return result;
+  }
+
+  async analyzeExpressionBasic(text: string): Promise<Partial<GroqExpressionResponse>> {
+    const prompt = this.getBasicPedagogicalPrompt(text);
+
+    const client = getGroqClient();
+    const completion = await client.chat.completions.create({
+      messages: [
+        { role: "system", content: "Return ONLY a valid JSON object." },
+        { role: "user", content: prompt }
+      ],
+      model: "llama-3.3-70b-versatile",
+      response_format: { type: "json_object" },
+      temperature: 0.1,
+    });
+
+    const content = completion.choices[0]?.message?.content || "{}";
+    return LinguisticSanitizer.safeJsonParse<Partial<GroqExpressionResponse>>(content);
   }
 
   async suggestRelated(failedTexts: string[]): Promise<AdaptivePathResponse> {
@@ -61,6 +81,7 @@ export class GroqLinguisticAnalyzer extends BaseLinguisticAnalyzer {
       temperature: 0.1,
     });
 
-    return JSON.parse(completion.choices[0]?.message?.content || "{}") as AdaptivePathResponse;
+    const content = completion.choices[0]?.message?.content || "{}";
+    return LinguisticSanitizer.safeJsonParse<AdaptivePathResponse>(content);
   }
 }

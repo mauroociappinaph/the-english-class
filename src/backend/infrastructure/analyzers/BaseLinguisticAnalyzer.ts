@@ -8,6 +8,7 @@ import { IStreamable } from "../../domain/interfaces/IStreamable";
 export abstract class BaseLinguisticAnalyzer implements ILinguisticAnalyzer, IStreamable {
   
   abstract analyzeExpression(text: string): Promise<GroqExpressionResponse>;
+  abstract analyzeExpressionBasic(text: string): Promise<Partial<GroqExpressionResponse>>;
   abstract analyzeStream(text: string, context?: unknown): AsyncGenerator<string, void, unknown>;
 
   /**
@@ -142,6 +143,27 @@ Return a strictly valid JSON object with:
     }
   ],
   "learningTip": "A actionable tip to overcome this specific hurdle in Spanish."
+}`;
+  }
+
+  /**
+   * Generates a simplified prompt for "Basic Mode" when full analysis fails.
+   */
+  protected getBasicPedagogicalPrompt(text: string): string {
+    return `You are a helpful English teacher. 
+Provide a basic analysis of the expression: "${text}"
+
+Return ONLY a valid JSON object with this schema:
+{
+  "translation": "Natural Spanish translation",
+  "meaning": "Simple English explanation",
+  "cefr": "CEFR Level (A1-C2)",
+  "correction": {
+    "isCorrect": true,
+    "correctedText": null,
+    "explanation": "Brief tip in Spanish if needed"
+  },
+  "type": "expression"
 }`;
   }
 
