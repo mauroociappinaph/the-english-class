@@ -28,6 +28,11 @@ export interface GroqExpressionResponse {
   formality: string;
   mnemonic: string;
   imageUrl: string | null;
+  correction: {
+    isCorrect: boolean;
+    correctedText: string | null;
+    explanation: string | null;
+  } | null;
   usageTips: GroqUsageTips;
   tenses: Record<string, GroqTense>;
   wordFamilies: WordFamilies;

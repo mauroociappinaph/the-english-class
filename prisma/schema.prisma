@@ -31,6 +31,7 @@ model Expression {
   phrasalVerbDetails String? // Store as JSON string
   chronology         String? // Store as JSON string: ChronologyData
   slangData          String?  // Store as JSON string: SlangData
+  correction         String?  // Store as JSON string: { isCorrect: boolean, correctedText: string, explanation: string }
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   examples          Example[]

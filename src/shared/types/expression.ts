@@ -134,6 +134,12 @@ interface ExpressionCore {
   meaning: string;
 }
 
+export interface CorrectionLayer {
+  isCorrect: boolean;
+  correctedText: string | null;
+  explanation: string | null;
+}
+
 interface ExpressionAttributes {
   secondaryMeanings: string[];
   type: string;
@@ -143,6 +149,7 @@ interface ExpressionAttributes {
   formality: string | null;
   mnemonic: string | null;
   imageUrl?: string | null;
+  correction?: CorrectionLayer | null;
 }
 
 export interface ChronologyModule {

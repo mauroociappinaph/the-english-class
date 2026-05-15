@@ -77,6 +77,7 @@ export class ExpressionService {
         formality: result.formality || "neutral",
         mnemonic: result.mnemonic || "",
         imageUrl: result.imageUrl || null,
+        correction: result.correction || null,
       },
       linguistics: {
         usageTips: {

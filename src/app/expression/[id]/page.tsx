@@ -92,6 +92,7 @@ export default function ExpressionPage() {
         ipa={currentAnalysis.metadata.ipa}
         formality={currentAnalysis.metadata.formality}
         slangData={currentAnalysis.linguistics.slangData}
+        correction={currentAnalysis.metadata.correction}
       />
 
       <SectionDivider label="meaning" />

@@ -49,6 +49,11 @@ Schema:
   "type": "verb", // Pick only one: verb | phrasal_verb | idiom | expression | tense
   "cefr": "B1", // Pick only one based on Cambridge standards: A1 | A2 | B1 | B2 | C1 | C2
   "ipa": "/phonetic transcription/",
+  "correction": {
+    "isCorrect": true, // false if the input has grammatical errors or is very unnatural
+    "correctedText": "Fixed version if isCorrect is false",
+    "explanation": "Why it was wrong or how to improve it in Spanish"
+  },
   "frequency": 0.5, // 0.0 to 1.0
   "formality": "neutral", // Pick only one: formal | informal | neutral
   "mnemonic": "memory trick in English",
