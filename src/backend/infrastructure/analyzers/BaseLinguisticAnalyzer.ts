@@ -79,10 +79,24 @@ Schema:
     }
   ],
   "wordFamilies": {
-    "noun": [{ "word": "...", "translation": "...", "simpleExplanation": "...", "examples": [{"text": "...", "translation": "..."}], "commonCollocations": ["string", "string"] }],
-    "verb": [{ "word": "...", "translation": "...", "simpleExplanation": "...", "examples": [{"text": "...", "translation": "..."}], "commonCollocations": ["string", "string"] }],
-    "adjective": [{ "word": "...", "translation": "...", "simpleExplanation": "...", "examples": [{"text": "...", "translation": "..."}], "commonCollocations": ["string", "string"] }],
-    "adverb": [{ "word": "...", "translation": "...", "simpleExplanation": "...", "examples": [{"text": "...", "translation": "..."}], "commonCollocations": ["string", "string"] }]
+    "noun": [{ 
+      "word": "step", 
+      "translation": "paso", 
+      "pronunciation": "/step/",
+      "cefr": "A1",
+      "simpleExplanation": "A movement made by lifting your foot.",
+      "grammarExplanation": "Countable noun. Often used with 'take'.",
+      "patterns": ["step", "stepping", "stepped"],
+      "morphology": { "prefix": null, "root": "step", "suffix": null },
+      "synonyms": ["stride", "pace"],
+      "antonyms": [],
+      "commonMistakes": "Don't confuse with 'stairs'.",
+      "naturalContexts": ["casual conversation", "academic"],
+      "tips": ["Used in many idioms like 'step by step'."],
+      "examples": [{"text": "He took a step forward.", "translation": "Él dio un paso adelante."}], 
+      "commonCollocations": ["take a step", "next step", "giant step"] 
+    }],
+    "verb": [{ "word": "...", "...": "Add other parts of speech (verb, adjective, adverb) with the SAME structure as the noun example above" }]
   },
   "phrasalVerbDetails": {
     "verb": "base verb",
