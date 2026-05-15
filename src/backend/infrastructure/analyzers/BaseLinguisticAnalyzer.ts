@@ -110,14 +110,9 @@ Schema:
     "validExamples": ["He sets the table up", "He sets up the table"],
     "invalidExamples": ["He sets up it"],
     "collocations": [{ "phrase": "...", "frequency": "high|medium|low", "example": "...", "translation": "..." }]
-  },
-  "slangData": {
-    "regionalVariants": [{ "region": "...", "country": "...", "flag": "...", "word": "...", "formality": "...", "slangLevel": 0, "culturalNote": "...", "usageContext": "...", "example": "...", "exampleTranslation": "...", "tags": ["..."] }],
-    "detectedSlangLevel": 0,
-    "isSlang": false,
-    "similarWords": ["..."]
   }
-}`;
+}
+`;
   }
 
   /**

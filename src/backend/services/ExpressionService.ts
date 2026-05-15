@@ -1,6 +1,5 @@
 import { IExpressionRepository } from "../domain/repositories/IExpressionRepository";
 import { ILinguisticAnalyzer } from "../domain/interfaces/ILinguisticAnalyzer";
-import { ISlangAnalyzer } from "../domain/interfaces/ISlangAnalyzer";
 import { Expression, CreateExpressionDto, AdaptivePathResponse, ExpressionDetail, GroqExample } from "../domain/types";
 import { CollisionError } from "../domain/errors";
 import { StudyPerformance } from "@/shared/types/expression";
@@ -20,8 +19,7 @@ export class AnalysisPipelineError extends Error {
 export class ExpressionService {
   constructor(
     private repository: IExpressionRepository,
-    private analyzer: ILinguisticAnalyzer,
-    private slangAnalyzer?: ISlangAnalyzer
+    private analyzer: ILinguisticAnalyzer
   ) {}
 
   async getExpression(text: string): Promise<ExpressionDetail | null> {
@@ -74,17 +72,9 @@ export class ExpressionService {
 
     // 3. Multi-stage analysis
     let result: any;
-    let slangData: any = null;
-
     try {
       console.log(`[ExpressionService] Attempting DEEP analysis for: "${normalizedText}"`);
-      [result, slangData] = await Promise.all([
-        this.analyzer.analyzeExpression(normalizedText),
-        this.slangAnalyzer?.analyzeSlang(normalizedText).catch((err: unknown) => {
-          console.warn(`[ExpressionService] Slang analysis failed for "${normalizedText}":`, err);
-          return null;
-        }) ?? Promise.resolve(null),
-      ]);
+      result = await this.analyzer.analyzeExpression(normalizedText);
     } catch (deepError: any) {
       console.warn(`[ExpressionService] DEEP analysis failed for "${normalizedText}". Error: ${deepError.message}. Attempting BASIC fallback...`);
       
@@ -137,7 +127,6 @@ export class ExpressionService {
         wordFamilies: result.wordFamilies || null,
         phrasalVerbDetails: result.phrasalVerbDetails || null,
         chronology: result.chronology || null,
-        slangData: slangData || null,
         examples: (result.examples || []).map((ex: GroqExample) => ({
           text: ex.text,
           translation: ex.translation,

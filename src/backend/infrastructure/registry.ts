@@ -6,9 +6,7 @@ import { PrismaAchievementRepository } from "./repositories/PrismaAchievementRep
 import { AchievementService } from "../services/AchievementService";
 import { GroqLinguisticAnalyzer } from "./analyzers/GroqLinguisticAnalyzer";
 import { GroqJournalAnalyzer } from "./analyzers/GroqJournalAnalyzer";
-import { GroqSlangAnalyzer } from "./analyzers/GroqSlangAnalyzer";
 import { NvidiaLinguisticAnalyzer } from "./analyzers/NvidiaLinguisticAnalyzer";
-import { NvidiaSlangAnalyzer } from "./analyzers/NvidiaSlangAnalyzer";
 import { withFallback } from "./resilience";
 import { NvidiaJournalAnalyzer } from "./analyzers/NvidiaJournalAnalyzer";
 
@@ -33,16 +31,9 @@ export const linguisticAnalyzer = withFallback(
   timeout
 );
 
-const slangAnalyzer = withFallback(
-  new GroqSlangAnalyzer(),
-  new NvidiaSlangAnalyzer(),
-  timeout
-);
-
 export const expressionService = new ExpressionService(
   expressionRepository,
-  linguisticAnalyzer,
-  slangAnalyzer
+  linguisticAnalyzer
 );
 
 export const journalService = new JournalService(

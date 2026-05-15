@@ -4,7 +4,6 @@ import {
   UsageTips as SharedUsageTips,
   Tense as SharedTense,
   CreateExpressionDto as SharedCreateExpressionDto,
-  SlangData,
   WordFamilies,
   PhrasalVerbDetails,
   ChronologyData
@@ -41,7 +40,6 @@ export interface GroqExpressionResponse {
   examples: GroqExample[];
 }
 
-export type { SlangData };
 
 export interface ExpressionDetail extends SharedExpression {}
 

@@ -120,7 +120,6 @@ export default function ExpressionPage() {
           cefr={currentAnalysis.metadata.cefr}
           ipa={currentAnalysis.metadata.ipa}
           formality={currentAnalysis.metadata.formality}
-          slangData={currentAnalysis.linguistics.slangData}
           correction={currentAnalysis.metadata.correction}
         />
 

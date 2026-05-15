@@ -78,7 +78,6 @@ export class AchievementService {
     // 3. Linguistic Specialization
     const phrasalVerbs = expressions.filter((e) => e.metadata.type === 'phrasal_verb');
     const idioms = expressions.filter((e) => e.metadata.type === 'idiom');
-    const slangs = expressions.filter((e) => e.metadata.formality === 'slang');
 
     // Master of Phrasal Verbs: 10 phrasal verbs analyzed
     if (phrasalVerbs.length >= 10 && !existingSlugs.has('phrasal-verb-master')) {
@@ -100,15 +99,6 @@ export class AchievementService {
       });
     }
 
-    // Slang Guru: 10 slang terms analyzed
-    if (slangs.length >= 10 && !existingSlugs.has('slang-guru')) {
-      newAchievements.push({
-        slug: 'slang-guru',
-        title: 'Slang Guru',
-        description: 'Mastered the art of informal street English with 10 slang terms.',
-        type: 'LINGUISTIC'
-      });
-    }
 
     // Persist new achievements
     const results = [];

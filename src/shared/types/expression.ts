@@ -30,45 +30,6 @@ export interface Example {
 
 export type StudyPerformance = 'hard' | 'good' | 'easy';
 
-type SlangTag =
-  | 'slang'
-  | 'formal'
-  | 'offensive'
-  | 'old-fashioned'
-  | 'internet-slang'
-  | 'regional'
-  | 'colloquial'
-  | 'vulgar';
-
-export type FormalityLevel = 'formal' | 'neutral' | 'informal' | 'slang' | 'offensive' | 'old-fashioned';
-
-/** 0 = standard English, 3 = heavy slang */
-export type SlangLevel = 0 | 1 | 2 | 3;
-
-export interface RegionalVariant {
-  region: string;             // "American English"
-  subregion?: string;         // "AAVE", "Cockney", "Southern English"
-  country: string;            // "United States"
-  flag: string;               // "🇺🇸"
-  word: string;               // equivalent word/expression in that variant
-  pronunciation?: string;     // informal phonetic: "uh-PART-ment"
-  ipa?: string;               // "/əˈpɑːrtmənt/"
-  formality: FormalityLevel;
-  slangLevel: SlangLevel;
-  culturalNote: string;       // cultural context in English
-  usageContext: string;       // when/where it's used
-  example: string;            // real English example sentence
-  exampleTranslation: string; // Spanish translation of example
-  tags: SlangTag[];
-  audioLocale?: string;       // Web Speech API locale: 'en-US', 'en-GB', 'en-AU'
-}
-
-export interface SlangData {
-  regionalVariants: RegionalVariant[];
-  detectedSlangLevel: SlangLevel;
-  isSlang: boolean;
-  similarWords: string[];
-}
 
 export interface WordVariant {
   word: string;
@@ -182,7 +143,6 @@ interface ExpressionLinguistics {
   wordFamilies: WordFamilies | null;
   phrasalVerbDetails: PhrasalVerbDetails | null;
   chronology?: ChronologyData | null;
-  slangData?: SlangData | null;
   examples: Example[];
 }
 

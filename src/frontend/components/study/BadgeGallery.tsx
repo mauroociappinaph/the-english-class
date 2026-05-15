@@ -9,7 +9,6 @@ const BADGE_DEFINITIONS = [
   { slug: 'cefr-a2-master', title: 'A2 Master', icon: ShieldCheck, color: 'from-blue-500 to-indigo-500', description: '100% mastery of A2 content' },
   { slug: 'phrasal-verb-master', title: 'Phrasal Master', icon: GitMerge, color: 'from-blue-600 to-cyan-500', description: 'Analyzed 10 phrasal verbs' },
   { slug: 'idiom-enthusiast', title: 'Idiom Expert', icon: MessageSquare, color: 'from-indigo-600 to-purple-500', description: 'Explored 10 idioms' },
-  { slug: 'slang-guru', title: 'Slang Guru', icon: Flame, color: 'from-red-600 to-orange-500', description: 'Mastered 10 slang terms' },
   { slug: 'morphology-novice', title: 'Morphology Novice', icon: Zap, color: 'from-purple-500 to-pink-500', description: 'Mastered 3 variants of a word family' },
   { slug: 'consistency-streak', title: 'Consistency King', icon: Sparkles, color: 'from-amber-500 to-yellow-500', description: 'Study streak milestone' },
 ];

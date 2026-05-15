@@ -90,7 +90,6 @@ export class PrismaExpressionRepository extends BasePrismaRepository implements 
       wordFamilies: JSON.stringify(expression.linguistics.wordFamilies),
       phrasalVerbDetails: JSON.stringify(expression.linguistics.phrasalVerbDetails),
       chronology: JSON.stringify(expression.linguistics.chronology),
-      slangData: expression.linguistics.slangData ? JSON.stringify(expression.linguistics.slangData) : null,
       correctionData: expression.metadata.correction ? JSON.stringify(expression.metadata.correction) : null,
       examples: {
         create: expression.linguistics.examples.map(ex => ({
@@ -156,16 +155,6 @@ export class PrismaExpressionRepository extends BasePrismaRepository implements 
         wordFamilies: JSON.parse(expression.wordFamilies || "null"),
         phrasalVerbDetails: JSON.parse(expression.phrasalVerbDetails || "null"),
         chronology: JSON.parse(expression.chronology || "null"),
-        slangData: (() => {
-          const parsed = JSON.parse(expression.slangData || "null");
-          if (!parsed) return null;
-          return {
-            regionalVariants: parsed.regionalVariants || [],
-            detectedSlangLevel: parsed.detectedSlangLevel ?? 0,
-            isSlang: !!parsed.isSlang,
-            similarWords: parsed.similarWords || []
-          };
-        })(),
         examples: expression.examples,
       },
       study: {

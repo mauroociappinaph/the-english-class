@@ -1,5 +1,4 @@
 import { Expression, Example, PhrasalVerbDetails, WordFamilies, UsageTips } from "@/shared/types/expression";
-import { RegionalVariant } from "@/frontend/types/store";
 import { Variants } from "framer-motion";
 
 export interface ExpressionHeroProps {
@@ -10,12 +9,6 @@ export interface ExpressionHeroProps {
   cefr: string;
   ipa?: string | null;
   formality?: string | null;
-  slangData?: {
-    isSlang: boolean;
-    detectedSlangLevel: number;
-    regionalVariants: RegionalVariant[];
-    similarWords: string[];
-  } | null;
   correction?: import("@/shared/types/expression").CorrectionLayer | null;
 }
 

@@ -30,7 +30,6 @@ model Expression {
   wordFamilies      String?  // Store as JSON string: { noun: string[], verb: string[], adjective: string[], adverb: string[] }
   phrasalVerbDetails String? // Store as JSON string
   chronology         String? // Store as JSON string: ChronologyData
-  slangData          String?  // Store as JSON string: SlangData
   correctionData     String?  // Store as JSON string: { isCorrect: boolean, correctedText: string, explanation: string }
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt

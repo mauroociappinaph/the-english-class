@@ -1,4 +1,3 @@
-import { Expression, RegionalVariant } from './store';
 import React from 'react';
 import { WordFamilies, PhrasalVerbDetails, WordVariant } from '@/shared/types/expression';
 import { LucideIcon } from 'lucide-react';
@@ -13,31 +12,6 @@ export interface GrammarSectionProps {
   category: string;
   icon: React.ReactNode;
   items: GrammarItem[];
-}
-
-export interface SlangComparePanelProps {
-  variants: RegionalVariant[];
-}
-
-export interface CompareColumnProps {
-  variant: RegionalVariant;
-  slot: 0 | 1;
-}
-
-export interface SlangFiltersProps {
-  availableRegions?: string[];
-  totalResults: number;
-}
-
-export interface SimilarWordsProps {
-  words: string[];
-  limit?: number;
-}
-
-export interface SlangRegionCardProps {
-  variant: RegionalVariant;
-  isSelected?: boolean;
-  onSelect?: () => void;
 }
 
 export interface ExpressionLibraryProps {}
