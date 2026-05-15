@@ -36,31 +36,29 @@ export default function ExpressionPage() {
   useEffect(() => {
     const syncData = async () => {
       try {
-        setIsSyncing(true);
-        setError(null);
-        
-        console.log(`[ExpressionPage] Syncing data for ID: ${id}`);
-        
-        // 1. Try local store first
+        // 1. If we have the data already in the store (from navigation or persistence)
         if (currentAnalysis && currentAnalysis.id === id) {
-          console.log(`[ExpressionPage] Using current analysis from store`);
+          console.log(`[ExpressionPage] Data ready in store for ID: ${id}`);
           setIsSyncing(false);
           return;
         }
 
-        // 2. Fetch from backend
+        setIsSyncing(true);
+        setError(null);
+        
+        console.log(`[ExpressionPage] Fetching data from backend for ID: ${id}`);
         const data = await getExpressionById(id);
         
         if (data) {
-          console.log(`[ExpressionPage] Data fetched from backend: ${data.text}`);
+          console.log(`[ExpressionPage] Success: Hydrated ${data.text}`);
           setCurrentAnalysis(data);
         } else {
-          console.error(`[ExpressionPage] Expression not found for ID: ${id}`);
-          setError("Expression not found in archive.");
+          console.error(`[ExpressionPage] Not Found: ${id}`);
+          setError("This expression doesn't exist in our neural archive.");
         }
       } catch (err) {
-        console.error("[ExpressionPage] Sync error:", err);
-        setError("Failed to load expression data. Please try again.");
+        console.error("[ExpressionPage] Sync failed:", err);
+        setError("Unable to connect to the neural archive. Please verify your link.");
       } finally {
         setIsSyncing(false);
       }
@@ -69,26 +67,43 @@ export default function ExpressionPage() {
     syncData();
   }, [id, currentAnalysis?.id, setCurrentAnalysis]);
 
+  // Handle hydration delay and sync
+  const isDataReady = currentAnalysis && currentAnalysis.id === id && currentAnalysis.metadata && currentAnalysis.linguistics;
+
   if (error) {
     return (
-      <div className="w-full max-w-6xl mx-auto min-h-[60vh] flex flex-col items-center justify-center gap-6">
-        <div className="p-8 border border-red-500/20 bg-red-500/5 rounded-[2rem] text-center">
-          <p className="text-red-400 font-bold uppercase tracking-widest text-xs mb-2">Sync Error</p>
-          <p className="text-zinc-400">{error}</p>
+      <div className="w-full max-w-6xl mx-auto min-h-[60vh] flex flex-col items-center justify-center gap-6 px-6">
+        <div className="p-12 border border-red-500/20 bg-red-500/5 rounded-[3rem] text-center backdrop-blur-xl">
+          <p className="text-red-400 font-bold uppercase tracking-[0.4em] text-[10px] mb-4">Neural Link Severed</p>
+          <p className="text-zinc-400 max-w-sm mx-auto leading-relaxed">{error}</p>
+          <button 
+            onClick={() => window.location.href = "/"}
+            className="mt-8 px-8 py-3 bg-white text-black rounded-full font-black uppercase text-[10px] tracking-widest hover:scale-105 transition-transform"
+          >
+            Return to Base
+          </button>
         </div>
       </div>
     );
   }
 
-  if (isSyncing || !currentAnalysis || !currentAnalysis.metadata || !currentAnalysis.linguistics || currentAnalysis.id !== id) {
+  if (!isDataReady || isSyncing) {
     return (
-      <div className="w-full max-w-6xl mx-auto min-h-[60vh] flex flex-col items-center justify-center gap-6">
-        <div className="w-20 h-20 bg-white/5 rounded-[2rem] border border-white/5 flex items-center justify-center">
-          <Loader2 className="animate-spin text-blue-500" size={32} />
+      <div className="w-full max-w-6xl mx-auto min-h-[60vh] flex flex-col items-center justify-center gap-8">
+        <div className="relative">
+          <div className="w-24 h-24 bg-blue-500/10 rounded-[2.5rem] border border-blue-500/20 flex items-center justify-center animate-pulse">
+            <Loader2 className="animate-spin text-blue-500" size={36} />
+          </div>
+          <div className="absolute -inset-4 bg-blue-500/10 blur-3xl -z-10 rounded-full" />
         </div>
-        <p className="text-zinc-500 font-black uppercase tracking-[0.3em] text-[10px]">
-          {isSyncing ? "Syncing with Archive..." : "Calibrating Linguistic Engine..."}
-        </p>
+        <div className="text-center space-y-2">
+          <p className="text-white font-black uppercase tracking-[0.5em] text-[10px]">
+            {isSyncing ? "Syncing Neural Archive" : "Calibrating Neural Engine"}
+          </p>
+          <p className="text-zinc-500 text-[10px] uppercase tracking-widest animate-pulse">
+            Rebuilding linguistic pathways...
+          </p>
+        </div>
       </div>
     );
   }
