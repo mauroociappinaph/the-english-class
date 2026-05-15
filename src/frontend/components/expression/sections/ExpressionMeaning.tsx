@@ -16,31 +16,40 @@ export function ExpressionMeaning({ meaning, secondaryMeanings, mnemonic }: Expr
       className="space-y-10"
     >
       <div className="flex items-center gap-4">
-        <Languages size={20} className="text-zinc-600" />
-        <h2 className="font-display text-lg font-black uppercase tracking-[0.4em] text-zinc-500">Meaning</h2>
+        <Languages size={20} className="text-blue-500/50" />
+        <h2 className="font-display text-lg font-black uppercase tracking-[0.4em] text-zinc-500">Core Meaning</h2>
       </div>
 
-      <div className="space-y-8 pl-4 border-l border-white/5">
-        <p className="text-3xl md:text-4xl text-white leading-relaxed font-medium">
+      <div className="space-y-8 pl-8 border-l-2 border-blue-500/20">
+        <p className="text-4xl md:text-5xl text-white leading-tight font-black tracking-tight">
           {meaning}
         </p>
         {secondaryMeanings && secondaryMeanings.length > 0 && (
-          <QuotedPillList 
-            items={secondaryMeanings} 
-            className="px-4 py-1.5 rounded-full border border-white/5 text-sm text-zinc-500 font-medium italic"
-          />
+          <div className="pt-4">
+            <QuotedPillList 
+              items={secondaryMeanings} 
+              className="px-6 py-2.5 rounded-full border border-white/5 bg-white/[0.02] text-base text-zinc-400 font-medium italic"
+            />
+          </div>
         )}
       </div>
 
       {mnemonic && (
-        <div className="mt-8 p-8 rounded-2xl border border-white/5 bg-white/[0.02] space-y-4">
-          <div className="flex items-center gap-2 text-zinc-600">
-            <Lightbulb size={16} />
-            <span className="text-sm font-black uppercase tracking-[0.4em]">Memory Trick</span>
+        <div className="mt-12 p-10 rounded-[2.5rem] border border-blue-500/10 bg-blue-500/[0.02] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-8 opacity-5">
+            <Lightbulb size={120} className="text-blue-500" />
           </div>
-          <p className="text-zinc-300 text-xl font-medium leading-relaxed italic">
-            &ldquo;{mnemonic}&rdquo;
-          </p>
+          <div className="relative space-y-6">
+            <div className="flex items-center gap-3 text-blue-400">
+              <div className="p-2 rounded-lg bg-blue-500/10">
+                <Lightbulb size={16} />
+              </div>
+              <span className="text-sm font-black uppercase tracking-[0.4em]">Memory Bridge</span>
+            </div>
+            <p className="text-white text-2xl md:text-3xl font-bold leading-relaxed italic">
+              &ldquo;{mnemonic}&rdquo;
+            </p>
+          </div>
         </div>
       )}
     </motion.section>

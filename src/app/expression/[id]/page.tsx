@@ -95,42 +95,54 @@ export default function ExpressionPage() {
 
   return (
     <div className="w-full max-w-6xl mx-auto space-y-32 pb-40">
-      <ExpressionHero 
-        expressionId={id} 
-        text={currentAnalysis.text}
-        translation={currentAnalysis.translation}
-        type={currentAnalysis.metadata.type}
-        cefr={currentAnalysis.metadata.cefr}
-        ipa={currentAnalysis.metadata.ipa}
-        formality={currentAnalysis.metadata.formality}
-        slangData={currentAnalysis.linguistics.slangData}
-        correction={currentAnalysis.metadata.correction}
-      />
+      {/* Primary Zone: Core Meaning */}
+      <div className="space-y-12">
+        <ExpressionHero 
+          expressionId={id} 
+          text={currentAnalysis.text}
+          translation={currentAnalysis.translation}
+          type={currentAnalysis.metadata.type}
+          cefr={currentAnalysis.metadata.cefr}
+          ipa={currentAnalysis.metadata.ipa}
+          formality={currentAnalysis.metadata.formality}
+          slangData={currentAnalysis.linguistics.slangData}
+          correction={currentAnalysis.metadata.correction}
+        />
 
-      <SectionDivider label="meaning" />
-      <ExpressionMeaning
-        meaning={currentAnalysis.meaning}
-        secondaryMeanings={currentAnalysis.metadata.secondaryMeanings}
-        mnemonic={currentAnalysis.metadata.mnemonic ?? undefined}
-      />
+        <ExpressionMeaning
+          meaning={currentAnalysis.meaning}
+          secondaryMeanings={currentAnalysis.metadata.secondaryMeanings}
+          mnemonic={currentAnalysis.metadata.mnemonic ?? undefined}
+        />
+      </div>
 
-      <SectionDivider label="mechanics" />
-      <ExpressionMechanics
-        phrasalVerbDetails={currentAnalysis.linguistics.phrasalVerbDetails ?? undefined}
-        wordFamilies={currentAnalysis.linguistics.wordFamilies ?? undefined}
-      />
+      {/* Technical Zone: Linguistic Blueprint */}
+      <div className="relative">
+        <div className="absolute inset-x-0 -inset-y-12 bg-white/[0.01] border-y border-white/5 pointer-events-none" />
+        <div className="relative space-y-32">
+          <div>
+            <SectionDivider label="mechanics" type="secondary" />
+            <ExpressionMechanics
+              phrasalVerbDetails={currentAnalysis.linguistics.phrasalVerbDetails ?? undefined}
+              wordFamilies={currentAnalysis.linguistics.wordFamilies ?? undefined}
+            />
+          </div>
 
-      <SectionDivider label="chronology" />
-      <motion.section
-        id="chronology"
-        variants={sectionVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-10%" }}
-        className="space-y-10"
-      >
-        <ChronologyEngine data={currentAnalysis.linguistics.chronology} />
-      </motion.section>
+          <div>
+            <SectionDivider label="chronology" type="secondary" />
+            <motion.section
+              id="chronology"
+              variants={sectionVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-10%" }}
+              className="space-y-10"
+            >
+              <ChronologyEngine data={currentAnalysis.linguistics.chronology} />
+            </motion.section>
+          </div>
+        </div>
+      </div>
 
       <SectionDivider label="scenarios" />
       <ExpressionScenarios 
