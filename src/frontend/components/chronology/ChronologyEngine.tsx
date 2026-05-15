@@ -20,9 +20,9 @@ export const ChronologyEngine: React.FC<ChronologyEngineProps> = ({ data }) => {
         <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 mb-4">
           <AlertCircle className="w-8 h-8 text-amber-400" />
         </div>
-        <h3 className="text-xl font-bold text-white mb-2">Temporal Data Not Calibrated</h3>
+        <h3 className="text-xl font-bold text-white mb-2">Ready for Analysis</h3>
         <p className="text-white/40 max-w-md">
-          This expression requires a fresh linguistic analysis to initialize the Visual Grammar Engine.
+          This expression needs a quick check to build your personalized Grammar Guide.
         </p>
       </div>
     );
@@ -47,7 +47,7 @@ export const ChronologyEngine: React.FC<ChronologyEngineProps> = ({ data }) => {
         <div className="flex items-center gap-2 px-4">
           <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
           <span className="text-[10px] font-mono text-white/40 uppercase tracking-[0.3em]">
-            Interactive_Simulation_Mode
+            Interactive_Timeline
           </span>
         </div>
 
@@ -68,21 +68,21 @@ export const ChronologyEngine: React.FC<ChronologyEngineProps> = ({ data }) => {
       <div className="flex flex-col xl:flex-row gap-6 items-stretch">
         <TemporalZone 
           id="retrospective" 
-          title="Retrospective Zone" 
+          title="Past Timeline" 
           subtitle="Past & Historical Context"
           data={data.retrospective}
         />
         
         <TemporalZone 
           id="active" 
-          title="Active Flow" 
+          title="Present Actions" 
           subtitle="Present Continuity"
           data={data.active}
         />
         
         <TemporalZone 
           id="projection" 
-          title="Projection Engine" 
+          title="Future Path" 
           subtitle="Future Trajectory"
           data={data.projection}
         />
