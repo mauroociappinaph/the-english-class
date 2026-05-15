@@ -16,8 +16,8 @@ export function ExampleSection({ variant }: ExampleSectionProps) {
           <Target size={20} />
         </div>
         <div>
-          <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white leading-none">Examples in Action</h4>
-          <p className="text-[9px] font-bold text-zinc-600 uppercase mt-1">Natural usage scenarios</p>
+          <h4 className="text-sm font-black uppercase tracking-[0.2em] text-white leading-none">Examples in Action</h4>
+          <p className="text-sm font-bold text-zinc-600 uppercase mt-1">Natural usage scenarios</p>
         </div>
       </div>
 
@@ -28,14 +28,14 @@ export function ExampleSection({ variant }: ExampleSectionProps) {
               <p className="text-white text-base font-medium italic leading-relaxed">
                 "{ex.text}"
               </p>
-              <p className="mt-3 text-xs text-zinc-500 uppercase font-black tracking-widest group-hover/ex:text-emerald-500/70 transition-colors">
+              <p className="mt-3 text-sm text-zinc-500 uppercase font-black tracking-widest group-hover/ex:text-emerald-500/70 transition-colors">
                 {ex.translation}
               </p>
             </div>
           ))
         ) : (
           <div className="col-span-full p-8 rounded-2xl border border-dashed border-white/5 flex flex-col items-center justify-center opacity-40">
-            <p className="text-zinc-500 text-[10px] font-black uppercase tracking-widest">No matching specimens detected</p>
+            <p className="text-zinc-500 text-sm font-black uppercase tracking-widest">No matching specimens detected</p>
           </div>
         )}
       </div>

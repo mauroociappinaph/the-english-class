@@ -108,10 +108,10 @@ export function WordFamilyList({ families }: WordFamilyListProps) {
                     <config.icon size={16} />
                   </div>
                   <div>
-                    <h4 className="text-xs font-black uppercase tracking-[0.2em] text-white">
+                    <h4 className="text-sm font-black uppercase tracking-[0.2em] text-white">
                       {config.label}s
                     </h4>
-                    <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                    <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">
                       {config.sub}
                     </p>
                   </div>

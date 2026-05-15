@@ -53,10 +53,10 @@ export const TemporalZone: React.FC<TemporalZoneProps> = ({ id, title, subtitle,
           </div>
           <div>
             <h3 className="text-xl font-bold text-white tracking-tight leading-none mb-1">{title}</h3>
-            <p className="text-[10px] font-mono opacity-50 tracking-widest uppercase">{config.label}</p>
+            <p className="text-sm font-mono opacity-50 tracking-widest uppercase">{config.label}</p>
           </div>
         </div>
-        <div className="text-[10px] font-mono opacity-40 bg-black/20 px-2 py-1 rounded">
+        <div className="text-sm font-mono opacity-40 bg-black/20 px-2 py-1 rounded">
           {config.indicator}
         </div>
       </div>
@@ -90,7 +90,7 @@ const TemporalModule: React.FC<{ module: ChronologyModule; accentColor: string; 
         <TagList 
           tags={module.grammarTags || []} 
           limit={2} 
-          tagClassName="text-[8px] font-mono px-1.5 py-0.5 rounded bg-white/5 border border-white/10 opacity-60"
+          tagClassName="text-sm font-mono px-1.5 py-0.5 rounded bg-white/5 border border-white/10 opacity-60"
           showCount={false}
         />
       </div>
@@ -106,10 +106,10 @@ const TemporalModule: React.FC<{ module: ChronologyModule; accentColor: string; 
 
       <div className="grid grid-cols-1 gap-4">
         <div>
-          <p className="text-xs text-white/70 leading-relaxed mb-2">
+          <p className="text-sm text-white/70 leading-relaxed mb-2">
             {module.simpleExplanation}
           </p>
-          <div className="flex items-center gap-2 text-[10px] font-mono text-white/30 uppercase tracking-tighter">
+          <div className="flex items-center gap-2 text-sm font-mono text-white/30 uppercase tracking-tighter">
             <ChevronRight className="w-3 h-3" />
             {module.technicalExplanation}
           </div>

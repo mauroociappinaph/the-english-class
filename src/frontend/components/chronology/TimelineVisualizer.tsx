@@ -39,7 +39,7 @@ export const TimelineVisualizer: React.FC<TimelineVisualizerProps> = ({ data }) 
             className="w-4 h-4 rounded-full bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)] border-2 border-white"
           />
           <div className="absolute top-6 left-1/2 -translate-x-1/2 whitespace-nowrap">
-            <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+            <span className="text-sm font-mono text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
               NOW_ACTIVE
             </span>
           </div>
@@ -58,7 +58,7 @@ export const TimelineVisualizer: React.FC<TimelineVisualizerProps> = ({ data }) 
       </div>
 
       {/* Axis Labels */}
-      <div className="flex justify-between mt-8 pt-8 border-t border-white/5 px-4 font-mono text-[9px] uppercase tracking-[0.2em] opacity-40">
+      <div className="flex justify-between mt-8 pt-8 border-t border-white/5 px-4 font-mono text-sm uppercase tracking-[0.2em] opacity-40">
         <div className="flex items-center gap-2">
           <ArrowLeft className="w-3 h-3" />
           HISTORICAL_DATA_FLOW
@@ -90,10 +90,10 @@ const TimelinePoint: React.FC<TimelinePointProps> = ({ module, position, color }
       />
       
       <div className={`absolute ${position === 'top' ? 'bottom-full mb-3' : 'top-full mt-3'} w-32 text-center`}>
-        <h5 className="text-[10px] font-bold text-white/80 uppercase tracking-tighter mb-1 leading-none">
+        <h5 className="text-sm font-bold text-white/80 uppercase tracking-tighter mb-1 leading-none">
           {module.tense}
         </h5>
-        <p className="text-[8px] text-white/40 italic line-clamp-1">
+        <p className="text-sm text-white/40 italic line-clamp-1">
           "{module.example}"
         </p>
       </div>

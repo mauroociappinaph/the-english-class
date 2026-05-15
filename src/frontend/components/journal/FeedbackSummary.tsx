@@ -26,7 +26,7 @@ export function FeedbackSummary({ analysis }: FeedbackSummaryProps) {
           <div className="mt-6 flex flex-wrap gap-2">
             {analysis.suggestedVocab.map((vocab, i) => {
               return (
-                <span key={i} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-blue-300">
+                <span key={i} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-blue-300">
                   {vocab}
                 </span>
               );
@@ -47,7 +47,7 @@ export function FeedbackSummary({ analysis }: FeedbackSummaryProps) {
             className="glass rounded-2xl p-6 border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-all"
           >
              <div className="flex flex-col md:flex-row items-start gap-4">
-                <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-wider ${getTypeColor(c.type)}`}>
+                <span className={`px-2 py-1 rounded text-sm font-black uppercase tracking-wider ${getTypeColor(c.type)}`}>
                   {c.type}
                 </span>
                 <div className="flex-1 space-y-3">
@@ -59,7 +59,7 @@ export function FeedbackSummary({ analysis }: FeedbackSummaryProps) {
                    <p className="text-zinc-300 text-sm leading-relaxed">{c.explanation}</p>
                    {c.rule && (
                      <div className="pt-2 border-t border-white/5">
-                        <p className="text-zinc-500 text-[11px] font-medium">RULE: {c.rule}</p>
+                        <p className="text-zinc-500 text-sm font-medium">RULE: {c.rule}</p>
                      </div>
                    )}
                 </div>
@@ -79,7 +79,7 @@ function StatCard({ label, value, color }: { label: string, value: string, color
   };
   return (
     <div className={`glass rounded-2xl p-6 border ${colors[color as keyof typeof colors]} text-center bg-white/[0.01]`}>
-      <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-50 mb-2">{label}</p>
+      <p className="text-sm font-black uppercase tracking-[0.2em] opacity-50 mb-2">{label}</p>
       <p className="text-4xl font-black">{value}</p>
     </div>
   );

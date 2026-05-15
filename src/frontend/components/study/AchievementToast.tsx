@@ -38,7 +38,7 @@ export const AchievementToast: React.FC = () => {
 
               <div className="flex-1 space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Badge Unlocked</span>
+                  <span className="text-sm font-black uppercase tracking-[0.3em] text-blue-400">Badge Unlocked</span>
                   <div className="h-px flex-1 bg-white/10" />
                 </div>
                 <h3 className="text-xl font-black text-white leading-tight">

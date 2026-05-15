@@ -119,7 +119,7 @@ export const GrammarSection = () => {
                   <p className="text-zinc-200 font-medium italic bg-white/5 p-3 rounded-2xl border border-white/5">
                     "{item.example}"
                   </p>
-                  <p className="text-xs text-zinc-400 font-medium uppercase tracking-tight">
+                  <p className="text-sm text-zinc-400 font-medium uppercase tracking-tight">
                     {item.description}
                   </p>
                 </div>

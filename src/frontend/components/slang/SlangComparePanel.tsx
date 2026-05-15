@@ -20,21 +20,21 @@ function CompareColumn({ variant, slot }: CompareColumnProps) {
           <div>
             <p className="text-white font-bold text-sm">{variant.region}</p>
             {variant.subregion && (
-              <p className={`text-${accentColor}-400 text-[11px] font-medium`}>{variant.subregion}</p>
+              <p className={`text-${accentColor}-400 text-sm font-medium`}>{variant.subregion}</p>
             )}
           </div>
         </div>
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => speakText(variant.example, variant.audioLocale ?? "en-US")}
-            className="w-7 h-7 rounded-full bg-zinc-800 hover:bg-blue-500/20 border border-zinc-700 text-xs flex items-center justify-center transition-all"
+            className="w-7 h-7 rounded-full bg-zinc-800 hover:bg-blue-500/20 border border-zinc-700 text-sm flex items-center justify-center transition-all"
             title="Listen"
           >
             🔊
           </button>
           <button
             onClick={() => setCompareVariant(slot, null)}
-            className="w-7 h-7 rounded-full bg-zinc-800 hover:bg-red-500/20 border border-zinc-700 text-zinc-500 hover:text-red-400 text-xs flex items-center justify-center transition-all"
+            className="w-7 h-7 rounded-full bg-zinc-800 hover:bg-red-500/20 border border-zinc-700 text-zinc-500 hover:text-red-400 text-sm flex items-center justify-center transition-all"
             title="Remove"
           >
             ✕
@@ -57,27 +57,27 @@ function CompareColumn({ variant, slot }: CompareColumnProps) {
         { label: "Context",    value: variant.usageContext },
       ].map(({ label, value }) => (
         <div key={label} className="flex flex-col gap-0.5">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-600">{label}</span>
+          <span className="text-sm font-bold uppercase tracking-widest text-zinc-600">{label}</span>
           <span className="text-zinc-300 text-sm">{value}</span>
         </div>
       ))}
 
       {/* Cultural note */}
       <div>
-        <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 block mb-1">Cultural note</span>
+        <span className="text-sm font-bold uppercase tracking-widest text-zinc-600 block mb-1">Cultural note</span>
         <p className="text-zinc-400 text-sm leading-relaxed">{variant.culturalNote}</p>
       </div>
 
       {/* Example */}
       <div className={`bg-${accentColor}-500/5 border border-${accentColor}-500/20 rounded-xl p-3`}>
         <p className="text-white text-sm italic">&ldquo;{variant.example}&rdquo;</p>
-        <p className="text-zinc-500 text-xs mt-1.5">{variant.exampleTranslation}</p>
+        <p className="text-zinc-500 text-sm mt-1.5">{variant.exampleTranslation}</p>
       </div>
 
       {/* Tags */}
       <div className="flex flex-wrap gap-1">
         {variant.tags.map((tag) => (
-          <span key={tag} className="px-2 py-0.5 bg-zinc-800 rounded-full text-zinc-400 text-[10px] font-semibold">
+          <span key={tag} className="px-2 py-0.5 bg-zinc-800 rounded-full text-zinc-400 text-sm font-semibold">
             #{tag}
           </span>
         ))}
@@ -105,7 +105,7 @@ export function SlangComparePanel({ variants }: SlangComparePanelProps) {
         {/* Header */}
         <div className="flex items-center gap-3 mb-4">
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
-          <span className="text-[11px] font-black uppercase tracking-widest text-blue-400">Comparison Mode</span>
+          <span className="text-sm font-black uppercase tracking-widest text-blue-400">Comparison Mode</span>
           <div className="h-px flex-1 bg-gradient-to-l from-transparent via-purple-500/30 to-transparent" />
         </div>
 

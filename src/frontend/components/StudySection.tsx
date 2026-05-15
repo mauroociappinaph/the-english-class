@@ -62,11 +62,11 @@ export function StudySection() {
         <div className="flex items-center gap-4">
           <div className="px-4 py-2 bg-white/5 border border-white/5 rounded-xl flex items-center gap-2">
             <BookOpen size={14} className="text-blue-400" />
-            <span className="text-xs font-bold">{expressions.length} Total</span>
+            <span className="text-sm font-bold">{expressions.length} Total</span>
           </div>
           <div className="px-4 py-2 bg-emerald-500/10 border border-emerald-500/10 rounded-xl flex items-center gap-2">
             <Zap size={14} className="text-emerald-400" />
-            <span className="text-xs font-bold text-emerald-400">{dueCount} Due Now</span>
+            <span className="text-sm font-bold text-emerald-400">{dueCount} Due Now</span>
           </div>
         </div>
       </div>
@@ -119,7 +119,7 @@ export function StudySection() {
           </button>
 
           {dueCount === 0 && expressions.length > 0 && (
-            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mt-2">
+            <p className="text-sm font-black uppercase tracking-widest text-zinc-500 mt-2">
               Next review scheduled in a few hours
             </p>
           )}

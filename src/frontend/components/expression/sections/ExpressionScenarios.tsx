@@ -37,7 +37,7 @@ export function ExpressionScenarios({ examples, rootText }: ExpressionScenariosP
         </div>
         <div>
           <h2 className="font-display text-lg font-black uppercase tracking-[0.4em] text-zinc-500 leading-none">Scenarios</h2>
-          <p className="text-[10px] font-bold text-zinc-600 uppercase mt-1">Contextual Implementation</p>
+          <p className="text-sm font-bold text-zinc-600 uppercase mt-1">Contextual Implementation</p>
         </div>
       </div>
 
@@ -53,12 +53,12 @@ export function ExpressionScenarios({ examples, rootText }: ExpressionScenariosP
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-white/5 pb-4">
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 group-hover/card:text-blue-400 transition-colors">
+              <span className="text-sm font-black uppercase tracking-[0.3em] text-zinc-500 group-hover/card:text-blue-400 transition-colors">
                 {(ex.category ?? "scenario").toUpperCase().replace(/\s+/g, "_")}
               </span>
               <div className="flex gap-2">
-                {ex.tone && <span className="px-2 py-0.5 text-[10px] border border-amber-500/30 text-amber-400 rounded-lg font-black uppercase tracking-tighter">{ex.tone}</span>}
-                {ex.register && <span className="px-2 py-0.5 text-[10px] border border-emerald-500/30 text-emerald-400 rounded-lg font-black uppercase tracking-tighter">{ex.register}</span>}
+                {ex.tone && <span className="px-2 py-0.5 text-sm border border-amber-500/30 text-amber-400 rounded-lg font-black uppercase tracking-tighter">{ex.tone}</span>}
+                {ex.register && <span className="px-2 py-0.5 text-sm border border-emerald-500/30 text-emerald-400 rounded-lg font-black uppercase tracking-tighter">{ex.register}</span>}
               </div>
             </div>
 
@@ -84,14 +84,14 @@ export function ExpressionScenarios({ examples, rootText }: ExpressionScenariosP
                   <div className="space-y-2">
                     <div className="flex items-center gap-1.5 text-zinc-600">
                       <Share2 size={10} />
-                      <span className="text-[9px] font-black uppercase tracking-widest">Literal</span>
+                      <span className="text-sm font-black uppercase tracking-widest">Literal</span>
                     </div>
                     <p className="text-sm text-zinc-500 italic leading-relaxed">&ldquo;{ex.literalTranslation}&rdquo;</p>
                   </div>
                 )}
                 {ex.subtitleAdaptation && (
                   <div className="space-y-2">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-zinc-600 block">Subtitle Adaptation</span>
+                    <span className="text-sm font-black uppercase tracking-widest text-zinc-600 block">Subtitle Adaptation</span>
                     <p className="text-sm text-zinc-400 font-medium leading-relaxed">&ldquo;{ex.subtitleAdaptation}&rdquo;</p>
                   </div>
                 )}

@@ -30,10 +30,10 @@ export const BadgeGallery: React.FC<BadgeGalleryProps> = ({ unlockedAchievements
           </div>
           <div>
             <h3 className="text-xl font-black text-white leading-tight">Achievement Gallery</h3>
-            <p className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Linguistic_Mastery_Records</p>
+            <p className="text-sm font-mono text-white/30 uppercase tracking-[0.2em]">Linguistic_Mastery_Records</p>
           </div>
         </div>
-        <div className="text-xs font-bold text-white/40">
+        <div className="text-sm font-bold text-white/40">
           {unlockedSlugs.size} / {BADGE_DEFINITIONS.length} Unlocked
         </div>
       </div>
@@ -73,7 +73,7 @@ export const BadgeGallery: React.FC<BadgeGalleryProps> = ({ unlockedAchievements
                   <h4 className={`text-sm font-black uppercase tracking-wider ${isUnlocked ? 'text-white' : 'text-white/20'}`}>
                     {badge.title}
                   </h4>
-                  <p className="text-[10px] text-white/40 leading-tight">
+                  <p className="text-sm text-white/40 leading-tight">
                     {badge.description}
                   </p>
                 </div>

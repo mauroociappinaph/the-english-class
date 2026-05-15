@@ -71,15 +71,15 @@ export function SessionSummary() {
 
           <div className="grid grid-cols-3 gap-8 w-full mt-4">
             <div className="space-y-1">
-              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Reviewed</p>
+              <p className="text-sm font-black uppercase tracking-widest text-zinc-500">Reviewed</p>
               <p className="text-2xl font-black">{total}</p>
             </div>
             <div className="space-y-1">
-              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Mastered</p>
+              <p className="text-sm font-black uppercase tracking-widest text-zinc-500">Mastered</p>
               <p className="text-2xl font-black text-emerald-400">{successCount}</p>
             </div>
             <div className="space-y-1">
-              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Accuracy</p>
+              <p className="text-sm font-black uppercase tracking-widest text-zinc-500">Accuracy</p>
               <p className="text-2xl font-black text-blue-400">{successRate}%</p>
             </div>
           </div>
@@ -101,7 +101,7 @@ export function SessionSummary() {
         ) : isLoading ? (
           <div className="bg-white/5 border border-white/5 rounded-[2rem] p-20 flex flex-col items-center justify-center gap-4">
             <Loader2 className="animate-spin text-purple-500" size={32} />
-            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">AI Analyst is designing your remedial path...</p>
+            <p className="text-sm font-black uppercase tracking-widest text-zinc-500">AI Analyst is designing your remedial path...</p>
           </div>
         ) : recommendations ? (
           <div className="space-y-6">
@@ -109,7 +109,7 @@ export function SessionSummary() {
             <div className="bg-purple-500/10 border border-purple-500/20 rounded-3xl p-6 flex gap-4">
               <AlertCircle className="text-purple-400 shrink-0" size={20} />
               <div className="space-y-1">
-                <p className="text-[10px] font-black uppercase tracking-widest text-purple-400">Diagnosis</p>
+                <p className="text-sm font-black uppercase tracking-widest text-purple-400">Diagnosis</p>
                 <p className="text-sm text-zinc-300 leading-relaxed font-medium">{recommendations.diagnosis}</p>
               </div>
             </div>
@@ -125,13 +125,13 @@ export function SessionSummary() {
                   className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all cursor-pointer group"
                 >
                   <div className="flex justify-between items-start mb-3">
-                    <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-[10px] font-bold rounded-md border border-blue-500/20">
+                    <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-sm font-bold rounded-md border border-blue-500/20">
                       {rec.level}
                     </span>
                     <TrendingUp size={14} className="text-zinc-600 group-hover:text-purple-400 transition-colors" />
                   </div>
                   <h4 className="text-lg font-black mb-2 group-hover:text-white transition-colors">{rec.text}</h4>
-                  <p className="text-xs text-zinc-500 leading-relaxed line-clamp-2 italic">{rec.reason}</p>
+                  <p className="text-sm text-zinc-500 leading-relaxed line-clamp-2 italic">{rec.reason}</p>
                 </motion.div>
               ))}
             </div>
@@ -140,7 +140,7 @@ export function SessionSummary() {
             <div className="bg-blue-500/10 border border-blue-500/20 rounded-3xl p-6 flex gap-4">
               <TrendingUp className="text-blue-400 shrink-0" size={20} />
               <div className="space-y-1">
-                <p className="text-[10px] font-black uppercase tracking-widest text-blue-400">Learning Strategy</p>
+                <p className="text-sm font-black uppercase tracking-widest text-blue-400">Learning Strategy</p>
                 <p className="text-sm text-zinc-300 leading-relaxed font-medium">{recommendations.learningTip}</p>
               </div>
             </div>

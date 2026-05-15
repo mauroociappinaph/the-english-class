@@ -45,7 +45,7 @@ export function WordVariantCard({ variant, category, index }: WordVariantCardPro
             <TagList 
               tags={variant.naturalContexts || []} 
               limit={2} 
-              tagClassName="px-3 py-1 rounded-lg text-[9px] font-bold uppercase tracking-widest"
+              tagClassName="px-3 py-1 rounded-lg text-sm font-bold uppercase tracking-widest"
             />
             
             {!isExpanded && (

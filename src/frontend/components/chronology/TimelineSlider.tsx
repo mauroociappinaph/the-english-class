@@ -34,7 +34,7 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({ data, activeModu
   return (
     <div className="relative py-20 px-4 group">
       {/* Visual Labels */}
-      <div className="flex justify-between mb-8 opacity-40 font-mono text-[9px] uppercase tracking-[0.3em]">
+      <div className="flex justify-between mb-8 opacity-40 font-mono text-sm uppercase tracking-[0.3em]">
         <div className="flex items-center gap-2">
           <ArrowLeft className="w-3 h-3" />
           Retrospective
@@ -62,7 +62,7 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({ data, activeModu
         {/* Zone Indicators */}
         <div className="absolute -top-10 inset-x-0 flex justify-between pointer-events-none">
            {['PAST', 'PRESENT', 'FUTURE'].map((label, i) => (
-             <span key={i} className="text-[8px] font-black tracking-[0.5em] opacity-20">{label}</span>
+             <span key={i} className="text-sm font-black tracking-[0.5em] opacity-20">{label}</span>
            ))}
         </div>
 
@@ -92,7 +92,7 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({ data, activeModu
           </div>
 
           {/* Floating Tense Indicator */}
-          <div className="absolute -top-8 whitespace-nowrap bg-white text-black text-[9px] font-black px-2 py-0.5 rounded shadow-lg uppercase tracking-tighter">
+          <div className="absolute -top-8 whitespace-nowrap bg-white text-black text-sm font-black px-2 py-0.5 rounded shadow-lg uppercase tracking-tighter">
             {points[activeIndex].label}
           </div>
         </motion.div>

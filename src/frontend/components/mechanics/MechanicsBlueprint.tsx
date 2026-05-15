@@ -28,14 +28,14 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
               <Activity size={28} />
             </div>
             <div>
-              <h4 className="text-xs font-black uppercase tracking-[0.4em] text-zinc-400">System Analysis</h4>
+              <h4 className="text-sm font-black uppercase tracking-[0.4em] text-zinc-400">System Analysis</h4>
               <p className="text-2xl font-black text-white tracking-tight italic">Structural Decomposition</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <span className="text-xs font-mono text-zinc-500 uppercase tracking-[0.3em]">Blueprint Revision</span>
-              <p className="text-xs font-black text-zinc-400">v3.0.1 (Pedagogical Optimized)</p>
+              <span className="text-sm font-mono text-zinc-500 uppercase tracking-[0.3em]">Blueprint Revision</span>
+              <p className="text-sm font-black text-zinc-400">v3.0.1 (Pedagogical Optimized)</p>
             </div>
           </div>
         </div>
@@ -53,7 +53,7 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
             
             <div className="flex flex-col md:flex-row items-center gap-4 md:gap-2">
               <div className="w-full md:flex-1 p-12 rounded-[2rem] bg-white/[0.02] border border-white/5 flex flex-col items-center justify-center space-y-4 group hover:bg-white/[0.05] hover:border-white/10 transition-all duration-500">
-                <span className="text-xs font-mono uppercase tracking-widest text-zinc-500 group-hover:text-blue-400 transition-colors">Verbal Module</span>
+                <span className="text-sm font-mono uppercase tracking-widest text-zinc-500 group-hover:text-blue-400 transition-colors">Verbal Module</span>
                 <span className="text-6xl md:text-8xl font-black text-white tracking-tighter italic transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-2">
                   {verb}
                 </span>
@@ -86,12 +86,12 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
                 
                 <div className="absolute -bottom-8 flex flex-col items-center">
                   <div className="w-px h-8 bg-gradient-to-b from-blue-500/50 to-transparent" />
-                  <span className="text-xs font-black text-blue-500/60 uppercase tracking-[0.4em]">Functional Link</span>
+                  <span className="text-sm font-black text-blue-500/60 uppercase tracking-[0.4em]">Functional Link</span>
                 </div>
               </div>
 
               <div className="w-full md:flex-1 p-12 rounded-[2rem] bg-blue-500/5 border border-blue-500/10 flex flex-col items-center justify-center space-y-4 group hover:bg-blue-500/10 hover:border-blue-500/20 transition-all duration-500">
-                <span className="text-xs font-mono uppercase tracking-widest text-blue-500/60 group-hover:text-blue-400 transition-colors">Particle Component</span>
+                <span className="text-sm font-mono uppercase tracking-widest text-blue-500/60 group-hover:text-blue-400 transition-colors">Particle Component</span>
                 <span className="text-6xl md:text-8xl font-black text-blue-400 tracking-tighter italic transition-transform duration-500 group-hover:scale-105 group-hover:rotate-2">
                   {particle}
                 </span>
@@ -119,11 +119,11 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
                 <Info size={14} className="text-zinc-500" />
-                <span className="text-xs font-black uppercase tracking-widest text-zinc-500">AI Pedagogical Validation: Pass</span>
+                <span className="text-sm font-black uppercase tracking-widest text-zinc-500">AI Pedagogical Validation: Pass</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                <span className="text-xs font-black uppercase tracking-widest text-zinc-500">Real-time Syntax Sync</span>
+                <span className="text-sm font-black uppercase tracking-widest text-zinc-500">Real-time Syntax Sync</span>
               </div>
             </div>
             <div className="flex gap-4">

@@ -62,12 +62,12 @@ export function ExpressionHero({
               </div>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <h5 className="text-xs font-black uppercase tracking-[0.3em] text-amber-500/60">Correction Layer</h5>
+                  <h5 className="text-sm font-black uppercase tracking-[0.3em] text-amber-500/60">Correction Layer</h5>
                   <div className="h-px w-12 bg-amber-500/20" />
                 </div>
                 <div className="space-y-4">
                   <div className="space-y-1">
-                    <p className="text-[10px] font-bold text-amber-500/40 uppercase tracking-widest">Suggested Correction</p>
+                    <p className="text-sm font-bold text-amber-500/40 uppercase tracking-widest">Suggested Correction</p>
                     <p className="text-2xl font-black text-white tracking-tight">
                       {correction.correctedText}
                     </p>
@@ -84,7 +84,7 @@ export function ExpressionHero({
         )}
       </AnimatePresence>
 
-      <span className="text-xs font-black uppercase tracking-[0.6em] text-zinc-500 block">
+      <span className="text-sm font-black uppercase tracking-[0.6em] text-zinc-500 block">
         {type}
       </span>
 

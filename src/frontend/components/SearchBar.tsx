@@ -31,7 +31,7 @@ export function SearchBar({ input, setInput, handleSearch, isAnalyzing }: Search
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          className="bg-white text-black px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest hover:bg-zinc-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 shrink-0"
+          className="bg-white text-black px-8 py-3 rounded-full font-black text-sm uppercase tracking-widest hover:bg-zinc-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 shrink-0"
         >
           {isAnalyzing ? (
             <>

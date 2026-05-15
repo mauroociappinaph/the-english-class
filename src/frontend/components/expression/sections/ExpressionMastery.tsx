@@ -24,7 +24,7 @@ export function ExpressionMastery({ usageTips, formality }: ExpressionMasteryPro
         {/* Naturalness */}
         {usageTips?.naturalness && (
           <div className="space-y-4 border border-white/5 rounded-2xl p-8 bg-white/[0.01]">
-            <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600 block">Naturalness</span>
+            <span className="text-sm font-black uppercase tracking-[0.4em] text-zinc-600 block">Naturalness</span>
             <p className="text-white text-2xl leading-relaxed font-medium">
               {usageTips.naturalness}
             </p>
@@ -37,15 +37,15 @@ export function ExpressionMastery({ usageTips, formality }: ExpressionMasteryPro
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-zinc-500">
                 <Sparkles size={14} className="text-amber-500/50" />
-                <span className="text-[9px] font-black uppercase tracking-[0.4em]">Interactive Quiz</span>
+                <span className="text-sm font-black uppercase tracking-[0.4em]">Interactive Quiz</span>
               </div>
-              <span className="text-[8px] font-bold px-2 py-0.5 rounded bg-zinc-800 text-zinc-500 uppercase">Common Pitfall</span>
+              <span className="text-sm font-bold px-2 py-0.5 rounded bg-zinc-800 text-zinc-500 uppercase">Common Pitfall</span>
             </div>
             
             <PitfallQuiz mistake={usageTips.commonMistake} />
             
             {usageTips.context && (
-              <p className="text-xs text-zinc-500 leading-relaxed pt-4 border-t border-white/5 italic">
+              <p className="text-sm text-zinc-500 leading-relaxed pt-4 border-t border-white/5 italic">
                 Context: {usageTips.context}
               </p>
             )}
@@ -56,11 +56,11 @@ export function ExpressionMastery({ usageTips, formality }: ExpressionMasteryPro
       {/* Formality + Frequency */}
       <div className="flex flex-wrap gap-12 pt-4">
         <div className="space-y-2">
-          <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600 block">Formality</span>
+          <span className="text-sm font-black uppercase tracking-[0.4em] text-zinc-600 block">Formality</span>
           <p className="font-display text-4xl font-black uppercase tracking-tighter text-white">{formality}</p>
         </div>
         <div className="space-y-4">
-          <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600 block">Frequency</span>
+          <span className="text-sm font-black uppercase tracking-[0.4em] text-zinc-600 block">Frequency</span>
           <div className="flex gap-2">
             {[1, 2, 3, 4, 5].map((i) => (
               <div

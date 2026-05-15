@@ -64,9 +64,9 @@ export function SlangRegionCard({ variant, isSelected, onSelect }: SlangRegionCa
           <div>
             <p className="text-white font-bold text-sm leading-tight">{variant.region}</p>
             {variant.subregion && (
-              <p className="text-zinc-500 text-[11px] font-medium mt-0.5">{variant.subregion}</p>
+              <p className="text-zinc-500 text-sm font-medium mt-0.5">{variant.subregion}</p>
             )}
-            <p className="text-zinc-600 text-[10px] uppercase tracking-widest mt-0.5">{variant.country}</p>
+            <p className="text-zinc-600 text-sm uppercase tracking-widest mt-0.5">{variant.country}</p>
           </div>
         </div>
 
@@ -90,7 +90,7 @@ export function SlangRegionCard({ variant, isSelected, onSelect }: SlangRegionCa
                 e.stopPropagation();
                 handleCompareToggle();
               }}
-              className={`w-8 h-8 rounded-full border flex items-center justify-center text-xs font-bold transition-all ${
+              className={`w-8 h-8 rounded-full border flex items-center justify-center text-sm font-bold transition-all ${
                 isInCompare
                   ? "bg-purple-500/30 border-purple-500/60 text-purple-300"
                   : "bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-purple-500/50 hover:text-purple-300"
@@ -110,17 +110,17 @@ export function SlangRegionCard({ variant, isSelected, onSelect }: SlangRegionCa
           <span className="text-zinc-500 font-mono text-sm">{variant.ipa}</span>
         )}
         {variant.pronunciation && !variant.ipa && (
-          <span className="text-zinc-600 text-xs italic">{variant.pronunciation}</span>
+          <span className="text-zinc-600 text-sm italic">{variant.pronunciation}</span>
         )}
       </div>
 
       {/* Badges */}
       <div className="flex flex-wrap gap-1.5">
-        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${formalityStyle.bg} ${formalityStyle.text}`}>
+        <span className={`px-2.5 py-0.5 rounded-full text-sm font-bold uppercase tracking-wider border ${formalityStyle.bg} ${formalityStyle.text}`}>
           {formalityStyle.label}
         </span>
         {variant.tags.map((tag) => (
-          <span key={tag} className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${TAG_COLORS[tag] ?? ""}`}>
+          <span key={tag} className={`px-2 py-0.5 rounded-full text-sm font-semibold ${TAG_COLORS[tag] ?? ""}`}>
             #{tag}
           </span>
         ))}
@@ -131,20 +131,20 @@ export function SlangRegionCard({ variant, isSelected, onSelect }: SlangRegionCa
 
       {/* Cultural note */}
       <div className="border-t border-zinc-800 pt-3">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-1">Cultural note</p>
+        <p className="text-sm font-bold uppercase tracking-widest text-zinc-500 mb-1">Cultural note</p>
         <p className="text-zinc-300 text-sm leading-relaxed">{variant.culturalNote}</p>
       </div>
 
       {/* Usage context */}
       <div className="flex items-start gap-2">
-        <span className="text-zinc-600 text-xs mt-0.5">📍</span>
-        <p className="text-zinc-500 text-xs leading-relaxed">{variant.usageContext}</p>
+        <span className="text-zinc-600 text-sm mt-0.5">📍</span>
+        <p className="text-zinc-500 text-sm leading-relaxed">{variant.usageContext}</p>
       </div>
 
       {/* Example */}
       <div className="bg-zinc-950/60 rounded-xl p-3 border border-zinc-800/50">
         <p className="text-white text-sm leading-relaxed italic">&ldquo;{variant.example}&rdquo;</p>
-        <p className="text-zinc-500 text-xs mt-1.5 leading-relaxed">{variant.exampleTranslation}</p>
+        <p className="text-zinc-500 text-sm mt-1.5 leading-relaxed">{variant.exampleTranslation}</p>
       </div>
     </motion.div>
   );

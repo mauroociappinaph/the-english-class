@@ -55,7 +55,7 @@ export function SlangFilters({ availableRegions, totalResults }: SlangFiltersPro
       {/* Top bar */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
-          <span className="text-xs font-black uppercase tracking-widest text-zinc-500">
+          <span className="text-sm font-black uppercase tracking-widest text-zinc-500">
             {totalResults} variant{totalResults !== 1 ? "s" : ""}
           </span>
 
@@ -66,7 +66,7 @@ export function SlangFilters({ availableRegions, totalResults }: SlangFiltersPro
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 onClick={clearFilters}
-                className="px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-400 text-[11px] font-semibold hover:text-white hover:border-zinc-600 transition-all"
+                className="px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-400 text-sm font-semibold hover:text-white hover:border-zinc-600 transition-all"
               >
                 ✕ Clear filters
               </motion.button>
@@ -78,7 +78,7 @@ export function SlangFilters({ availableRegions, totalResults }: SlangFiltersPro
           {/* Slang only toggle */}
           <button
             onClick={() => setShowSlangOnly(!showSlangOnly)}
-            className={`px-3.5 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider border transition-all ${
+            className={`px-3.5 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider border transition-all ${
               showSlangOnly
                 ? "bg-purple-500/20 border-purple-500/50 text-purple-300"
                 : "bg-zinc-800/60 border-zinc-700 text-zinc-500 hover:text-zinc-300"
@@ -90,7 +90,7 @@ export function SlangFilters({ availableRegions, totalResults }: SlangFiltersPro
           {/* Compare mode */}
           <button
             onClick={toggleCompareMode}
-            className={`px-3.5 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider border transition-all ${
+            className={`px-3.5 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider border transition-all ${
               compareMode
                 ? "bg-blue-500/20 border-blue-500/50 text-blue-300"
                 : "bg-zinc-800/60 border-zinc-700 text-zinc-500 hover:text-zinc-300"
@@ -111,7 +111,7 @@ export function SlangFilters({ availableRegions, totalResults }: SlangFiltersPro
             className="overflow-hidden"
           >
             <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl px-4 py-3">
-              <p className="text-blue-300 text-xs font-medium">
+              <p className="text-blue-300 text-sm font-medium">
                 Select up to 2 variants to compare them side by side. Click the <strong>+</strong> button on each card.
               </p>
             </div>
@@ -123,7 +123,7 @@ export function SlangFilters({ availableRegions, totalResults }: SlangFiltersPro
       <div className="flex flex-wrap gap-2">
         <button
           onClick={() => setRegionFilter(null)}
-          className={`px-3.5 py-1.5 rounded-full text-[11px] font-bold border transition-all ${
+          className={`px-3.5 py-1.5 rounded-full text-sm font-bold border transition-all ${
             activeRegion === null
               ? "bg-white text-black border-white"
               : "bg-zinc-900 border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500"
@@ -135,7 +135,7 @@ export function SlangFilters({ availableRegions, totalResults }: SlangFiltersPro
           <button
             key={region.value}
             onClick={() => setRegionFilter(activeRegion === region.value ? null : region.value)}
-            className={`px-3.5 py-1.5 rounded-full text-[11px] font-semibold border transition-all ${
+            className={`px-3.5 py-1.5 rounded-full text-sm font-semibold border transition-all ${
               activeRegion === region.value
                 ? "bg-blue-500/30 border-blue-500/60 text-blue-200"
                 : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-600"
@@ -152,7 +152,7 @@ export function SlangFilters({ availableRegions, totalResults }: SlangFiltersPro
           <button
             key={opt.label}
             onClick={() => setFormalityFilter(opt.value)}
-            className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border transition-all ${
+            className={`px-3 py-1 rounded-full text-sm font-bold uppercase tracking-wider border transition-all ${
               formalityFilter === opt.value
                 ? "bg-amber-500/20 border-amber-500/50 text-amber-300"
                 : "bg-zinc-900/60 border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:border-zinc-700"

@@ -26,7 +26,7 @@ export const GrammarAtlasCTA: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[10px] font-mono text-blue-400 uppercase tracking-[0.3em]">Advanced Infrastructure</span>
+              <span className="text-sm font-mono text-blue-400 uppercase tracking-[0.3em]">Advanced Infrastructure</span>
               <Sparkles className="w-3 h-3 text-amber-400" />
             </div>
             <h3 className="text-3xl font-bold text-white mb-2 tracking-tight">Access Full Grammar Atlas</h3>

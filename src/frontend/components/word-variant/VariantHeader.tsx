@@ -37,13 +37,13 @@ export function VariantHeader({ variant, category, isExpanded, onToggle }: Varia
           <div className="flex items-center gap-3">
             <span className="text-sm font-mono text-zinc-500">[{variant.pronunciation}]</span>
             <div className={clsx(
-              "px-2 py-0.5 rounded-md text-[10px] font-black border",
+              "px-2 py-0.5 rounded-md text-sm font-black border",
               cefrColors[variant.cefr] || "text-zinc-500 border-zinc-800 bg-zinc-800/10"
             )}>
               {variant.cefr}
             </div>
-            <span className="text-zinc-600 font-bold text-xs uppercase tracking-widest">•</span>
-            <span className="text-emerald-500/80 font-bold text-xs uppercase tracking-widest">
+            <span className="text-zinc-600 font-bold text-sm uppercase tracking-widest">•</span>
+            <span className="text-emerald-500/80 font-bold text-sm uppercase tracking-widest">
               {variant.translation}
             </span>
           </div>

@@ -8,7 +8,7 @@ export function SimilarWords({ words, limit }: SimilarWordsProps) {
 
   return (
     <div className="flex items-center gap-2 flex-wrap">
-      <span className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Similar:</span>
+      <span className="text-sm font-black uppercase tracking-widest text-zinc-600">Similar:</span>
       {displayWords.map((word) => (
         <TagChip 
           key={word} 

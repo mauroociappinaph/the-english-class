@@ -9,7 +9,7 @@ export function AdvancedMechanics({ variant }: AdvancedMechanicsProps) {
       <div className="space-y-4">
         <div className="flex items-center gap-2 text-zinc-400">
           <Info size={14} className="text-blue-400" />
-          <span className="text-[10px] font-black uppercase tracking-widest text-blue-400/50">Common Partners</span>
+          <span className="text-sm font-black uppercase tracking-widest text-blue-400/50">Common Partners</span>
         </div>
         <TagList 
           tags={variant.commonCollocations || []} 
@@ -21,7 +21,7 @@ export function AdvancedMechanics({ variant }: AdvancedMechanicsProps) {
       <div className="space-y-4">
         <div className="flex items-center gap-2 text-zinc-400">
           <ArrowRightLeft size={14} className="text-purple-400" />
-          <span className="text-[10px] font-black uppercase tracking-widest text-purple-400/50">Synonyms & Antonyms</span>
+          <span className="text-sm font-black uppercase tracking-widest text-purple-400/50">Synonyms & Antonyms</span>
         </div>
         <div className="flex flex-wrap gap-2">
           <TagList tags={variant.synonyms || []} limit={3} variant="purple" />

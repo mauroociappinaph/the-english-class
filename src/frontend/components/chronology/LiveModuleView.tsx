@@ -32,7 +32,7 @@ export const LiveModuleView: React.FC<LiveModuleViewProps> = ({ module, accentCo
             <TagList 
               tags={module.grammarTags || []} 
               variant="glass" 
-              tagClassName="text-[10px] font-mono px-3 py-1 rounded-full border border-white/5"
+              tagClassName="text-sm font-mono px-3 py-1 rounded-full border border-white/5"
             />
           </div>
 
@@ -49,7 +49,7 @@ export const LiveModuleView: React.FC<LiveModuleViewProps> = ({ module, accentCo
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-white/40">
                 <Info className="w-3 h-3" />
-                <span className="text-[10px] font-mono uppercase tracking-widest">Pedagogical_Logic</span>
+                <span className="text-sm font-mono uppercase tracking-widest">Pedagogical_Logic</span>
               </div>
               <p className="text-sm text-white/80 leading-relaxed font-light">
                 {module.simpleExplanation}
@@ -59,7 +59,7 @@ export const LiveModuleView: React.FC<LiveModuleViewProps> = ({ module, accentCo
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-white/40">
                 <ChevronRight className="w-3 h-3" />
-                <span className="text-[10px] font-mono uppercase tracking-widest">Technical_Structure</span>
+                <span className="text-sm font-mono uppercase tracking-widest">Technical_Structure</span>
               </div>
               <p className="text-sm text-white/60 leading-relaxed font-mono bg-black/20 p-3 rounded-xl border border-white/5">
                 {module.technicalExplanation}
@@ -70,7 +70,7 @@ export const LiveModuleView: React.FC<LiveModuleViewProps> = ({ module, accentCo
       </AnimatePresence>
 
       {/* Decorative Metadata */}
-      <div className="absolute bottom-4 right-8 opacity-10 font-mono text-[8px] tracking-[0.4em] uppercase">
+      <div className="absolute bottom-4 right-8 opacity-10 font-mono text-sm tracking-[0.4em] uppercase">
         Live_Temporal_Simulation_Active
       </div>
     </div>

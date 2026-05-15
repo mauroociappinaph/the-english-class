@@ -17,7 +17,7 @@ export const ChronologyHeader: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <h2 className="text-3xl font-bold text-white tracking-tight">Chronology</h2>
-              <span className="px-2 py-0.5 rounded-md bg-blue-500/20 border border-blue-500/30 text-[10px] font-mono text-blue-400 uppercase tracking-widest">
+              <span className="px-2 py-0.5 rounded-md bg-blue-500/20 border border-blue-500/30 text-sm font-mono text-blue-400 uppercase tracking-widest">
                 Grammar Guide
               </span>
             </div>
@@ -49,7 +49,7 @@ const StatusBadge: React.FC<{ icon: React.ReactNode; label: string; color: 'emer
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${colors[color]} font-mono text-[10px] tracking-tighter`}
+      className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${colors[color]} font-mono text-sm tracking-tighter`}
     >
       <span className="relative flex h-2 w-2">
         <span className={`animate-ping absolute inline-flex h-full w-full rounded-full bg-current opacity-75`}></span>

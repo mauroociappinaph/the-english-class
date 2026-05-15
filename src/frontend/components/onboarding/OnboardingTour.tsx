@@ -90,7 +90,7 @@ export function OnboardingTour() {
                   {STEPS[currentStep].icon}
                 </div>
                 <div className="flex-1">
-                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 mb-1">
+                   <p className="text-sm font-black uppercase tracking-[0.2em] text-blue-400 mb-1">
                      Step {currentStep + 1} of {STEPS.length}
                    </p>
                    <h3 className="text-2xl font-black text-white">{STEPS[currentStep].title}</h3>

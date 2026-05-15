@@ -65,7 +65,7 @@ export function InteractiveText({ text, translation, className = "", label }: In
             {!isRevealed && !isAsking && (
               <>
                 <HelpCircle size={12} className="animate-pulse" />
-                <span className="text-[10px] font-black uppercase tracking-widest">
+                <span className="text-sm font-black uppercase tracking-widest">
                   Reveal {label || 'Meaning'}?
                 </span>
               </>
@@ -74,7 +74,7 @@ export function InteractiveText({ text, translation, className = "", label }: In
             {isAsking && (
               <>
                 <BrainCircuit size={14} className="animate-bounce" />
-                <span className="text-[11px] font-black uppercase tracking-tight">
+                <span className="text-sm font-black uppercase tracking-tight">
                   {getQuestion()}
                 </span>
               </>
@@ -83,7 +83,7 @@ export function InteractiveText({ text, translation, className = "", label }: In
             {isRevealed && (
               <>
                 <Eye size={12} />
-                <span className="text-xs font-bold">{translation}</span>
+                <span className="text-sm font-bold">{translation}</span>
               </>
             )}
             

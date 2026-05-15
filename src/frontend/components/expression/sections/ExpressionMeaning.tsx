@@ -36,7 +36,7 @@ export function ExpressionMeaning({ meaning, secondaryMeanings, mnemonic }: Expr
         <div className="mt-8 p-8 rounded-2xl border border-white/5 bg-white/[0.02] space-y-4">
           <div className="flex items-center gap-2 text-zinc-600">
             <Lightbulb size={16} />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em]">Memory Trick</span>
+            <span className="text-sm font-black uppercase tracking-[0.4em]">Memory Trick</span>
           </div>
           <p className="text-zinc-300 text-xl font-medium leading-relaxed italic">
             &ldquo;{mnemonic}&rdquo;

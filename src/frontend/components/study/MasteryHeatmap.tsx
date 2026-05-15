@@ -51,17 +51,17 @@ export function MasteryHeatmap({ expressions }: { expressions: Expression[] }) {
                 <Bell size={28} className="animate-swing" />
               </div>
               <div className="space-y-1">
-                <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400/60">Spaced Repetition</h5>
+                <h5 className="text-sm font-black uppercase tracking-[0.3em] text-blue-400/60">Spaced Repetition</h5>
                 <p className="text-lg font-black text-white tracking-tight">
                   Tienes {learningPhrases.length} frases en fase crítica de olvido.
                 </p>
-                <p className="text-xs text-zinc-400 font-medium">
+                <p className="text-sm text-zinc-400 font-medium">
                   Repasalas ahora para fortalecer las conexiones neuronales.
                 </p>
               </div>
             </div>
 
-            <button className="px-8 py-4 rounded-2xl bg-blue-500 hover:bg-blue-400 text-white font-black text-xs uppercase tracking-widest flex items-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-blue-500/20 group/btn">
+            <button className="px-8 py-4 rounded-2xl bg-blue-500 hover:bg-blue-400 text-white font-black text-sm uppercase tracking-widest flex items-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-blue-500/20 group/btn">
               <Zap size={16} />
               Review Learning Stack
               <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
@@ -73,17 +73,17 @@ export function MasteryHeatmap({ expressions }: { expressions: Expression[] }) {
       <div className="bg-white/[0.02] border border-white/5 rounded-[2.5rem] p-10 space-y-8">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <h4 className="text-xs font-black uppercase tracking-[0.4em] text-zinc-500">Mastery Heatmap</h4>
+            <h4 className="text-sm font-black uppercase tracking-[0.4em] text-zinc-500">Mastery Heatmap</h4>
             <p className="text-2xl font-black text-white italic tracking-tighter">Knowledge Density</p>
           </div>
           <div className="flex items-center gap-6">
              <div className="flex items-center gap-2">
                <div className="w-2.5 h-2.5 rounded-full bg-blue-400" />
-               <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Mastered</span>
+               <span className="text-sm font-black uppercase tracking-widest text-zinc-400">Mastered</span>
              </div>
              <div className="flex items-center gap-2">
                <div className="w-2.5 h-2.5 rounded-full bg-zinc-800 border border-white/10" />
-               <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">New</span>
+               <span className="text-sm font-black uppercase tracking-widest text-zinc-400">New</span>
              </div>
           </div>
         </div>
@@ -105,10 +105,10 @@ export function MasteryHeatmap({ expressions }: { expressions: Expression[] }) {
                 )}
 
                 {/* Tooltip */}
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-4 py-2 bg-zinc-950 border border-white/10 rounded-xl text-[10px] font-black whitespace-nowrap opacity-0 group-hover/cell:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl translate-y-2 group-hover/cell:translate-y-0">
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-4 py-2 bg-zinc-950 border border-white/10 rounded-xl text-sm font-black whitespace-nowrap opacity-0 group-hover/cell:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl translate-y-2 group-hover/cell:translate-y-0">
                   <div className="flex flex-col gap-1">
                     <span className="text-zinc-500 uppercase tracking-tighter">Phrase Analysis</span>
-                    <span className="text-white text-xs">{exp.text}</span>
+                    <span className="text-white text-sm">{exp.text}</span>
                     <div className="h-px bg-white/5 my-1" />
                     <div className="flex items-center justify-between gap-4">
                       <span className="text-blue-400">{exp.study.timesStudied ?? 0} Repetitions</span>
@@ -131,15 +131,15 @@ export function MasteryHeatmap({ expressions }: { expressions: Expression[] }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
           <div className="p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 space-y-2">
             <p className="text-4xl font-black text-white italic tracking-tighter">{stats.mastered}</p>
-            <p className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em]">Synaptic Stability</p>
+            <p className="text-sm font-black text-zinc-500 uppercase tracking-[0.3em]">Synaptic Stability</p>
           </div>
           <div className="p-6 rounded-[2rem] bg-blue-500/[0.03] border border-blue-500/10 space-y-2">
             <p className="text-4xl font-black text-blue-400 italic tracking-tighter">{stats.learning}</p>
-            <p className="text-[10px] font-black text-blue-500/60 uppercase tracking-[0.3em]">Active Consolidation</p>
+            <p className="text-sm font-black text-blue-500/60 uppercase tracking-[0.3em]">Active Consolidation</p>
           </div>
           <div className="p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 space-y-2">
             <p className="text-4xl font-black text-zinc-600 italic tracking-tighter">{stats.new_count}</p>
-            <p className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em]">Unexplored Modules</p>
+            <p className="text-sm font-black text-zinc-600 uppercase tracking-[0.3em]">Unexplored Modules</p>
           </div>
         </div>
       </div>

@@ -24,7 +24,7 @@ export const TagList: React.FC<TagListProps> = ({
         </TagChip>
       ))}
       {limit && showCount && remainingCount > 0 && (
-        <span className="text-[9px] font-bold text-zinc-700 flex items-center italic whitespace-nowrap">
+        <span className="text-sm font-bold text-zinc-700 flex items-center italic whitespace-nowrap">
           +{remainingCount} more
         </span>
       )}

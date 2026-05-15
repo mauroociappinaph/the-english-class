@@ -137,7 +137,7 @@ export const AnalysisHero: React.FC = () => {
             <div className="w-full flex flex-col items-center gap-4 relative z-10">
               <div className="flex items-center gap-3 text-blue-400">
                 <Loader2 size={16} className="animate-spin" />
-                <span className="text-[10px] font-black uppercase tracking-[0.4em]">Neural Processing in Progress</span>
+                <span className="text-sm font-black uppercase tracking-[0.4em]">Neural Processing in Progress</span>
               </div>
 
               {/* Progress Bar Container */}
@@ -150,9 +150,9 @@ export const AnalysisHero: React.FC = () => {
                 />
               </div>
               <div className="flex justify-between w-full px-1">
-                <span className="text-[9px] font-mono text-zinc-600">SYST_INIT</span>
-                <span className="text-[10px] font-mono text-blue-500 font-bold">{Math.round(progress)}%</span>
-                <span className="text-[9px] font-mono text-zinc-600">LANG_SYNC</span>
+                <span className="text-sm font-mono text-zinc-600">SYST_INIT</span>
+                <span className="text-sm font-mono text-blue-500 font-bold">{Math.round(progress)}%</span>
+                <span className="text-sm font-mono text-zinc-600">LANG_SYNC</span>
               </div>
             </div>
 
@@ -172,7 +172,7 @@ export const AnalysisHero: React.FC = () => {
                       idx < activeStep ? "bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]" : 
                       idx === activeStep ? "bg-blue-400 animate-pulse" : "bg-zinc-800"
                     }`} />
-                    <span className={`text-[10px] font-bold uppercase tracking-wider ${
+                    <span className={`text-sm font-bold uppercase tracking-wider ${
                       idx <= activeStep ? "text-blue-100" : "text-zinc-600"
                     }`}>
                       {step.label}
@@ -182,7 +182,7 @@ export const AnalysisHero: React.FC = () => {
                     <motion.p 
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="text-[10px] text-zinc-500 mt-2 font-mono leading-tight"
+                      className="text-sm text-zinc-500 mt-2 font-mono leading-tight"
                     >
                       {step.detail}
                     </motion.p>
@@ -192,7 +192,7 @@ export const AnalysisHero: React.FC = () => {
             </div>
             
             <div className="w-full p-6 border border-white/5 rounded-2xl bg-zinc-950/50 relative z-10">
-              <p className="text-zinc-400 font-mono text-xs leading-relaxed text-left min-h-[60px]">
+              <p className="text-zinc-400 font-mono text-sm leading-relaxed text-left min-h-[60px]">
                 {streamedText || "Initializing deep linguistic analysis..."}
                 <motion.span 
                   animate={{ opacity: [0, 1, 0] }} 
@@ -212,9 +212,9 @@ export const AnalysisHero: React.FC = () => {
                 className="flex flex-col items-center gap-2 text-center relative z-10"
               >
                 <div className="flex items-center gap-2 text-blue-500/80">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em]">Neural Insight #{activeTip + 1}</span>
+                  <span className="text-sm font-black uppercase tracking-[0.3em]">Neural Insight #{activeTip + 1}</span>
                 </div>
-                <p className="text-[11px] text-zinc-400 italic max-w-sm px-4">
+                <p className="text-sm text-zinc-400 italic max-w-sm px-4">
                   "{LEARNING_HACKS[activeTip]}"
                 </p>
               </motion.div>

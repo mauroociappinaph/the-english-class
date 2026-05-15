@@ -51,7 +51,7 @@ export function LogicDocumentation({ details }: PhrasalVerbDetailsProps) {
       {/* Decorative Elements */}
       <div className="absolute -right-12 -top-12 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl opacity-50 group-hover/specs:bg-blue-500/10 transition-all duration-700" />
       <div className="absolute top-0 right-0 p-8">
-        <span className="text-[10px] font-mono text-blue-500/30 uppercase tracking-[0.4em]">Engine v2.1.0</span>
+        <span className="text-sm font-mono text-blue-500/30 uppercase tracking-[0.4em]">Engine v2.1.0</span>
       </div>
 
       <div className="flex items-center gap-6 text-blue-400 relative">
@@ -59,7 +59,7 @@ export function LogicDocumentation({ details }: PhrasalVerbDetailsProps) {
           <Brain size={28} />
         </div>
         <div>
-          <h4 className="text-xs font-black uppercase tracking-[0.4em] text-blue-400/60">Technical Analysis</h4>
+          <h4 className="text-sm font-black uppercase tracking-[0.4em] text-blue-400/60">Technical Analysis</h4>
           <p className="text-2xl font-black text-white tracking-tight">Logic Documentation</p>
         </div>
       </div>
@@ -69,7 +69,7 @@ export function LogicDocumentation({ details }: PhrasalVerbDetailsProps) {
           <div key={doc.id} className="space-y-8">
             <div className="flex items-center gap-4">
               <div className="flex flex-col">
-                <span className="text-[10px] font-mono text-blue-500 font-black">{doc.id}.</span>
+                <span className="text-sm font-mono text-blue-500 font-black">{doc.id}.</span>
                 <h5 className="text-sm font-black uppercase tracking-widest text-white">{doc.title}</h5>
               </div>
               <div className="h-px flex-1 bg-gradient-to-r from-blue-500/20 to-transparent" />
@@ -85,7 +85,7 @@ export function LogicDocumentation({ details }: PhrasalVerbDetailsProps) {
                 <div className="p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 space-y-6 group/item hover:bg-white/[0.04] transition-all">
                   <div className="flex items-center gap-3">
                     <doc.icon size={16} className={doc.color} />
-                    <span className={clsx("text-[9px] font-black uppercase tracking-[0.2em]", doc.color)}>
+                    <span className={clsx("text-sm font-black uppercase tracking-[0.2em]", doc.color)}>
                       {doc.techNote}
                     </span>
                   </div>
@@ -97,7 +97,7 @@ export function LogicDocumentation({ details }: PhrasalVerbDetailsProps) {
                   <div className="pt-6 border-t border-white/5 flex items-center justify-between">
                     <button 
                       onClick={() => document.getElementById('core-assembly')?.scrollIntoView({ behavior: 'smooth' })}
-                      className="text-[10px] font-black text-zinc-600 uppercase tracking-widest hover:text-blue-400 transition-colors flex items-center gap-2"
+                      className="text-sm font-black text-zinc-600 uppercase tracking-widest hover:text-blue-400 transition-colors flex items-center gap-2"
                     >
                       View Syntax anatomy <ChevronRight size={12} />
                     </button>
@@ -105,7 +105,7 @@ export function LogicDocumentation({ details }: PhrasalVerbDetailsProps) {
                 </div>
 
                 {/* Visual Sentence Anatomy Placeholder - Logic based */}
-                <div className="px-6 py-4 rounded-2xl bg-zinc-950/50 border border-white/5 flex items-center gap-4 font-mono text-[10px]">
+                <div className="px-6 py-4 rounded-2xl bg-zinc-950/50 border border-white/5 flex items-center gap-4 font-mono text-sm">
                   <FileCode2 size={14} className="text-zinc-700" />
                   <div className="flex items-center gap-2">
                     <span className="text-zinc-500 italic">subject</span>
@@ -128,7 +128,7 @@ export function LogicDocumentation({ details }: PhrasalVerbDetailsProps) {
       <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6 opacity-60">
         <div className="flex items-center gap-4">
           <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-          <p className="text-xs font-bold text-zinc-500 tracking-tight">
+          <p className="text-sm font-bold text-zinc-500 tracking-tight">
             Overall System Logic: <span className="text-zinc-300 italic">"{safeVal(logicExplanation) || "Context-dependent structural behavior."}"</span>
           </p>
         </div>
@@ -136,7 +136,7 @@ export function LogicDocumentation({ details }: PhrasalVerbDetailsProps) {
           <div className="flex -space-x-1">
             {[1, 2, 3].map(i => <div key={i} className="w-1.5 h-1.5 rounded-full bg-blue-500/20" />)}
           </div>
-          <span className="text-[9px] font-black uppercase tracking-widest text-zinc-600">Pedagogical Engine Active</span>
+          <span className="text-sm font-black uppercase tracking-widest text-zinc-600">Pedagogical Engine Active</span>
         </div>
       </div>
     </div>

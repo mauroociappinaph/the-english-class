@@ -11,8 +11,8 @@ export function MorphologyPattern({ variant }: MorphologyPatternProps) {
             <LinkIcon size={20} />
           </div>
           <div>
-            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Morphology Pattern</h4>
-            <p className="text-[9px] font-bold text-zinc-600 uppercase">Visual word relationships</p>
+            <h4 className="text-sm font-black uppercase tracking-[0.2em] text-white">Morphology Pattern</h4>
+            <p className="text-sm font-bold text-zinc-600 uppercase">Visual word relationships</p>
           </div>
         </div>
 
@@ -34,15 +34,15 @@ export function MorphologyPattern({ variant }: MorphologyPatternProps) {
 
         <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/5">
           <div className="space-y-1">
-            <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Prefix</p>
+            <p className="text-sm font-black text-zinc-600 uppercase tracking-widest">Prefix</p>
             <p className="text-sm font-bold text-white">{variant.morphology?.prefix || "—"}</p>
           </div>
           <div className="space-y-1">
-            <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Root</p>
+            <p className="text-sm font-black text-zinc-600 uppercase tracking-widest">Root</p>
             <p className="text-sm font-bold text-blue-400">{variant.morphology?.root || "—"}</p>
           </div>
           <div className="space-y-1">
-            <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Suffix</p>
+            <p className="text-sm font-black text-zinc-600 uppercase tracking-widest">Suffix</p>
             <p className="text-sm font-bold text-white">{variant.morphology?.suffix || "—"}</p>
           </div>
         </div>

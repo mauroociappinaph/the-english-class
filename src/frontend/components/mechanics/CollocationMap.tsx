@@ -31,18 +31,18 @@ export function CollocationMap({ details }: PhrasalVerbDetailsProps) {
             <Sparkles size={24} />
           </div>
           <div>
-            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Common Partners</h4>
+            <h4 className="text-sm font-black uppercase tracking-[0.3em] text-zinc-500">Common Partners</h4>
             <p className="text-xl font-bold text-white">Collocation Network</p>
           </div>
         </div>
         <div className="hidden md:flex items-center gap-6">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">High Naturalness</span>
+            <span className="text-sm font-black uppercase tracking-widest text-zinc-500">High Naturalness</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-blue-500" />
-            <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Frequency Data</span>
+            <span className="text-sm font-black uppercase tracking-widest text-zinc-500">Frequency Data</span>
           </div>
         </div>
       </div>
@@ -66,14 +66,14 @@ export function CollocationMap({ details }: PhrasalVerbDetailsProps) {
                   item.frequency === 'high' ? "text-blue-400" : item.frequency === 'medium' ? "text-amber-400" : "text-zinc-500"
                 )} />
                 <span className={clsx(
-                  "text-[9px] font-black uppercase tracking-widest",
+                  "text-sm font-black uppercase tracking-widest",
                   item.frequency === 'high' ? "text-blue-400/80" : "text-zinc-600"
                 )}>
                   {item.frequency} Frequency
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="text-[9px] font-mono text-zinc-600 uppercase tracking-tighter">Match</div>
+                <div className="text-sm font-mono text-zinc-600 uppercase tracking-tighter">Match</div>
                 <div className="w-16 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
@@ -100,10 +100,10 @@ export function CollocationMap({ details }: PhrasalVerbDetailsProps) {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                <span className="px-2.5 py-1 rounded-lg bg-zinc-900 border border-white/5 text-[9px] font-black text-zinc-500 uppercase tracking-widest">
+                <span className="px-2.5 py-1 rounded-lg bg-zinc-900 border border-white/5 text-sm font-black text-zinc-500 uppercase tracking-widest">
                   {item.usageContext}
                 </span>
-                <span className="px-2.5 py-1 rounded-lg bg-emerald-500/5 border border-emerald-500/10 text-[9px] font-black text-emerald-500/80 uppercase tracking-widest">
+                <span className="px-2.5 py-1 rounded-lg bg-emerald-500/5 border border-emerald-500/10 text-sm font-black text-emerald-500/80 uppercase tracking-widest">
                   {item.translation}
                 </span>
               </div>
@@ -111,7 +111,7 @@ export function CollocationMap({ details }: PhrasalVerbDetailsProps) {
               <div className="pt-4 space-y-3">
                 <div className="flex items-center gap-2 text-zinc-500">
                   <Target size={12} />
-                  <span className="text-[9px] font-black uppercase tracking-widest">Example</span>
+                  <span className="text-sm font-black uppercase tracking-widest">Example</span>
                 </div>
                 <p className="text-sm text-zinc-300 font-medium italic leading-relaxed">
                   "{item.example}"
@@ -130,9 +130,9 @@ export function CollocationMap({ details }: PhrasalVerbDetailsProps) {
                     <div className="p-6 rounded-2xl bg-blue-500/5 border border-blue-500/10 space-y-4">
                       <div className="flex items-center gap-2 text-blue-400">
                         <Brain size={12} />
-                        <span className="text-[9px] font-black uppercase tracking-widest">Deep Insight</span>
+                        <span className="text-sm font-black uppercase tracking-widest">Deep Insight</span>
                       </div>
-                      <p className="text-[11px] text-zinc-400 leading-relaxed italic">
+                      <p className="text-sm text-zinc-400 leading-relaxed italic">
                         {item.usageNote || `In ${item.usageContext} contexts, this collocation is favored for its high naturalness score (${item.naturalness}%). It represents a fixed semantic unit in native speaker production.`}
                       </p>
                     </div>
@@ -145,12 +145,12 @@ export function CollocationMap({ details }: PhrasalVerbDetailsProps) {
             <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Gauge size={14} className="text-blue-400" />
-                <span className="text-[10px] font-black uppercase text-blue-400/60 tracking-widest">Usage Score: {item.naturalness}/100</span>
+                <span className="text-sm font-black uppercase text-blue-400/60 tracking-widest">Usage Score: {item.naturalness}/100</span>
               </div>
               <button 
                 onClick={() => setExpandedId(expandedId === i ? null : i)}
                 className={clsx(
-                  "text-[10px] font-black uppercase tracking-widest transition-colors",
+                  "text-sm font-black uppercase tracking-widest transition-colors",
                   expandedId === i ? "text-blue-400" : "text-zinc-600 hover:text-white"
                 )}
               >

@@ -52,12 +52,12 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
               <Activity size={24} />
             </div>
             <div>
-              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Transitivity</h4>
+              <h4 className="text-sm font-black uppercase tracking-[0.3em] text-zinc-500">Transitivity</h4>
               <p className="text-xl font-bold text-white">Object Requirement</p>
             </div>
           </div>
           <div className={clsx(
-            "px-4 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-widest transition-all duration-500",
+            "px-4 py-1.5 rounded-full border text-sm font-black uppercase tracking-widest transition-all duration-500",
             transitive ? "bg-blue-500/20 text-blue-400 border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]" : "bg-zinc-900 text-zinc-500 border-zinc-800"
           )}>
             {transitive ? "Detected" : "Negative"}
@@ -70,14 +70,14 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
           </p>
 
           {/* Visual Specimen */}
-          <div className="p-6 rounded-2xl bg-zinc-950/50 border border-white/5 font-mono text-xs space-y-4">
+          <div className="p-6 rounded-2xl bg-zinc-950/50 border border-white/5 font-mono text-sm space-y-4">
             <div className="flex items-center gap-2 text-zinc-600">
               <motion.div 
                 animate={{ opacity: [0.3, 1, 0.3] }}
                 transition={{ duration: 2, repeat: Infinity }}
                 className="w-1.5 h-1.5 rounded-full bg-blue-500"
               />
-              <span className="text-[9px] font-black tracking-widest uppercase">Sentence Anatomy</span>
+              <span className="text-sm font-black tracking-widest uppercase">Sentence Anatomy</span>
             </div>
             
             <div className="flex items-center gap-3 text-lg">
@@ -95,7 +95,7 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
               <span className="px-3 py-1 rounded-xl bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 font-bold">{particle}</span>
             </div>
 
-            <p className="text-[10px] text-zinc-500 leading-relaxed italic border-t border-white/5 pt-4">
+            <p className="text-sm text-zinc-500 leading-relaxed italic border-t border-white/5 pt-4">
               <span className="text-blue-500/60 font-black uppercase tracking-tighter mr-2">Note:</span>
               {transitive ? "A target object is mandatory to stabilize the sentence structure." : "Autonomous operation: No external target required."}
             </p>
@@ -107,9 +107,9 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
           <div className="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 space-y-2">
             <div className="flex items-center gap-2 text-emerald-500">
               <CheckCircle2 size={12} />
-              <span className="text-[9px] font-black uppercase tracking-widest">Valid Instance</span>
+              <span className="text-sm font-black uppercase tracking-widest">Valid Instance</span>
             </div>
-            <p className="text-[11px] text-zinc-300 font-medium leading-relaxed italic">
+            <p className="text-sm text-zinc-300 font-medium leading-relaxed italic">
               {/* Ensure example contains the verb/particle or fallback to template */}
               {(validExamples?.[0] && safeExample(validExamples[0]).toLowerCase().includes(verb.toLowerCase()))
                 ? safeExample(validExamples[0])
@@ -119,9 +119,9 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
           <div className="p-4 rounded-2xl bg-red-500/5 border border-red-500/10 space-y-2">
             <div className="flex items-center gap-2 text-red-500">
               <XCircle size={12} />
-              <span className="text-[9px] font-black uppercase tracking-widest">Invalid Path</span>
+              <span className="text-sm font-black uppercase tracking-widest">Invalid Path</span>
             </div>
-            <p className="text-[11px] text-zinc-500 font-medium leading-relaxed italic line-through opacity-60">
+            <p className="text-sm text-zinc-500 font-medium leading-relaxed italic line-through opacity-60">
               {(invalidExamples?.[0] && safeExample(invalidExamples[0]).toLowerCase().includes(verb.toLowerCase()))
                 ? safeExample(invalidExamples[0])
                 : `He ${verb}s ${transitive ? '' : 'it '}${particle}.`}
@@ -152,12 +152,12 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
               <currentSep.icon size={24} />
             </div>
             <div>
-              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Structure</h4>
+              <h4 className="text-sm font-black uppercase tracking-[0.3em] text-zinc-500">Structure</h4>
               <p className="text-xl font-bold text-white">Separability</p>
             </div>
           </div>
           <div className={clsx(
-            "px-4 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-widest",
+            "px-4 py-1.5 rounded-full border text-sm font-black uppercase tracking-widest",
             currentSep.color
           )}>
             {currentSep.label}
@@ -173,7 +173,7 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
           <div className="space-y-4">
             <div className="flex items-center gap-3 px-4">
               <ArrowRightLeft size={14} className="text-zinc-700" />
-              <span className="text-[9px] font-black uppercase tracking-widest text-zinc-600">Mutation States</span>
+              <span className="text-sm font-black uppercase tracking-widest text-zinc-600">Mutation States</span>
             </div>
 
             <div className="space-y-2">
@@ -187,7 +187,7 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
                   <span className="text-zinc-300 font-bold">{particle}</span>
                   {separable === 'no' && <span className="text-emerald-400 font-black">it</span>}
                 </div>
-                <p className="mt-2 text-[9px] font-black text-emerald-500/60 uppercase tracking-widest">Valid Syntax</p>
+                <p className="mt-2 text-sm font-black text-emerald-500/60 uppercase tracking-widest">Valid Syntax</p>
               </div>
 
               <div className={clsx(
@@ -203,7 +203,7 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
                   <span className="text-zinc-500">{particle}</span>
                   {separable === 'mandatory' && <span className="text-red-400 font-black italic underline">it</span>}
                 </div>
-                <p className="mt-2 text-[9px] font-black text-red-500/60 uppercase tracking-widest">
+                <p className="mt-2 text-sm font-black text-red-500/60 uppercase tracking-widest">
                   {separable === 'mandatory' ? "Object MUST be inside" : "Broken Logic"}
                 </p>
               </div>
@@ -217,8 +217,8 @@ export function UsageLogic({ details }: PhrasalVerbDetailsProps) {
               <Info size={20} />
             </div>
             <div className="space-y-1">
-              <p className="text-xs font-bold text-zinc-300">Why this fails?</p>
-              <p className="text-[11px] text-zinc-500 leading-relaxed italic">
+              <p className="text-sm font-bold text-zinc-300">Why this fails?</p>
+              <p className="text-sm text-zinc-500 leading-relaxed italic">
                 {separable === 'no' 
                   ? "Inseparable verbs function as a single unit. Think of them as 'welded' together."
                   : "Pronoun objects (like 'it', 'them') almost always go in the middle of separable phrasal verbs."}

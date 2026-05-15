@@ -23,7 +23,7 @@ export function PhrasalVerbDetails({ details }: PhrasalVerbDetailsProps) {
           <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400">
             <Activity size={16} />
           </div>
-          <p className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-black">
+          <p className="text-sm uppercase tracking-[0.3em] text-zinc-500 font-black">
             Linguistic Mechanics
           </p>
         </div>
@@ -38,7 +38,7 @@ export function PhrasalVerbDetails({ details }: PhrasalVerbDetailsProps) {
         >
           <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
           <div className="flex flex-col relative">
-            <span className="text-[9px] uppercase font-black tracking-widest text-zinc-600 mb-2">Verb Module</span>
+            <span className="text-sm uppercase font-black tracking-widest text-zinc-600 mb-2">Verb Module</span>
             <span className="text-xl font-black text-white italic tracking-tight">{verb}</span>
           </div>
           <div className="flex flex-col items-center gap-1 opacity-40">
@@ -46,7 +46,7 @@ export function PhrasalVerbDetails({ details }: PhrasalVerbDetailsProps) {
             <div className="w-1 h-1 rounded-full bg-blue-500" />
           </div>
           <div className="flex flex-col text-right relative">
-            <span className="text-[9px] uppercase font-black tracking-widest text-blue-500/50 mb-2">Particle Link</span>
+            <span className="text-sm uppercase font-black tracking-widest text-blue-500/50 mb-2">Particle Link</span>
             <span className="text-xl font-black text-blue-400 italic tracking-tight">{particle}</span>
           </div>
         </motion.div>
@@ -60,10 +60,10 @@ export function PhrasalVerbDetails({ details }: PhrasalVerbDetailsProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <GitMerge size={12} className="text-zinc-600" />
-              <span className="text-[9px] uppercase font-black tracking-widest text-zinc-500">Transitive</span>
+              <span className="text-sm uppercase font-black tracking-widest text-zinc-500">Transitive</span>
             </div>
             <span className={clsx(
-              "px-3 py-1 rounded-lg border text-[9px] font-black uppercase tracking-widest",
+              "px-3 py-1 rounded-lg border text-sm font-black uppercase tracking-widest",
               transitive ? "text-blue-400 border-blue-500/20 bg-blue-500/10" : "text-zinc-600 border-zinc-800 bg-zinc-900"
             )}>
               {transitive ? "Detected" : "No"}
@@ -72,10 +72,10 @@ export function PhrasalVerbDetails({ details }: PhrasalVerbDetailsProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Puzzle size={12} className="text-zinc-600" />
-              <span className="text-[9px] uppercase font-black tracking-widest text-zinc-500">Separability</span>
+              <span className="text-sm uppercase font-black tracking-widest text-zinc-500">Separability</span>
             </div>
             <span className={clsx(
-              "px-3 py-1 rounded-lg border text-[9px] font-black uppercase tracking-widest",
+              "px-3 py-1 rounded-lg border text-sm font-black uppercase tracking-widest",
               currentSeparable.color
             )}>
               {currentSeparable.label}
@@ -93,13 +93,13 @@ export function PhrasalVerbDetails({ details }: PhrasalVerbDetailsProps) {
         >
           <div className="flex items-center gap-2 px-1">
             <Sparkles size={14} className="text-amber-500" />
-            <span className="text-[9px] uppercase font-black tracking-[0.2em] text-zinc-500">Common Partners</span>
+            <span className="text-sm uppercase font-black tracking-[0.2em] text-zinc-500">Common Partners</span>
           </div>
           <div className="flex flex-wrap gap-2">
             {collocations.slice(0, 5).map((item, idx) => (
               <div 
                 key={idx} 
-                className="px-4 py-2 rounded-xl bg-zinc-900/50 border border-white/5 text-xs font-bold text-zinc-400 italic hover:border-blue-500/30 hover:text-white transition-all cursor-default"
+                className="px-4 py-2 rounded-xl bg-zinc-900/50 border border-white/5 text-sm font-bold text-zinc-400 italic hover:border-blue-500/30 hover:text-white transition-all cursor-default"
               >
                 &ldquo;{typeof item === 'string' ? item : item.phrase}&rdquo;
               </div>

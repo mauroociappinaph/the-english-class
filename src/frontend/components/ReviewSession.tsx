@@ -91,13 +91,13 @@ export function ReviewSession() {
         <div className="flex items-center gap-2 bg-white/5 p-1 rounded-xl border border-white/5">
           <button
             onClick={() => isTestMode && toggleTestMode()}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${!isTestMode ? 'bg-blue-500 text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'}`}
+            className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${!isTestMode ? 'bg-blue-500 text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'}`}
           >
             Study
           </button>
           <button
             onClick={() => !isTestMode && toggleTestMode()}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${isTestMode ? 'bg-purple-500 text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'}`}
+            className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${isTestMode ? 'bg-purple-500 text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'}`}
           >
             Test
           </button>
@@ -131,7 +131,7 @@ export function ReviewSession() {
             {isTestMode ? (
               <div className="space-y-6 w-full">
                 <div className="space-y-3">
-                  <p className="text-xs uppercase tracking-[0.2em] text-purple-400 font-black">Active Recall Mode</p>
+                  <p className="text-sm uppercase tracking-[0.2em] text-purple-400 font-black">Active Recall Mode</p>
                   <p className="text-xl text-zinc-300 leading-relaxed font-medium">
                     {clozeSentence || currentExpression.translation}
                   </p>
@@ -185,7 +185,7 @@ export function ReviewSession() {
             )}
             
             <div className="space-y-2">
-              <p className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Expression</p>
+              <p className="text-sm uppercase tracking-widest text-zinc-500 font-bold">Expression</p>
               <p className="text-3xl font-black text-white">
                 {currentExpression.text}
               </p>
@@ -195,13 +195,13 @@ export function ReviewSession() {
             
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <p className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Translation</p>
+                <p className="text-sm uppercase tracking-widest text-zinc-500 font-bold">Translation</p>
                 <p className="text-lg font-bold text-blue-400">
                   {currentExpression.translation}
                 </p>
               </div>
               <div className="space-y-2">
-                <p className="text-xs uppercase tracking-widest text-zinc-500 font-bold">CEFR Level</p>
+                <p className="text-sm uppercase tracking-widest text-zinc-500 font-bold">CEFR Level</p>
                 <p className={`text-lg font-bold ${cefrStyle.text}`}>
                   {currentExpression.metadata.cefr}
                 </p>
@@ -211,7 +211,7 @@ export function ReviewSession() {
             <div className="w-full h-px bg-white/10" />
 
             <div className="space-y-2">
-              <p className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Meaning</p>
+              <p className="text-sm uppercase tracking-widest text-zinc-500 font-bold">Meaning</p>
               <p className="text-zinc-300 text-base leading-relaxed">
                 {currentExpression.meaning}
               </p>
@@ -228,7 +228,7 @@ export function ReviewSession() {
               <>
                 <div className="w-full h-px bg-white/10" />
                 <div className="space-y-2 text-left">
-                  <p className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Full Example</p>
+                  <p className="text-sm uppercase tracking-widest text-zinc-500 font-bold">Full Example</p>
                   <p className="text-zinc-400 text-sm italic">
                     &ldquo;{currentExpression.linguistics.examples[0].text}&rdquo;
                   </p>
@@ -257,7 +257,7 @@ export function ReviewSession() {
               >
                 <span className="text-2xl">{emoji}</span>
                 <span className="text-sm">{label}</span>
-                <span className="text-xs text-zinc-400 font-medium">{sublabel}</span>
+                <span className="text-sm text-zinc-400 font-medium">{sublabel}</span>
               </button>
             ))}
           </motion.div>

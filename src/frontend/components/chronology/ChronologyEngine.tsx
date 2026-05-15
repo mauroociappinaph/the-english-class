@@ -46,7 +46,7 @@ export const ChronologyEngine: React.FC<ChronologyEngineProps> = ({ data }) => {
       <div className="space-y-6">
         <div className="flex items-center gap-2 px-4">
           <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-          <span className="text-[10px] font-mono text-white/40 uppercase tracking-[0.3em]">
+          <span className="text-sm font-mono text-white/40 uppercase tracking-[0.3em]">
             Interactive_Timeline
           </span>
         </div>
@@ -91,7 +91,7 @@ export const ChronologyEngine: React.FC<ChronologyEngineProps> = ({ data }) => {
       <GrammarAtlasCTA />
       
       {/* Visual Footer Branding */}
-      <div className="flex justify-between items-center opacity-20 font-mono text-[8px] tracking-[0.5em] pt-8 border-t border-white/5">
+      <div className="flex justify-between items-center opacity-20 font-mono text-sm tracking-[0.5em] pt-8 border-t border-white/5">
         <div>SYSTEM_IDENTIFIER: 0xCHRONO_V4</div>
         <div>STABLE_TEMPORAL_EQUILIBRIUM_DETECTED</div>
         <div>2026_LINGUISTIC_CORE</div>
