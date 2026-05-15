@@ -114,7 +114,7 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
                   </span>
                 </div>
                 <button 
-                  onClick={() => onViewDetail?.(ex?.id)}
+                  onClick={() => onViewDetail?.(ex)}
                   className="text-sm font-black uppercase tracking-widest text-blue-500/0 group-hover:text-blue-500 transition-all transform translate-x-4 group-hover:translate-x-0"
                 >
                   View Detail

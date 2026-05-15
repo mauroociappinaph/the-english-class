@@ -16,6 +16,7 @@ export interface ExpressionHeroProps {
     regionalVariants: RegionalVariant[];
     similarWords: string[];
   } | null;
+  correction?: import("@/shared/types/expression").CorrectionLayer | null;
 }
 
 export interface ExpressionMeaningProps {

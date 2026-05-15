@@ -91,7 +91,7 @@ export class PrismaExpressionRepository extends BasePrismaRepository implements 
       phrasalVerbDetails: JSON.stringify(expression.linguistics.phrasalVerbDetails),
       chronology: JSON.stringify(expression.linguistics.chronology),
       slangData: expression.linguistics.slangData ? JSON.stringify(expression.linguistics.slangData) : null,
-      correction: expression.metadata.correction ? JSON.stringify(expression.metadata.correction) : null,
+      correctionData: expression.metadata.correction ? JSON.stringify(expression.metadata.correction) : null,
       examples: {
         create: expression.linguistics.examples.map(ex => ({
           text: ex.text,
@@ -148,7 +148,7 @@ export class PrismaExpressionRepository extends BasePrismaRepository implements 
         formality: expression.formality,
         mnemonic: expression.mnemonic,
         imageUrl: expression.imageUrl,
-        correction: expression.correction ? JSON.parse(expression.correction) : null,
+        correction: expression.correctionData ? JSON.parse(expression.correctionData) : null,
       },
       linguistics: {
         usageTips: JSON.parse(expression.usageTips || "null"),
