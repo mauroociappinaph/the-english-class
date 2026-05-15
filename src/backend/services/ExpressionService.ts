@@ -1,6 +1,7 @@
 import { IExpressionRepository } from "../domain/repositories/IExpressionRepository";
 import { ILinguisticAnalyzer } from "../domain/interfaces/ILinguisticAnalyzer";
 import { Expression, CreateExpressionDto, AdaptivePathResponse, ExpressionDetail, GroqExample } from "../domain/types";
+import { CefrLevel } from "@/shared/types/expression";
 import { CollisionError } from "../domain/errors";
 import { StudyPerformance } from "@/shared/types/expression";
 import { SpacedRepetitionEngine, StudyMetadata } from "../domain/logic/SpacedRepetitionEngine";
@@ -109,7 +110,8 @@ export class ExpressionService {
       metadata: {
         secondaryMeanings: result.secondaryMeanings || [],
         type: result.type || "expression",
-        cefr: (result.cefr?.match(/A[12]|B[12]|C[12]/i)?.[0]?.toUpperCase()) || "B1",
+        cefr: this.validateCefr(result.cefr),
+        isAiEstimated: true, // Mark as AI estimated as it comes from the analyzer
         ipa: result.ipa || "",
         frequency: result.frequency || 0.5,
         formality: result.formality || "neutral",
@@ -196,5 +198,33 @@ export class ExpressionService {
 
     console.log(`[ExpressionService] Generating adaptive path for: ${texts.join(', ')}`);
     return this.analyzer.suggestRelated(texts);
+  }
+
+  /**
+   * Validates and normalizes CEFR levels.
+   * Prevents hardcoded fallbacks and ensures typed consistency.
+   */
+  private validateCefr(rawCefr: string | undefined | null): CefrLevel {
+    if (!rawCefr) {
+      console.warn(`[ExpressionService] No CEFR level provided by analyzer. Falling back to NOT_CLASSIFIED.`);
+      return "NOT_CLASSIFIED";
+    }
+
+    const normalized = rawCefr.trim().toUpperCase();
+    
+    // Strict match for Cambridge levels
+    const match = normalized.match(/^(A1|A2|B1|B2|C1|C2)$/i);
+    if (match) {
+      const level = match[1].toUpperCase() as CefrLevel;
+      console.log(`[ExpressionService] CEFR level validated: ${level}`);
+      return level;
+    }
+
+    if (normalized === "UNKNOWN" || normalized === "NOT_CLASSIFIED") {
+      return normalized as CefrLevel;
+    }
+
+    console.warn(`[ExpressionService] Invalid CEFR level received: "${rawCefr}". Falling back to UNKNOWN.`);
+    return "UNKNOWN";
   }
 }

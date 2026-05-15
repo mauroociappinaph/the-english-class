@@ -2,6 +2,8 @@
  * Shared Expression types between Frontend and Backend
  */
 
+export type CefrLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'NOT_CLASSIFIED' | 'UNKNOWN';
+
 export interface Tense {
   text: string;
   translation: string;
@@ -34,7 +36,8 @@ export type StudyPerformance = 'hard' | 'good' | 'easy';
 export interface WordVariant {
   word: string;
   pronunciation: string;
-  cefr: string; // A1-C2
+  cefr: CefrLevel; // A1-C2 or UNKNOWN
+  isAiEstimated?: boolean;
   translation: string;
   simpleExplanation: string;
   differenceWithSimilar?: string;
@@ -104,7 +107,8 @@ export interface CorrectionLayer {
 interface ExpressionAttributes {
   secondaryMeanings: string[];
   type: string;
-  cefr: string;
+  cefr: CefrLevel;
+  isAiEstimated?: boolean;
   ipa: string | null;
   frequency: number | null;
   formality: string | null;

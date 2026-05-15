@@ -9,6 +9,8 @@ const cefrColors: Record<string, string> = {
   B2: "text-blue-300 border-blue-500/20 bg-blue-500/5",
   C1: "text-purple-400 border-purple-500/20 bg-purple-500/5",
   C2: "text-purple-300 border-purple-500/20 bg-purple-500/5",
+  NOT_CLASSIFIED: "text-zinc-500 border-zinc-800 bg-zinc-800/10",
+  UNKNOWN: "text-zinc-500 border-zinc-800 bg-zinc-800/10",
 };
 
 export function VariantHeader({ variant, category, isExpanded, onToggle }: VariantHeaderProps) {
@@ -42,10 +44,13 @@ export function VariantHeader({ variant, category, isExpanded, onToggle }: Varia
             <div className="flex items-center gap-3">
               <span className="text-sm md:text-base font-mono text-zinc-500 tracking-wider">/{variant.pronunciation}/</span>
               <div className={clsx(
-                "px-3 py-1 rounded-lg text-xs md:text-sm font-black border shadow-sm",
-                cefrColors[variant.cefr] || "text-zinc-500 border-zinc-800 bg-zinc-800/10"
+                "px-3 py-1 rounded-lg text-xs md:text-sm font-black border shadow-sm flex items-center gap-2",
+                cefrColors[variant.cefr] || cefrColors.UNKNOWN
               )}>
-                {variant.cefr}
+                <span>{variant.cefr.replace('_', ' ')}</span>
+                {variant.isAiEstimated && (
+                  <span className="text-[8px] bg-white/10 px-1 rounded text-zinc-400">AI</span>
+                )}
               </div>
             </div>
 

@@ -48,7 +48,7 @@ Schema:
   },
   "secondaryMeanings": ["English secondary meaning"],
   "type": "verb", // Pick only one: verb | phrasal_verb | idiom | expression | tense
-  "cefr": "B1", // Pick only one based on Cambridge standards: A1 | A2 | B1 | B2 | C1 | C2
+  "cefr": "A1-C2", // CRITICAL: Provide an accurate Cambridge-based classification (A1, A2, B1, B2, C1, or C2). If unsure or the word is extremely rare/not standard, use "UNKNOWN". DO NOT default to B1.
   "ipa": "/phonetic transcription/",
   "correction": {
     "isCorrect": true, // false if the input has grammatical errors or is very unnatural
