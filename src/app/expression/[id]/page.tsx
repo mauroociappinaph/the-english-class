@@ -14,6 +14,9 @@ import { ChronologyEngine } from "@/frontend/components/chronology/ChronologyEng
 import { OnboardingTour } from "@/frontend/components/onboarding/OnboardingTour";
 import { Loader2 } from "lucide-react";
 
+import { useEffect, useState } from "react";
+import { getExpressionById } from "@/app/actions";
+
 const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 32 },
   visible: {
@@ -24,18 +27,55 @@ const sectionVariants: Variants = {
 };
 
 export default function ExpressionPage() {
-  const { currentAnalysis } = useStudyStore();
+  const { currentAnalysis, setCurrentAnalysis } = useStudyStore();
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const params = useParams();
   const id = params.id as string;
 
-  if (!currentAnalysis || !currentAnalysis.metadata || !currentAnalysis.linguistics) {
+  useEffect(() => {
+    const syncData = async () => {
+      // If we have the wrong data or no data, fetch from DB
+      if (!currentAnalysis || currentAnalysis.id !== id) {
+        try {
+          setIsSyncing(true);
+          const data = await getExpressionById(id);
+          if (data) {
+            setCurrentAnalysis(data);
+          } else {
+            setError("Expression not found in archive.");
+          }
+        } catch (err) {
+          setError("Failed to sync with Neural Engine.");
+          console.error(err);
+        } finally {
+          setIsSyncing(false);
+        }
+      }
+    };
+
+    syncData();
+  }, [id, currentAnalysis?.id, setCurrentAnalysis]);
+
+  if (error) {
+    return (
+      <div className="w-full max-w-6xl mx-auto min-h-[60vh] flex flex-col items-center justify-center gap-6">
+        <div className="p-8 border border-red-500/20 bg-red-500/5 rounded-[2rem] text-center">
+          <p className="text-red-400 font-bold uppercase tracking-widest text-xs mb-2">Sync Error</p>
+          <p className="text-zinc-400">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isSyncing || !currentAnalysis || !currentAnalysis.metadata || !currentAnalysis.linguistics || currentAnalysis.id !== id) {
     return (
       <div className="w-full max-w-6xl mx-auto min-h-[60vh] flex flex-col items-center justify-center gap-6">
         <div className="w-20 h-20 bg-white/5 rounded-[2rem] border border-white/5 flex items-center justify-center">
           <Loader2 className="animate-spin text-blue-500" size={32} />
         </div>
         <p className="text-zinc-500 font-black uppercase tracking-[0.3em] text-[10px]">
-          Calibrating Linguistic Engine...
+          {isSyncing ? "Syncing with Archive..." : "Calibrating Linguistic Engine..."}
         </p>
       </div>
     );
