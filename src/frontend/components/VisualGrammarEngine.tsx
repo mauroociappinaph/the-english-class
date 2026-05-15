@@ -99,6 +99,7 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
                         <InteractiveText 
                           text={tense.text} 
                           translation={tense.translation} 
+                          label="Tense"
                           className="text-base text-zinc-200 leading-relaxed font-bold block"
                         />
                       </motion.div>

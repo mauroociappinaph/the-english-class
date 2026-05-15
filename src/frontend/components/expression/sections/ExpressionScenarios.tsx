@@ -67,6 +67,7 @@ export function ExpressionScenarios({ examples, rootText }: ExpressionScenariosP
               <InteractiveText
                 text={ex.text}
                 translation={ex.translation || ""}
+                label="Full Meaning"
                 className="text-2xl text-white leading-tight font-black tracking-tight block italic"
               />
               {ex.explanation && (
