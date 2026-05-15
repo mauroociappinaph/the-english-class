@@ -81,7 +81,7 @@ export const AnalysisHero: React.FC = () => {
             
             <div className="flex items-center gap-3 text-zinc-400">
               <Loader2 size={16} className="animate-spin text-blue-500" />
-              <span className="text-xs font-black uppercase tracking-[0.4em]">Neural Engine Active</span>
+              <span className="text-xs font-black uppercase tracking-[0.4em]">Smart Analysis Active</span>
             </div>
             
             <div className="w-full p-6 border border-white/5 rounded-2xl bg-zinc-950/50 relative">
