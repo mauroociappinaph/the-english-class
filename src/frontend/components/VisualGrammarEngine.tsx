@@ -105,9 +105,18 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
                       </motion.div>
                     ))}
                     {categories[cat].length === 0 && (
-                      <div className="p-8 rounded-2xl border border-dashed border-white/5 flex flex-col items-center justify-center opacity-30">
-                        <div className="w-1 h-1 rounded-full bg-zinc-700 mb-2" />
-                        <span className="text-sm font-mono uppercase tracking-widest text-zinc-400">No Data Detected</span>
+                      <div className="p-8 rounded-2xl border border-dashed border-white/5 flex flex-col items-center justify-center space-y-4 opacity-50 group-hover:opacity-100 transition-opacity">
+                        <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-zinc-600">
+                          <Activity size={24} strokeWidth={1} />
+                        </div>
+                        <div className="text-center">
+                          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-1">
+                            Neutral Zone Detected
+                          </p>
+                          <p className="text-xs text-zinc-600 max-w-[150px] mx-auto leading-relaxed">
+                            No temporal data for this path yet. Try searching for <span className="text-emerald-400">"Go"</span>.
+                          </p>
+                        </div>
                       </div>
                     )}
                   </div>

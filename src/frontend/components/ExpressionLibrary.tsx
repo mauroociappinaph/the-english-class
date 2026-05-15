@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Filter, ChevronRight, X } from "lucide-react";
 import { ExpressionLibraryProps } from "@/frontend/types/components";
+import { PedagogicalEmptyState } from "./ui/PedagogicalEmptyState";
 
 export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewDetail }: ExpressionLibraryProps) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -126,19 +127,20 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
 
       {/* Empty State */}
       {filteredExpressions.length === 0 && (
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="py-20 flex flex-col items-center justify-center space-y-4 border border-dashed border-white/10 rounded-[2rem]"
-        >
-          <div className="p-6 rounded-full bg-white/5 text-zinc-600">
-            <Filter size={32} />
-          </div>
-          <div className="text-center">
-            <h3 className="text-xl font-bold text-zinc-400">No expressions found</h3>
-            <p className="text-sm text-zinc-400">Try adjusting your filters or search query.</p>
-          </div>
-        </motion.div>
+        <PedagogicalEmptyState 
+          title="Archive Empty" 
+          description="Your neural library is currently a blank slate. Every master starts with a single expression."
+          illustrationPath="/illustrations/lone-wolf.png"
+          suggestion={{
+            text: "This archive is a lone wolf, it doesn't have a family yet. Try searching for 'Get' to see the magic.",
+            action: "get"
+          }}
+          onAction={(action) => {
+            // Logic to trigger search would go here, 
+            // for now just update the search query
+            setSearchQuery(action);
+          }}
+        />
       )}
     </div>
   );
