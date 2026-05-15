@@ -18,17 +18,17 @@ export const ChronologyHeader: React.FC = () => {
             <div className="flex items-center gap-2 mb-1">
               <h2 className="text-3xl font-bold text-white tracking-tight">Chronology</h2>
               <span className="px-2 py-0.5 rounded-md bg-blue-500/20 border border-blue-500/30 text-[10px] font-mono text-blue-400 uppercase tracking-widest">
-                VGE v4.1
+                Grammar Guide
               </span>
             </div>
-            <p className="text-blue-200/60 font-medium tracking-wide">Temporal Analysis • Visual Grammar Engine</p>
+            <p className="text-blue-200/60 font-medium tracking-wide">Time Analysis • Grammar Guide</p>
           </div>
         </div>
 
         <div className="grid grid-cols-2 sm:flex items-center gap-3">
-          <StatusBadge icon={<Activity className="w-3 h-3" />} label="TEMPORAL_ENGINE_ACTIVE" color="emerald" />
-          <StatusBadge icon={<Cpu className="w-3 h-3" />} label="TIMEFLOW_ANALYZER" color="blue" />
-          <StatusBadge icon={<Zap className="w-3 h-3" />} label="GRAMMAR_STREAM_CONNECTED" color="amber" />
+          <StatusBadge icon={<Activity className="w-3 h-3" />} label="READY TO LEARN" color="emerald" />
+          <StatusBadge icon={<Cpu className="w-3 h-3" />} label="STRUCTURE CHECK" color="blue" />
+          <StatusBadge icon={<Zap className="w-3 h-3" />} label="CONNECTED" color="amber" />
         </div>
       </div>
 
