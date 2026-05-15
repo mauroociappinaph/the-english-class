@@ -95,7 +95,10 @@ export function LogicDocumentation({ details }: PhrasalVerbDetailsProps) {
                   </p>
 
                   <div className="pt-6 border-t border-white/5 flex items-center justify-between">
-                    <button className="text-[10px] font-black text-zinc-600 uppercase tracking-widest hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <button 
+                      onClick={() => document.getElementById('core-assembly')?.scrollIntoView({ behavior: 'smooth' })}
+                      className="text-[10px] font-black text-zinc-600 uppercase tracking-widest hover:text-blue-400 transition-colors flex items-center gap-2"
+                    >
                       View Syntax anatomy <ChevronRight size={12} />
                     </button>
                   </div>

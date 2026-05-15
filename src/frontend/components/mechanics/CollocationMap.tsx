@@ -14,8 +14,11 @@ import {
 import { PhrasalVerbDetailsProps } from "../../types/components";
 import { clsx } from "clsx";
 
+import { useState } from "react";
+
 export function CollocationMap({ details }: PhrasalVerbDetailsProps) {
   const { collocations } = details || {};
+  const [expandedId, setExpandedId] = useState<number | null>(null);
 
   if (!collocations || collocations.length === 0) return null;
 
@@ -42,7 +45,6 @@ export function CollocationMap({ details }: PhrasalVerbDetailsProps) {
           </div>
         </div>
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {collocations.map((item, i) => (
           <motion.div
@@ -51,9 +53,12 @@ export function CollocationMap({ details }: PhrasalVerbDetailsProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.1 }}
-            className="group relative p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500"
+            className={clsx(
+              "group relative p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500",
+              expandedId === i && "border-blue-500/30 bg-blue-500/[0.03]"
+            )}
           >
-            {/* Top Bar: Frequency & Confidence */}
+            {/* ... frequency bar ... */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
                 <TrendingUp size={12} className={clsx(
@@ -110,25 +115,45 @@ export function CollocationMap({ details }: PhrasalVerbDetailsProps) {
                 <p className="text-sm text-zinc-300 font-medium italic leading-relaxed">
                   "{item.example}"
                 </p>
-                {item.usageNote && (
-                  <div className="flex gap-2 pt-2">
-                    <Info size={12} className="text-amber-500 shrink-0 mt-0.5" />
-                    <p className="text-[10px] text-zinc-500 leading-relaxed italic">
-                      {item.usageNote}
-                    </p>
-                  </div>
-                )}
               </div>
+
+              {/* Expanded Insight Section */}
+              <AnimatePresence>
+                {expandedId === i && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden pt-4"
+                  >
+                    <div className="p-6 rounded-2xl bg-blue-500/5 border border-blue-500/10 space-y-4">
+                      <div className="flex items-center gap-2 text-blue-400">
+                        <Brain size={12} />
+                        <span className="text-[9px] font-black uppercase tracking-widest">Deep Insight</span>
+                      </div>
+                      <p className="text-[11px] text-zinc-400 leading-relaxed italic">
+                        {item.usageNote || `In ${item.usageContext} contexts, this collocation is favored for its high naturalness score (${item.naturalness}%). It represents a fixed semantic unit in native speaker production.`}
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
-            {/* Usage Confidence Meter / Bottom Info */}
-            <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            {/* Bottom Info */}
+            <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Gauge size={14} className="text-blue-400" />
                 <span className="text-[10px] font-black uppercase text-blue-400/60 tracking-widest">Usage Score: {item.naturalness}/100</span>
               </div>
-              <button className="text-[10px] font-black text-zinc-600 uppercase tracking-widest hover:text-white transition-colors">
-                Details
+              <button 
+                onClick={() => setExpandedId(expandedId === i ? null : i)}
+                className={clsx(
+                  "text-[10px] font-black uppercase tracking-widest transition-colors",
+                  expandedId === i ? "text-blue-400" : "text-zinc-600 hover:text-white"
+                )}
+              >
+                {expandedId === i ? "Hide" : "Details"}
               </button>
             </div>
           </motion.div>

@@ -42,7 +42,7 @@ export function MechanicsBlueprint({ details }: PhrasalVerbDetailsProps) {
 
         <div className="flex flex-col gap-24">
           {/* Core Assembly - Visualized structural link */}
-          <section className="space-y-12">
+          <section id="core-assembly" className="space-y-12">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500">
                 <GitMerge size={20} />
