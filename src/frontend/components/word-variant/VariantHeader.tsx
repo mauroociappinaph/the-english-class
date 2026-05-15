@@ -1,4 +1,4 @@
-import { Volume2, ChevronRight } from "lucide-react";
+import { Volume2, ChevronRight, MessageSquare, Briefcase, GraduationCap } from "lucide-react";
 import { clsx } from "clsx";
 import { VariantHeaderProps } from "./types";
 
@@ -14,38 +14,69 @@ const cefrColors: Record<string, string> = {
 export function VariantHeader({ variant, category, isExpanded, onToggle }: VariantHeaderProps) {
   const Icon = category.icon;
 
+  const isFormal = variant.naturalContexts?.includes("formal") || variant.naturalContexts?.includes("business") || variant.naturalContexts?.includes("academic");
+  const isSpoken = variant.naturalContexts?.includes("spoken") || variant.naturalContexts?.includes("casual conversation");
+
   return (
     <div className="flex items-start justify-between">
-      <div className="flex gap-6">
+      <div className="flex gap-6 md:gap-8">
         <div className={clsx(
-          "w-16 h-16 rounded-3xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110",
-          category.color
+          "w-16 h-16 md:w-20 md:h-20 rounded-3xl flex items-center justify-center transition-all duration-500 shadow-2xl",
+          category.color,
+          isExpanded ? "scale-110 shadow-blue-500/10" : "group-hover:scale-105"
         )}>
-          <Icon size={28} />
+          <Icon size={32} />
         </div>
 
-        <div className="space-y-1">
-          <div className="flex items-center gap-3">
-            <h3 className="text-3xl font-black text-white tracking-tight">
+        <div className="space-y-2">
+          <div className="flex items-center gap-4">
+            <h3 className="text-3xl md:text-5xl font-black text-white tracking-tighter">
               {variant.word}
             </h3>
-            <button className="p-2 rounded-full hover:bg-white/5 text-zinc-500 hover:text-white transition-colors">
-              <Volume2 size={16} />
+            <button className="p-3 rounded-2xl bg-white/5 hover:bg-white/10 text-zinc-500 hover:text-white transition-all group/audio">
+              <Volume2 size={20} className="group-hover/audio:scale-110 transition-transform" />
             </button>
           </div>
           
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-mono text-zinc-500">[{variant.pronunciation}]</span>
-            <div className={clsx(
-              "px-2 py-0.5 rounded-md text-sm font-black border",
-              cefrColors[variant.cefr] || "text-zinc-500 border-zinc-800 bg-zinc-800/10"
-            )}>
-              {variant.cefr}
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-sm md:text-base font-mono text-zinc-500 tracking-wider">/{variant.pronunciation}/</span>
+              <div className={clsx(
+                "px-3 py-1 rounded-lg text-xs md:text-sm font-black border shadow-sm",
+                cefrColors[variant.cefr] || "text-zinc-500 border-zinc-800 bg-zinc-800/10"
+              )}>
+                {variant.cefr}
+              </div>
             </div>
-            <span className="text-zinc-600 font-bold text-sm uppercase tracking-widest">•</span>
-            <span className="text-emerald-500/80 font-bold text-sm uppercase tracking-widest">
-              {variant.translation}
-            </span>
+
+            <div className="flex items-center gap-2">
+              <span className="text-zinc-700 font-bold">•</span>
+              <span className="text-emerald-500 font-black text-sm md:text-base uppercase tracking-widest bg-emerald-500/5 px-2 py-0.5 rounded-md">
+                {variant.translation}
+              </span>
+            </div>
+
+            {/* Tone Badges */}
+            <div className="flex items-center gap-2">
+              {isSpoken && (
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400">
+                  <MessageSquare size={12} />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Spoken</span>
+                </div>
+              )}
+              {isFormal && (
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400">
+                  <Briefcase size={12} />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Formal</span>
+                </div>
+              )}
+              {variant.naturalContexts?.includes("academic") && (
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400">
+                  <GraduationCap size={12} />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Academic</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -53,11 +84,11 @@ export function VariantHeader({ variant, category, isExpanded, onToggle }: Varia
       <button 
         onClick={onToggle}
         className={clsx(
-          "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300",
+          "w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all duration-300",
           isExpanded ? "bg-white/10 text-white rotate-90" : "bg-white/5 text-zinc-500 hover:bg-white/10"
         )}
       >
-        <ChevronRight size={20} />
+        <ChevronRight size={24} />
       </button>
     </div>
   );
