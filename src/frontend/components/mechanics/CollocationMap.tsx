@@ -9,7 +9,8 @@ import {
   ChevronRight,
   Gauge,
   Sparkles,
-  Info
+  Info,
+  Brain
 } from "lucide-react";
 import { PhrasalVerbDetailsProps } from "../../types/components";
 import { clsx } from "clsx";
