@@ -51,6 +51,7 @@ export interface InteractiveTextProps {
   text: string;
   translation: string;
   className?: string;
+  label?: string;
 }
 
 export interface SearchBarProps {
