@@ -91,6 +91,9 @@ export const AnalysisHero: React.FC = () => {
         setTimeout(() => {
           router.push(`/expression/${result.id}`);
         }, 800);
+      } else {
+        console.error("[AnalysisHero] Failed to analyze expression");
+        alert("The analysis engine could not process this phrase. Please try a different one.");
       }
     } catch (err) {
       console.error(err);

@@ -64,7 +64,7 @@ export default function Home() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as "search" | "library" | "study" | "grammar")}
-                className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-500 ${
+                className={`px-6 py-2 rounded-xl text-sm font-black uppercase tracking-widest transition-all duration-500 ${
                   activeTab === tab.id 
                     ? "bg-white text-black shadow-2xl shadow-white/10" 
                     : "text-zinc-500 hover:text-white"

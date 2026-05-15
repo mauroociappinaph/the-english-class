@@ -35,22 +35,34 @@ export default function ExpressionPage() {
 
   useEffect(() => {
     const syncData = async () => {
-      // If we have the wrong data or no data, fetch from DB
-      if (!currentAnalysis || currentAnalysis.id !== id) {
-        try {
-          setIsSyncing(true);
-          const data = await getExpressionById(id);
-          if (data) {
-            setCurrentAnalysis(data);
-          } else {
-            setError("Expression not found in archive.");
-          }
-        } catch (err) {
-          setError("Failed to sync with Neural Engine.");
-          console.error(err);
-        } finally {
+      try {
+        setIsSyncing(true);
+        setError(null);
+        
+        console.log(`[ExpressionPage] Syncing data for ID: ${id}`);
+        
+        // 1. Try local store first
+        if (currentAnalysis && currentAnalysis.id === id) {
+          console.log(`[ExpressionPage] Using current analysis from store`);
           setIsSyncing(false);
+          return;
         }
+
+        // 2. Fetch from backend
+        const data = await getExpressionById(id);
+        
+        if (data) {
+          console.log(`[ExpressionPage] Data fetched from backend: ${data.text}`);
+          setCurrentAnalysis(data);
+        } else {
+          console.error(`[ExpressionPage] Expression not found for ID: ${id}`);
+          setError("Expression not found in archive.");
+        }
+      } catch (err) {
+        console.error("[ExpressionPage] Sync error:", err);
+        setError("Failed to load expression data. Please try again.");
+      } finally {
+        setIsSyncing(false);
       }
     };
 

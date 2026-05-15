@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronRight, Search, Filter } from "lucide-react";
+import { Search, Filter, ChevronRight, X } from "lucide-react";
 import { ExpressionLibraryProps } from "@/frontend/types/components";
 
 export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewDetail }: ExpressionLibraryProps) {
@@ -12,9 +12,9 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
   const filteredExpressions = useMemo(() => {
     return expressions.filter((ex) => {
       const matchesSearch = 
-        ex.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        ex.translation.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesLevel = selectedLevel ? ex.metadata.cefr === selectedLevel : true;
+        (ex?.text?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+        (ex?.translation?.toLowerCase() || "").includes(searchQuery.toLowerCase());
+      const matchesLevel = selectedLevel ? ex?.metadata?.cefr === selectedLevel : true;
       return matchesSearch && matchesLevel;
     });
   }, [expressions, searchQuery, selectedLevel]);
@@ -73,36 +73,52 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
               className="glass p-6 rounded-2xl space-y-3 relative group overflow-hidden h-full flex flex-col"
             >
               <div 
-                className={`absolute top-0 right-0 w-2 h-full ${getCefrStyle(ex?.metadata.cefr || 'A1').bg}`} 
-                style={{ boxShadow: `-5px 0 15px rgba(${getCefrStyle(ex?.metadata.cefr || 'A1').glow}, 0.2)` }}
+                className={`absolute top-0 right-0 w-2 h-full ${getCefrStyle(ex?.metadata?.cefr || 'A1').bg}`} 
               />
               
-              <button 
-                onClick={async (e) => {
-                  e.stopPropagation();
-                  if (ex.id) await onDelete(ex.id);
-                }}
-                className="absolute top-2 right-4 p-1.5 rounded-lg bg-red-500/10 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500 hover:text-white"
-              >
-                <X size={14} />
-              </button>
-
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-bold text-zinc-400 uppercase tracking-wider">{ex?.metadata.type}</span>
-                <span className={`text-sm font-black ${getCefrStyle(ex?.metadata.cefr || 'A1').text}`}>{ex?.metadata.cefr}</span>
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-sm font-black uppercase tracking-widest text-zinc-600">
+                  {ex?.metadata?.cefr}
+                </span>
+                <div className="flex items-center gap-4">
+                  <span className="text-sm font-mono text-zinc-700 uppercase tracking-tighter">
+                    ID: {ex?.id?.slice(-4)}
+                  </span>
+                  <button 
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      if (ex?.id) await onDelete?.(ex.id);
+                    }}
+                    className="p-1.5 rounded-lg bg-red-500/10 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500 hover:text-white"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
               </div>
-              
-              <div className="flex-1 space-y-2">
-                <h4 className="text-xl font-black text-white">{ex?.text}</h4>
-                <p className="text-zinc-400 text-sm leading-relaxed">{ex?.translation}</p>
+
+              <div className="space-y-2">
+                <h3 className="text-2xl font-black text-white group-hover:text-blue-400 transition-colors">
+                  {ex?.text}
+                </h3>
+                <p className="text-sm text-zinc-500 font-medium leading-relaxed">
+                  {ex?.translation}
+                </p>
               </div>
 
-              <button 
-                onClick={() => onViewDetail(ex)}
-                className="text-sm text-blue-400 font-bold flex items-center gap-1 mt-4 hover:translate-x-1 transition-transform"
-              >
-                Ver detalle <ChevronRight size={14} />
-              </button>
+              <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500/50" />
+                  <span className="text-sm font-black uppercase tracking-widest text-zinc-600">
+                    {ex?.metadata?.type?.replace('_', ' ')}
+                  </span>
+                </div>
+                <button 
+                  onClick={() => onViewDetail?.(ex?.id)}
+                  className="text-sm font-black uppercase tracking-widest text-blue-500/0 group-hover:text-blue-500 transition-all transform translate-x-4 group-hover:translate-x-0"
+                >
+                  View Detail
+                </button>
+              </div>
             </motion.div>
           ))}
         </AnimatePresence>
