@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 export const AnalysisHero: React.FC = () => {
   const router = useRouter();
   const [input, setInput] = useState("");
-  const { isAnalyzing, setAnalyzing, setCurrentAnalysis, addExpression } = useStudyStore();
+  const { isAnalyzing, setAnalyzing, setCurrentAnalysis, addExpression, clearCurrentAnalysis } = useStudyStore();
   const { streamedText, startStream } = useAiStream();
 
   const handleAnalyze = async (e: React.FormEvent) => {
@@ -21,6 +21,7 @@ export const AnalysisHero: React.FC = () => {
     if (!input.trim()) return;
 
     try {
+      clearCurrentAnalysis();
       setAnalyzing(true);
       startStream(input);
       
