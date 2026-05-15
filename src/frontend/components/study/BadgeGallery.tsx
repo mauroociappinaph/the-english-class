@@ -1,11 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Award, Lock, Sparkles, ShieldCheck, Zap, Globe, Flame, GitMerge, MessageSquare } from 'lucide-react';
-import { Achievement } from '@/frontend/store/useAchievementStore';
-
-interface BadgeGalleryProps {
-  unlockedAchievements: Achievement[];
-}
+import { useAchievementStore } from '@/frontend/store/useAchievementStore';
 
 const BADGE_DEFINITIONS = [
   { slug: 'cefr-a1-explorer', title: 'A1 Explorer', icon: Globe, color: 'from-orange-500 to-rose-500', description: 'Mastered 5 basic A1 expressions' },
@@ -18,7 +14,8 @@ const BADGE_DEFINITIONS = [
   { slug: 'consistency-streak', title: 'Consistency King', icon: Sparkles, color: 'from-amber-500 to-yellow-500', description: 'Study streak milestone' },
 ];
 
-export const BadgeGallery: React.FC<BadgeGalleryProps> = ({ unlockedAchievements }) => {
+export const BadgeGallery: React.FC = () => {
+  const { achievements: unlockedAchievements } = useAchievementStore();
   const unlockedSlugs = new Set(unlockedAchievements.map(a => a.slug));
 
   return (

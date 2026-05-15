@@ -40,12 +40,7 @@ export interface SlangRegionCardProps {
   onSelect?: () => void;
 }
 
-export interface ExpressionLibraryProps {
-  expressions: Expression[];
-  getCefrStyle: (level: string) => { bg: string; glow: string; text: string };
-  onDelete: (id: string) => Promise<void>;
-  onViewDetail: (ex: Expression) => void;
-}
+export interface ExpressionLibraryProps {}
 
 export interface InteractiveTextProps {
   text: string;

@@ -1,10 +1,13 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Filter, ChevronRight, X } from "lucide-react";
-import { ExpressionLibraryProps } from "@/frontend/types/components";
+import { useStudyStore } from "@/frontend/store/useStudyStore";
+import { getCefrStyle } from "./cefr-styles";
+import { deleteExpression } from "@/app/actions";
 import { PedagogicalEmptyState } from "./ui/PedagogicalEmptyState";
 
-export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewDetail }: ExpressionLibraryProps) {
+export function ExpressionLibrary() {
+  const { expressions, removeExpression } = useStudyStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
 
@@ -19,6 +22,19 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
       return matchesSearch && matchesLevel;
     });
   }, [expressions, searchQuery, selectedLevel]);
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteExpression(id);
+      removeExpression(id);
+    } catch (err) {
+      console.error("[ExpressionLibrary] Failed to delete expression:", err);
+    }
+  };
+
+  const handleViewDetail = (id: string) => {
+    window.location.href = `/expression/${id}`;
+  };
 
   return (
     <div className="space-y-8 w-full">
@@ -88,7 +104,7 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
                   <button 
                     onClick={async (e) => {
                       e.stopPropagation();
-                      if (ex?.id) await onDelete?.(ex.id);
+                      if (ex?.id) await handleDelete(ex.id);
                     }}
                     className="p-1.5 rounded-lg bg-red-500/10 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500 hover:text-white"
                   >
@@ -114,7 +130,7 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
                   </span>
                 </div>
                 <button 
-                  onClick={() => onViewDetail?.(ex)}
+                  onClick={() => ex.id && handleViewDetail(ex.id)}
                   className="text-sm font-black uppercase tracking-widest text-blue-500/0 group-hover:text-blue-500 transition-all transform translate-x-4 group-hover:translate-x-0"
                 >
                   View Detail
@@ -136,8 +152,6 @@ export function ExpressionLibrary({ expressions, getCefrStyle, onDelete, onViewD
             action: "get"
           }}
           onAction={(action) => {
-            // Logic to trigger search would go here, 
-            // for now just update the search query
             setSearchQuery(action);
           }}
         />

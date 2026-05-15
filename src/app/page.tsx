@@ -15,7 +15,7 @@ import { AnalysisHero } from "@/frontend/components/home/AnalysisHero";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"search" | "library" | "study" | "grammar">("search");
-  const { expressions, setExpressions, removeExpression } = useStudyStore();
+  const { setExpressions } = useStudyStore();
 
   useEffect(() => {
     const fetchLibrary = async () => {
@@ -32,19 +32,6 @@ export default function Home() {
       setActiveTab(tab as "search" | "library" | "study" | "grammar");
     }
   }, []);
-
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteExpression(id);
-      removeExpression(id);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleViewDetail = (expr: Expression) => {
-    window.location.href = `/expression/${expr.id}`;
-  };
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-blue-500/30">
@@ -80,14 +67,7 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-6 pt-40 pb-20">
         {activeTab === "search" && <AnalysisHero />}
 
-        {activeTab === "library" && (
-          <ExpressionLibrary 
-            expressions={expressions} 
-            getCefrStyle={getCefrStyle} 
-            onDelete={handleDelete} 
-            onViewDetail={handleViewDetail} 
-          />
-        )}
+        {activeTab === "library" && <ExpressionLibrary />}
 
         {activeTab === "study" && <StudySection />}
         {activeTab === "grammar" && <GrammarSection />}

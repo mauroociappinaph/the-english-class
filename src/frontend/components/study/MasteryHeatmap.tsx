@@ -1,15 +1,13 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Expression } from "@/frontend/types/store";
 import { useMemo } from "react";
 import { Bell, Zap, ArrowRight, Brain } from "lucide-react";
+import { useStudyStore } from "@/frontend/store/useStudyStore";
 
-interface MasteryHeatmapProps {
-  expressions: Expression[];
-}
+export function MasteryHeatmap() {
+  const { expressions } = useStudyStore();
 
-export function MasteryHeatmap({ expressions }: { expressions: Expression[] }) {
   const learningPhrases = useMemo(() => {
     return expressions
       .filter(e => (e.study.timesStudied ?? 0) > 0 && (e.study.timesStudied ?? 0) < 5)
