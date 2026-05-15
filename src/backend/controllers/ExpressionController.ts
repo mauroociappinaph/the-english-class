@@ -1,6 +1,8 @@
 import { withTelemetry } from "@/backend/infrastructure/telemetry";
 import { expressionService, achievementService } from "@/backend/infrastructure/registry";
 import { StudyPerformance } from "@/shared/types/expression";
+import { AnalysisResponse, AnalysisError, AnalysisErrorCode } from "@/shared/types/analysis";
+import { AnalysisPipelineError } from "../services/ExpressionService";
 
 /**
  * Controller to orchestrate Expression actions
@@ -14,21 +16,49 @@ export class ExpressionController {
     return withTelemetry("getExpressionById", () => expressionService.getExpressionById(id), { id });
   }
 
-  static async analyze(text: string) {
+  static async analyze(text: string): Promise<AnalysisResponse<any>> {
     console.log(`[Controller] Starting analysis for: "${text}"`);
     return withTelemetry("analyzeExpression", async () => {
       try {
         const result = await expressionService.analyzeExpression(text);
         // Fire and forget achievement check
         achievementService.checkAchievements().catch(e => console.error("Achievement sync failed", e));
-        return result;
+        return { success: true, data: result };
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        console.error(`[Controller] CRITICAL: Analysis pipeline failed for "${text}":`, errorMessage);
-        if (error instanceof Error && error.stack) {
-          console.error(error.stack);
+        console.error(`[Controller] Analysis failed for "${text}":`, error);
+        
+        let code: AnalysisErrorCode = "UNKNOWN";
+        let pedagogicalTip = "Tuvimos un problema técnico. ¿Podés intentar de nuevo?";
+        
+        if (error instanceof AnalysisPipelineError) {
+          code = error.code;
+          switch (code) {
+            case "INPUT_TOO_SHORT":
+              pedagogicalTip = "La frase es muy corta. ¡Intentá con algo un poco más completo!";
+              break;
+            case "INPUT_NONSENSE":
+              pedagogicalTip = "No pude reconocer palabras en inglés. Revisá si hay algún error de tipeo.";
+              break;
+            case "PROVIDER_TIMEOUT":
+              pedagogicalTip = "El motor neuronal está lento hoy. ¡Probá de nuevo en unos segundos!";
+              break;
+            case "PROVIDER_RATE_LIMIT":
+              pedagogicalTip = "¡Mucho tráfico! Estamos calibrando los servidores. Esperá un ratito.";
+              break;
+            case "PARSING_FAILURE":
+              pedagogicalTip = "La estructura de esta frase confundió a mis algoritmos. ¿Podés simplificarla?";
+              break;
+          }
         }
-        return null;
+
+        return { 
+          success: false, 
+          error: {
+            code,
+            message: error instanceof Error ? error.message : String(error),
+            pedagogicalTip
+          }
+        };
       }
     }, { text });
   }

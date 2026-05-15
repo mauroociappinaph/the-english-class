@@ -5,6 +5,14 @@ import { Expression, CreateExpressionDto, AdaptivePathResponse, ExpressionDetail
 import { CollisionError } from "../domain/errors";
 import { StudyPerformance } from "@/shared/types/expression";
 import { SpacedRepetitionEngine, StudyMetadata } from "../domain/logic/SpacedRepetitionEngine";
+import { AnalysisErrorCode } from "@/shared/types/analysis";
+
+export class AnalysisPipelineError extends Error {
+  constructor(public code: AnalysisErrorCode, message: string) {
+    super(message);
+    this.name = "AnalysisPipelineError";
+  }
+}
 
 /**
  * Service to handle Expression business logic
@@ -55,14 +63,54 @@ export class ExpressionService {
       console.log(`[ExpressionService] Fresh analysis for: "${normalizedText}"`);
     }
 
-    // 2. Call analyzers in parallel — main linguistics + slang variants
-    const [result, slangData] = await Promise.all([
-      this.analyzer.analyzeExpression(normalizedText),
-      this.slangAnalyzer?.analyzeSlang(normalizedText).catch((err: unknown) => {
-        console.warn(`[ExpressionService] Slang analysis failed for "${normalizedText}":`, err);
-        return null;
-      }) ?? Promise.resolve(null),
-    ]);
+    // 2. Pre-validation: Catch nonsense or ultra-short inputs
+    if (normalizedText.length < 2 && !/^[a-z0-9]$/i.test(normalizedText)) {
+      throw new AnalysisPipelineError("INPUT_TOO_SHORT", "The phrase is too short to analyze.");
+    }
+    
+    if (/^[^a-z0-9]+$/i.test(normalizedText)) {
+      throw new AnalysisPipelineError("INPUT_NONSENSE", "The input contains no recognizable words.");
+    }
+
+    // 3. Multi-stage analysis
+    let result: any;
+    let slangData: any = null;
+
+    try {
+      console.log(`[ExpressionService] Attempting DEEP analysis for: "${normalizedText}"`);
+      [result, slangData] = await Promise.all([
+        this.analyzer.analyzeExpression(normalizedText),
+        this.slangAnalyzer?.analyzeSlang(normalizedText).catch((err: unknown) => {
+          console.warn(`[ExpressionService] Slang analysis failed for "${normalizedText}":`, err);
+          return null;
+        }) ?? Promise.resolve(null),
+      ]);
+    } catch (deepError: any) {
+      console.warn(`[ExpressionService] DEEP analysis failed for "${normalizedText}". Error: ${deepError.message}. Attempting BASIC fallback...`);
+      
+      try {
+        const basicResult = await this.analyzer.analyzeExpressionBasic(normalizedText);
+        // Map basic result to full object with nulls/defaults
+        result = {
+          ...basicResult,
+          secondaryMeanings: [],
+          usageTips: { naturalness: "", commonMistake: "", context: "" },
+          tenses: {},
+          wordFamilies: {},
+          phrasalVerbDetails: null,
+          chronology: null,
+          examples: []
+        };
+      } catch (basicError: any) {
+        console.error(`[ExpressionService] BASIC analysis ALSO failed for "${normalizedText}".`);
+        
+        const isTimeout = deepError.message?.includes("TIMEOUT") || basicError.message?.includes("TIMEOUT");
+        const isRateLimit = deepError.message?.includes("429") || basicError.message?.includes("rate limit");
+        
+        const errorCode: AnalysisErrorCode = isRateLimit ? "PROVIDER_RATE_LIMIT" : isTimeout ? "PROVIDER_TIMEOUT" : "PARSING_FAILURE";
+        throw new AnalysisPipelineError(errorCode, `Analysis pipeline failed: ${deepError.message}`);
+      }
+    }
 
     const expressionData = {
       text: normalizedText,
