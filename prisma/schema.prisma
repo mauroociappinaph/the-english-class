@@ -91,7 +91,8 @@ model Achievement {
   slug        String   @unique // e.g. "cefr-a1-explorer"
   title       String
   description String
-  type        String   // "CEFR" | "FAMILY" | "STREAK"
+  type        String   // "CEFR" | "FAMILY" | "STREAK" | "LINGUISTIC"
+  icon        String   @default("Sparkles")
   unlockedAt  DateTime @default(now())
 }
 
