@@ -26,9 +26,9 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
   });
 
   const zoneLabels: Record<string, { label: string; icon: LucideIcon; color: string }> = {
-    past: { label: "RETROSPECTIVE_ZONE", icon: History, color: "text-rose-400" },
-    present: { label: "ACTIVE_FLOW", icon: Timer, color: "text-blue-400" },
-    future: { label: "PROJECTION_ENGINE", icon: FastForward, color: "text-emerald-400" }
+    past: { label: "PAST TIMELINE", icon: History, color: "text-rose-400" },
+    present: { label: "PRESENT ACTIONS", icon: Timer, color: "text-blue-400" },
+    future: { label: "FUTURE PATH", icon: FastForward, color: "text-emerald-400" }
   };
 
   return (
@@ -45,12 +45,12 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
               <Clock size={20} />
             </div>
             <div>
-              <h4 className="text-sm font-black uppercase tracking-[0.3em] text-zinc-400">Temporal Analysis</h4>
-              <p className="text-lg font-bold text-white">Visual Grammar Engine</p>
+              <h4 className="text-sm font-black uppercase tracking-[0.3em] text-zinc-400">Time Analysis</h4>
+              <p className="text-lg font-bold text-white">Grammar Visualization</p>
             </div>
           </div>
           <div className="text-right flex flex-col items-end">
-            <span className="text-sm font-mono text-zinc-400 uppercase tracking-widest">VGE v4.1</span>
+            <span className="text-sm font-mono text-zinc-400 uppercase tracking-widest">Grammar Guide</span>
             <div className="flex gap-1 mt-1">
               <div className="w-1 h-1 rounded-full bg-emerald-500/40" />
               <div className="w-1 h-1 rounded-full bg-emerald-500/20" />
