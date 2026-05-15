@@ -46,11 +46,11 @@ Schema:
     }
   },
   "secondaryMeanings": ["English secondary meaning"],
-  "type": "verb | phrasal_verb | idiom | expression | tense",
-  "cefr": "A1 | A2 | B1 | B2 | C1 | C2",
+  "type": "verb", // Pick only one: verb | phrasal_verb | idiom | expression | tense
+  "cefr": "B1", // Pick only one based on Cambridge standards: A1 | A2 | B1 | B2 | C1 | C2
   "ipa": "/phonetic transcription/",
-  "frequency": 0.0 to 1.0,
-  "formality": "formal | informal | neutral",
+  "frequency": 0.5, // 0.0 to 1.0
+  "formality": "neutral", // Pick only one: formal | informal | neutral
   "mnemonic": "memory trick in English",
   "imagePrompt": "artistic prompt for image generator",
   "usageTips": {

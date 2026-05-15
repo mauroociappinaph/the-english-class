@@ -71,7 +71,7 @@ export class ExpressionService {
       metadata: {
         secondaryMeanings: result.secondaryMeanings || [],
         type: result.type || "expression",
-        cefr: result.cefr || "B1",
+        cefr: (result.cefr?.match(/A[12]|B[12]|C[12]/i)?.[0]?.toUpperCase()) || "B1",
         ipa: result.ipa || "",
         frequency: result.frequency || 0.5,
         formality: result.formality || "neutral",
