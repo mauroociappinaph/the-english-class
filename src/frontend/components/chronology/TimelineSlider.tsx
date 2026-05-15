@@ -9,11 +9,11 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({ data, activeModu
   
   // Flatten data into ordered points
   const points = useMemo(() => [
-    { module: data.retrospective.pastPerfect, label: 'Past Perfect', color: 'bg-rose-500', zone: 'retrospective' },
+    { module: data.retrospective.pastPerfect, label: 'Past Perfect', color: 'bg-red-500', zone: 'retrospective' },
     { module: data.retrospective.pastSimple, label: 'Past Simple', color: 'bg-orange-500', zone: 'retrospective' },
-    { module: data.active.presentPerfect, label: 'Present Perfect', color: 'bg-teal-500', zone: 'active' },
-    { module: data.active.presentSimple, label: 'Present Simple', color: 'bg-emerald-500', zone: 'active' },
-    { module: data.projection.futureSimple, label: 'Future Simple', color: 'bg-blue-500', zone: 'projection' },
+    { module: data.active.presentPerfect, label: 'Present Perfect', color: 'bg-blue-500', zone: 'active' },
+    { module: data.active.presentSimple, label: 'Present Simple', color: 'bg-cyan-500', zone: 'active' },
+    { module: data.projection.futureSimple, label: 'Future Simple', color: 'bg-emerald-500', zone: 'projection' },
   ], [data]);
 
   const activeIndex = points.findIndex(p => p.module.tense === activeModule.tense);

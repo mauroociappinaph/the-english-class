@@ -30,12 +30,12 @@ export const ChronologyEngine: React.FC<ChronologyEngineProps> = ({ data }) => {
 
   // Map active module to an accent color for the LiveView
   const getAccentColor = () => {
-    if (!activeModule) return 'text-emerald-400';
+    if (!activeModule) return 'text-blue-400';
     const tense = activeModule.tense.toLowerCase();
-    if (tense.includes('past')) return 'text-orange-400';
-    if (tense.includes('present')) return 'text-emerald-400';
-    if (tense.includes('future')) return 'text-blue-400';
-    return 'text-emerald-400';
+    if (tense.includes('past')) return 'text-red-400';
+    if (tense.includes('present')) return 'text-blue-400';
+    if (tense.includes('future')) return 'text-emerald-400';
+    return 'text-blue-400';
   };
 
   return (

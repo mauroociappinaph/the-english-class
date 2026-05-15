@@ -10,25 +10,28 @@ import { TagList } from '../ui/TagList';
 const ZONE_CONFIG = {
   retrospective: {
     icon: History,
-    color: 'from-orange-500/20 to-rose-500/20',
-    borderColor: 'border-orange-500/30',
-    accentColor: 'text-orange-400',
+    color: 'from-red-500/10 to-orange-500/10',
+    borderColor: 'border-red-500/20',
+    accentColor: 'text-red-400',
+    glowColor: 'bg-red-500/5',
     label: 'COMPLETED_ACTIONS_DETECTOR',
     indicator: 'PAST → EARLIER PAST'
   },
   active: {
     icon: Play,
-    color: 'from-emerald-500/20 to-teal-500/20',
-    borderColor: 'border-emerald-500/30',
-    accentColor: 'text-emerald-400',
+    color: 'from-blue-500/10 to-teal-500/10',
+    borderColor: 'border-blue-500/20',
+    accentColor: 'text-blue-400',
+    glowColor: 'bg-blue-500/5',
     label: 'PRESENT_EFFECT_ENGINE',
     indicator: 'PAST ACTION → PRESENT EFFECT'
   },
   projection: {
     icon: FastForward,
-    color: 'from-blue-500/20 to-indigo-500/20',
-    borderColor: 'border-blue-500/30',
-    accentColor: 'text-blue-400',
+    color: 'from-emerald-500/10 to-green-500/10',
+    borderColor: 'border-emerald-500/20',
+    accentColor: 'text-emerald-400',
+    glowColor: 'bg-emerald-500/5',
     label: 'FUTURE_TRAJECTORY_ENGINE',
     indicator: 'ACTION NOT REALIZED YET'
   }
@@ -43,8 +46,11 @@ export const TemporalZone: React.FC<TemporalZoneProps> = ({ id, title, subtitle,
       initial={{ opacity: 0, x: id === 'retrospective' ? -20 : id === 'projection' ? 20 : 0 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      className={`relative p-6 rounded-3xl bg-gradient-to-br ${config.color} border ${config.borderColor} backdrop-blur-md overflow-hidden flex-1`}
+      className={`relative p-6 rounded-[2.5rem] bg-gradient-to-br ${config.color} border ${config.borderColor} backdrop-blur-xl overflow-hidden flex-1 group`}
     >
+      {/* Background Aura */}
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full ${config.glowColor} blur-[120px] -z-10 opacity-50 group-hover:opacity-100 transition-opacity duration-1000`} />
+      
       {/* Zone Header */}
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
