@@ -46,6 +46,7 @@ export interface ExpressionProcessState {
   currentAnalysis: Expression | null;
   setAnalyzing: (val: boolean) => void;
   setCurrentAnalysis: (analysis: Expression | null) => void;
+  clearCurrentAnalysis: () => void;
 }
 
 export interface ReviewSessionState {

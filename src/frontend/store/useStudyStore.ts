@@ -12,6 +12,7 @@ export const useStudyStore = create<StudyState>((set) => ({
   })),
   setAnalyzing: (val) => set({ isAnalyzing: val }),
   setCurrentAnalysis: (analysis) => set({ currentAnalysis: analysis }),
+  clearCurrentAnalysis: () => set({ currentAnalysis: null }),
 
   // Review session
   reviewQueue: [],
