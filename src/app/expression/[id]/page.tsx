@@ -139,6 +139,7 @@ export default function ExpressionPage() {
             <ExpressionMechanics
               phrasalVerbDetails={currentAnalysis.linguistics.phrasalVerbDetails ?? undefined}
               wordFamilies={currentAnalysis.linguistics.wordFamilies ?? undefined}
+              type={currentAnalysis.metadata.type}
             />
           </div>
 

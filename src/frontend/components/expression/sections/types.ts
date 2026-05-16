@@ -21,6 +21,7 @@ export interface ExpressionMeaningProps {
 export interface ExpressionMechanicsProps {
   phrasalVerbDetails?: PhrasalVerbDetails;
   wordFamilies?: WordFamilies;
+  type: string;
 }
 
 export interface ExpressionScenariosProps {

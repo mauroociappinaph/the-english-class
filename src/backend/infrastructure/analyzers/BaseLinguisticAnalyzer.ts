@@ -99,17 +99,18 @@ Schema:
     }],
     "verb": [{ "word": "...", "...": "Add other parts of speech (verb, adjective, adverb) with the SAME structure as the noun example above" }]
   },
-  "phrasalVerbDetails": {
-    "verb": "base verb",
-    "particle": "preposition/adverb",
-    "separable": "no | optional | mandatory",
-    "transitive": true,
-    "logicExplanation": "...",
-    "transitiveExplanation": "...",
-    "separabilityExplanation": "...",
-    "validExamples": ["He sets the table up", "He sets up the table"],
-    "invalidExamples": ["He sets up it"],
-    "collocations": [{ "phrase": "...", "frequency": "high|medium|low", "example": "...", "translation": "..." }]
+    "phrasalVerbDetails": {
+      "verb": "base verb",
+      "particle": "preposition/adverb",
+      "separable": "no | optional | mandatory",
+      "transitive": true,
+      "logicExplanation": "...",
+      "transitiveExplanation": "...",
+      "separabilityExplanation": "...",
+      "validExamples": ["He sets the table up", "He sets up the table"],
+      "invalidExamples": ["He sets up it"],
+      "collocations": [{ "phrase": "...", "frequency": "high|medium|low", "example": "...", "translation": "..." }]
+    } // IMPORTANT: If the expression is NOT a phrasal verb, this field MUST be null. DO NOT hallucinate details for adjectives or standard verbs.
   }
 }
 `;

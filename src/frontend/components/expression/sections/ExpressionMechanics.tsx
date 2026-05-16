@@ -6,7 +6,7 @@ import { MechanicsBlueprint } from "@/frontend/components/mechanics/MechanicsBlu
 import { WordFamilyList } from "@/frontend/components/WordFamilyList";
 import { ExpressionMechanicsProps, sectionVariants } from "./types";
 
-export function ExpressionMechanics({ phrasalVerbDetails, wordFamilies }: ExpressionMechanicsProps) {
+export function ExpressionMechanics({ phrasalVerbDetails, wordFamilies, type }: ExpressionMechanicsProps) {
   return (
     <motion.section
       id="mechanics"
@@ -21,7 +21,7 @@ export function ExpressionMechanics({ phrasalVerbDetails, wordFamilies }: Expres
         <h2 className="font-display text-lg font-black uppercase tracking-[0.4em] text-zinc-500">Mechanics</h2>
       </div>
 
-      {phrasalVerbDetails ? (
+      {phrasalVerbDetails && type === "phrasal_verb" ? (
         <MechanicsBlueprint details={phrasalVerbDetails} />
       ) : (
         <div className="p-12 border border-white/5 rounded-2xl text-center space-y-3">
