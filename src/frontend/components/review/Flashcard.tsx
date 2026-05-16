@@ -4,14 +4,7 @@ import { motion } from "framer-motion";
 import { ReactNode } from "react";
 import { clsx } from "clsx";
 
-interface FlashcardProps {
-  isFlipped: boolean;
-  onFlip: () => void;
-  front: ReactNode;
-  back: ReactNode;
-  className?: string;
-  disableFlipClick?: boolean;
-}
+import { FlashcardProps } from "@/frontend/types/review";
 
 export function Flashcard({ isFlipped, onFlip, front, back, className, disableFlipClick }: FlashcardProps) {
   return (

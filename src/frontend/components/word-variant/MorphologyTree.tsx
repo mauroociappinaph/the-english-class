@@ -4,10 +4,7 @@ import { Box, Zap, Palette, Wind, Info } from 'lucide-react';
 import { WordFamilies, WordVariant } from '@/shared/types/expression';
 import { clsx } from 'clsx';
 
-interface MorphologyTreeProps {
-  families: WordFamilies;
-  rootWord: string;
-}
+import { MorphologyTreeProps } from "@/frontend/types/word-variant";
 
 const posConfig = {
   noun: { label: 'Noun', icon: Box, color: 'text-blue-400', stroke: '#3b82f6' },

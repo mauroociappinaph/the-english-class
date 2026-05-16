@@ -12,9 +12,7 @@ import {
 import { WordVariant } from "@/shared/types/expression";
 import { clsx } from "clsx";
 
-interface HumanContextProps {
-  variant: WordVariant;
-}
+import { HumanContextProps } from "@/frontend/types/word-variant";
 
 export function HumanContext({ variant }: HumanContextProps) {
   const usageCards = [
