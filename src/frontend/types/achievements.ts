@@ -3,8 +3,8 @@ export interface Achievement {
   slug: string;
   title: string;
   description: string;
-  type: 'CEFR' | 'FAMILY' | 'STREAK';
-  unlockedAt: string;
+  type: string;
+  unlockedAt: string | Date;
 }
 
 export interface AchievementState {

@@ -12,20 +12,9 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { AnalysisErrorCard } from "./AnalysisErrorCard";
 import { AnalysisError } from "@/shared/types/analysis";
+import { ANALYSIS_STEPS, LEARNING_HACKS } from "@/frontend/constants/analysis";
+import { Achievement } from "@/frontend/types/achievements";
 
-const ANALYSIS_STEPS = [
-  { id: "neural", label: "Neural Engine Warmup", detail: "Initializing language model and context buffers..." },
-  { id: "morph", label: "Morphological Mapping", detail: "Analyzing word roots, families and phrasal structures..." },
-  { id: "chronos", label: "Temporal Sync", detail: "Synchronizing Chronos Engine for tense and timeline mapping..." },
-  { id: "cefr", label: "CEFR Calibration", detail: "Finalizing metadata and level proficiency metrics..." },
-];
-
-const LEARNING_HACKS = [
-  "Did you know? Understanding the root of a word multiplies your vocabulary by 4x.",
-  "Phrasal verbs aren't just words; they are 'lego' blocks of English communication.",
-  "Visualizing tenses on a timeline reduces cognitive friction by 30% compared to rules.",
-  "Context is king: the same word can change meaning entirely based on its neighbor.",
-];
 
 export const AnalysisHero: React.FC = () => {
   const router = useRouter();
@@ -93,7 +82,7 @@ export const AnalysisHero: React.FC = () => {
         const newAch = await checkAchievements();
         if (newAch && newAch.length > 0) {
           const { addAchievement } = useAchievementStore.getState();
-          newAch.forEach((a) => addAchievement(a as unknown as import("@/frontend/types/achievements").Achievement));
+          newAch.forEach((a) => addAchievement(a as unknown as Achievement));
         }
 
         setTimeout(() => {
