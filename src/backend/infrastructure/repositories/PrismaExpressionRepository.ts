@@ -1,6 +1,6 @@
 import { prisma } from "../db";
 import { IExpressionRepository } from "../../domain/repositories/IExpressionRepository";
-import { ExpressionDetail, CreateExpressionDto } from "../../domain/types";
+import { ExpressionDetail, CreateExpressionDto, CefrLevel } from "../../domain/types";
 import { Prisma } from "@prisma/client";
 import { CollisionError } from "../../domain/errors";
 import { StudyMetadata } from "../../domain/types/study";
@@ -141,7 +141,7 @@ export class PrismaExpressionRepository extends BasePrismaRepository implements 
       metadata: {
         secondaryMeanings: JSON.parse(expression.secondaryMeanings || "[]"),
         type: expression.type,
-        cefr: expression.cefr,
+        cefr: expression.cefr as CefrLevel,
         ipa: expression.ipa,
         frequency: expression.frequency,
         formality: expression.formality,
