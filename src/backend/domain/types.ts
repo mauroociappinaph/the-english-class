@@ -6,8 +6,11 @@ import {
   CreateExpressionDto as SharedCreateExpressionDto,
   WordFamilies,
   PhrasalVerbDetails,
-  ChronologyData
+  ChronologyData,
+  CefrLevel
 } from "@/shared/types/expression";
+
+export type { CefrLevel };
 
 export interface GroqExample extends Omit<SharedExample, 'id' | 'expressionId' | 'createdAt' | 'updatedAt'> {}
 
