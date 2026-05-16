@@ -52,16 +52,16 @@ export class ExpressionController {
           }
         }
 
-        const errorResponse: AnalysisResponse<unknown> = { 
+        const errorResponse: AnalysisResponse<import("../domain/types").ExpressionDetail> = { 
           success: false, 
           error: {
             code,
-            message: error instanceof Error ? error.message : String(error),
+            message: error instanceof Error ? error.message : (typeof error === 'object' ? JSON.stringify(error) : String(error)),
             pedagogicalTip
           }
         };
         console.log(`[Controller] Returning error response:`, JSON.stringify(errorResponse, null, 2));
-        return errorResponse as AnalysisResponse<import("../domain/types").ExpressionDetail>;
+        return errorResponse;
       }
     }, { text });
   }
