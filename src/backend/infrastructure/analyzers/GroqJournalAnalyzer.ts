@@ -46,7 +46,7 @@ Schema:
         { role: "user", content: prompt }
       ],
       model: "llama-3.3-70b-versatile",
-      response_format: { type: "json_object" },
+      
       temperature: 0.1,
       stream: true,
     });
@@ -101,7 +101,7 @@ Schema:
         { role: "user", content: prompt }
       ],
       model: "llama-3.3-70b-versatile",
-      response_format: { type: "json_object" },
+      
       temperature: 0.1,
     });
 

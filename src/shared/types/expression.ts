@@ -2,6 +2,8 @@
  * Shared Expression types between Frontend and Backend
  */
 
+export type CefrLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'NOT_CLASSIFIED' | 'UNKNOWN';
+
 export interface Tense {
   text: string;
   translation: string;
@@ -30,51 +32,47 @@ export interface Example {
 
 export type StudyPerformance = 'hard' | 'good' | 'easy';
 
-type SlangTag =
-  | 'slang'
-  | 'formal'
-  | 'offensive'
-  | 'old-fashioned'
-  | 'internet-slang'
-  | 'regional'
-  | 'colloquial'
-  | 'vulgar';
 
-export type FormalityLevel = 'formal' | 'neutral' | 'informal' | 'slang' | 'offensive' | 'old-fashioned';
-
-/** 0 = standard English, 3 = heavy slang */
-export type SlangLevel = 0 | 1 | 2 | 3;
-
-export interface RegionalVariant {
-  region: string;             // "American English"
-  subregion?: string;         // "AAVE", "Cockney", "Southern English"
-  country: string;            // "United States"
-  flag: string;               // "🇺🇸"
-  word: string;               // equivalent word/expression in that variant
-  pronunciation?: string;     // informal phonetic: "uh-PART-ment"
-  ipa?: string;               // "/əˈpɑːrtmənt/"
-  formality: FormalityLevel;
-  slangLevel: SlangLevel;
-  culturalNote: string;       // cultural context in English
-  usageContext: string;       // when/where it's used
-  example: string;            // real English example sentence
-  exampleTranslation: string; // Spanish translation of example
-  tags: SlangTag[];
-  audioLocale?: string;       // Web Speech API locale: 'en-US', 'en-GB', 'en-AU'
-}
-
-export interface SlangData {
-  regionalVariants: RegionalVariant[];
-  detectedSlangLevel: SlangLevel;
-  isSlang: boolean;
-  similarWords: string[];
+export interface WordVariant {
+  word: string;
+  pronunciation: string;
+  cefr: CefrLevel; // A1-C2 or UNKNOWN
+  isAiEstimated?: boolean;
+  translation: string;
+  simpleExplanation: string;
+  differenceWithSimilar?: string;
+  examples: Example[];
+  grammarExplanation: string;
+  commonCollocations: string[];
+  commonExpressions: string[];
+  synonyms: string[];
+  antonyms: string[];
+  commonMistakes: string;
+  naturalContexts: ("formal" | "informal" | "spoken" | "business" | "academic" | "casual conversation" | "literary" | "slang")[];
+  patterns: string[]; // e.g. ["favor", "favorable", "favorably"]
+  morphology: {
+    prefix?: string;
+    suffix?: string;
+    root: string;
+  };
+  tips: string[]; // e.g. ["Used mostly in spoken English"]
 }
 
 export interface WordFamilies {
-  noun?: string[];
-  verb?: string[];
-  adjective?: string[];
-  adverb?: string[];
+  noun?: WordVariant[];
+  verb?: WordVariant[];
+  adjective?: WordVariant[];
+  adverb?: WordVariant[];
+}
+
+interface Collocation {
+  phrase: string;
+  frequency: 'high' | 'medium' | 'low';
+  naturalness: number; // 0-100
+  usageContext: 'formal' | 'informal' | 'spoken' | 'business' | 'academic';
+  example: string;
+  translation: string;
+  usageNote?: string;
 }
 
 export interface PhrasalVerbDetails {
@@ -82,7 +80,17 @@ export interface PhrasalVerbDetails {
   particle: string;
   separable: 'no' | 'optional' | 'mandatory';
   transitive: boolean;
-  commonCollocations: string[];
+  
+  // Pedagogical metadata
+  logicExplanation: string;
+  transitiveExplanation: string;
+  separabilityExplanation: string;
+  
+  // Structural examples for visual logic
+  validExamples: string[];
+  invalidExamples: string[];
+  
+  collocations: Collocation[];
 }
 
 interface ExpressionCore {
@@ -91,15 +99,47 @@ interface ExpressionCore {
   meaning: string;
 }
 
+export interface CorrectionLayer {
+  isCorrect: boolean;
+  correctedText: string | null;
+  explanation: string | null;
+}
+
 interface ExpressionAttributes {
   secondaryMeanings: string[];
   type: string;
-  cefr: string;
+  cefr: CefrLevel;
+  isAiEstimated?: boolean;
   ipa: string | null;
   frequency: number | null;
   formality: string | null;
   mnemonic: string | null;
   imageUrl?: string | null;
+  correction?: CorrectionLayer | null;
+}
+
+export interface ChronologyModule {
+  tense: string;
+  example: string;
+  simpleExplanation: string;
+  technicalExplanation: string;
+  visualTimelinePoint: number; 
+  grammarTags: string[];
+  visualIndicators?: string[]; // e.g. ["completed", "bridge", "prediction"]
+}
+
+export interface ChronologyData {
+  retrospective: {
+    pastSimple: ChronologyModule;
+    pastPerfect: ChronologyModule;
+  };
+  active: {
+    presentSimple: ChronologyModule;
+    presentPerfect: ChronologyModule;
+  };
+  projection: {
+    futureSimple: ChronologyModule;
+  };
 }
 
 interface ExpressionLinguistics {
@@ -107,7 +147,7 @@ interface ExpressionLinguistics {
   tenses: Record<string, Tense> | null;
   wordFamilies: WordFamilies | null;
   phrasalVerbDetails: PhrasalVerbDetails | null;
-  slangData?: SlangData | null;
+  chronology?: ChronologyData | null;
   examples: Example[];
 }
 

@@ -2,43 +2,38 @@ import { ExpressionService } from "../services/ExpressionService";
 import { JournalService } from "../services/JournalService";
 import { PrismaExpressionRepository } from "./repositories/PrismaExpressionRepository";
 import { PrismaJournalRepository } from "./repositories/PrismaJournalRepository";
+import { PrismaAchievementRepository } from "./repositories/PrismaAchievementRepository";
+import { AchievementService } from "../services/AchievementService";
 import { GroqLinguisticAnalyzer } from "./analyzers/GroqLinguisticAnalyzer";
 import { GroqJournalAnalyzer } from "./analyzers/GroqJournalAnalyzer";
-import { GroqSlangAnalyzer } from "./analyzers/GroqSlangAnalyzer";
 import { NvidiaLinguisticAnalyzer } from "./analyzers/NvidiaLinguisticAnalyzer";
-import { NvidiaSlangAnalyzer } from "./analyzers/NvidiaSlangAnalyzer";
 import { withFallback } from "./resilience";
-
 import { NvidiaJournalAnalyzer } from "./analyzers/NvidiaJournalAnalyzer";
 
 // Singleton instances — primary providers
 const expressionRepository = new PrismaExpressionRepository();
 const journalRepository = new PrismaJournalRepository();
+const achievementRepository = new PrismaAchievementRepository();
+
+const timeout = { timeoutMs: 10000 };
 
 // Resilient analyzer for Journal: Groq -> Nvidia
 export const journalAnalyzer = withFallback(
   new GroqJournalAnalyzer(),
   new NvidiaJournalAnalyzer(),
-  { timeoutMs: 10000 }
+  timeout
 );
 
 // Resilient analyzers: Groq -> Nvidia (10s timeout)
 export const linguisticAnalyzer = withFallback(
   new GroqLinguisticAnalyzer(),
   new NvidiaLinguisticAnalyzer(),
-  { timeoutMs: 10000 }
-);
-
-const slangAnalyzer = withFallback(
-  new GroqSlangAnalyzer(),
-  new NvidiaSlangAnalyzer(),
-  { timeoutMs: 10000 }
+  timeout
 );
 
 export const expressionService = new ExpressionService(
   expressionRepository,
-  linguisticAnalyzer,
-  slangAnalyzer
+  linguisticAnalyzer
 );
 
 export const journalService = new JournalService(
@@ -46,3 +41,7 @@ export const journalService = new JournalService(
   journalAnalyzer
 );
 
+export const achievementService = new AchievementService(
+  achievementRepository,
+  expressionRepository
+);

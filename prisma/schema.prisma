@@ -29,7 +29,8 @@ model Expression {
   easiness          Float    @default(2.5)
   wordFamilies      String?  // Store as JSON string: { noun: string[], verb: string[], adjective: string[], adverb: string[] }
   phrasalVerbDetails String? // Store as JSON string
-  slangData         String?  // Store as JSON string: SlangData
+  chronology         String? // Store as JSON string: ChronologyData
+  correctionData     String?  // Store as JSON string: { isCorrect: boolean, correctedText: string, explanation: string }
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   examples          Example[]
@@ -82,5 +83,15 @@ model Correction {
   rule            String?
   isFixed         Boolean  @default(false)
   entry           JournalEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+}
+
+model Achievement {
+  id          String   @id @default(cuid())
+  slug        String   @unique // e.g. "cefr-a1-explorer"
+  title       String
+  description String
+  type        String   // "CEFR" | "FAMILY" | "STREAK" | "LINGUISTIC"
+  icon        String   @default("Sparkles")
+  unlockedAt  DateTime @default(now())
 }
 

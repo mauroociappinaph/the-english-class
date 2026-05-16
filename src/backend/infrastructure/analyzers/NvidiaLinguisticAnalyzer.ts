@@ -1,94 +1,11 @@
 import { ILinguisticAnalyzer } from "../../domain/interfaces/ILinguisticAnalyzer";
-import { IStreamable } from "../../domain/interfaces/IStreamable";
-import { GroqExpressionResponse } from "../../domain/types";
+import { GroqExpressionResponse, AdaptivePathResponse } from "../../domain/types";
+import { BaseLinguisticAnalyzer } from "./BaseLinguisticAnalyzer";
+import { LinguisticSanitizer } from "../utils/LinguisticSanitizer";
 
-export class NvidiaLinguisticAnalyzer implements ILinguisticAnalyzer, IStreamable {
+export class NvidiaLinguisticAnalyzer extends BaseLinguisticAnalyzer {
   async *analyzeStream(text: string): AsyncGenerator<string, void, unknown> {
-    const prompt = `You are a Senior English Professor and Linguistic Analyst (Cambridge standards). 
-Analyze the provided English expression and return a strictly valid JSON object.
-
-RULES:
-- "translation": Provide a natural Spanish translation of the expression.
-- "meaning": Provide a clear explanation in ENGLISH.
-- "secondaryMeanings": Scan for polysemy. Provide all other significantly different definitions or usages in different domains (e.g., technical, social, scientific, slang) in ENGLISH. Do not include minor nuances, only distinct alternative meanings.
-- "usageTips": All descriptions must be in ENGLISH.
-- "tenses": DO NOT provide a fixed list. Instead, identify the TOP 5 most natural, frequent, and relevant verbal forms/tenses for this specific expression in real-world usage.
-  Each tense must have a "text" (ENGLISH example) and a "translation" (SPANISH).
-  Provide exactly 3 different cinematic examples in the "examples" section.
-
-Expression: "${text}"
-
-Schema:
-{
-  "translation": "Spanish translation",
-  "meaning": "English explanation",
-  "secondaryMeanings": ["English secondary meaning"],
-  "type": "verb | phrasal_verb | idiom | expression | tense",
-  "cefr": "A1 | A2 | B1 | B2 | C1 | C2",
-  "ipa": "/phonetic transcription/",
-  "frequency": 0.0 to 1.0,
-  "formality": "formal | informal | neutral",
-  "mnemonic": "a clever memory trick or mnemonic device in English to remember this expression",
-  "imagePrompt": "a detailed, artistic prompt for an image generator (DALL-E/Midjourney style) that visually represents the core concept of this expression",
-  "usageTips": {
-    "naturalness": "English description",
-    "commonMistake": "English description",
-    "context": "English description"
-  },
-  "tenses": {
-    "tense_name_1": { "text": "...", "translation": "..." },
-    "tense_name_2": { "text": "...", "translation": "..." },
-    "tense_name_3": { "text": "...", "translation": "..." },
-    "tense_name_4": { "text": "...", "translation": "..." },
-    "tense_name_5": { "text": "...", "translation": "..." }
-  },
-  "examples": [
-    { 
-      "text": "English example", 
-      "translation": "Spanish translation",
-      "literalTranslation": "Word by word Spanish translation",
-      "subtitleAdaptation": "Netflix subtitle adaptation",
-      "category": "Medical Drama", 
-      "explanation": "English explanation",
-      "tone": "Sarcastic",
-      "register": "Casual"
-    }
-  ],
-  "wordFamilies": {
-    "noun": ["related noun"],
-    "verb": ["related verb"],
-    "adjective": ["related adjective"],
-    "adverb": ["related adverb"]
-  },
-  "phrasalVerbDetails": {
-    "verb": "base verb",
-    "particle": "preposition/adverb",
-    "separable": "no | optional | mandatory",
-    "transitive": true,
-    "commonCollocations": ["word1", "word2"]
-  },
-  "slangData": {
-    "regionalVariants": [
-      {
-        "region": "string (e.g. American English)",
-        "country": "string (e.g. United States)",
-        "flag": "emoji flag",
-        "word": "string (the expression itself or regional equivalent)",
-        "formality": "formal | neutral | informal | slang",
-        "slangLevel": 0,
-        "culturalNote": "brief explanation of origin/usage in English",
-        "usageContext": "where it is most common",
-        "example": "English example",
-        "exampleTranslation": "Spanish translation",
-        "tags": ["regional"]
-      }
-    ],
-    "_instruction": "If variants are identical across regions, provide ONLY the primary regional variant in regionalVariants[]. Only list multiple if they differ significantly.",
-    "detectedSlangLevel": 0,
-    "isSlang": false,
-    "similarWords": ["word1", "word2"]
-  }
-} `;
+    const prompt = this.getPedagogicalPrompt(text);
 
     const response = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
       method: 'POST',
@@ -97,7 +14,7 @@ Schema:
         'Authorization': `Bearer ${process.env.NVIDIA_API_KEY}`
       },
       body: JSON.stringify({
-        model: "meta/llama-3.1-70b-instruct",
+        model: "meta/llama-3.1-8b-instruct",
         messages: [
           { role: "system", content: "Return ONLY a valid JSON object." },
           { role: "user", content: prompt }
@@ -145,91 +62,7 @@ Schema:
   }
 
   async analyzeExpression(text: string): Promise<GroqExpressionResponse> {
-    const prompt = `You are a Senior English Professor and Linguistic Analyst (Cambridge standards). 
-Analyze the provided English expression and return a strictly valid JSON object.
-
-RULES:
-- "translation": Provide a natural Spanish translation of the expression.
-- "meaning": Provide a clear explanation in ENGLISH.
-- "secondaryMeanings": Scan for polysemy. Provide all other significantly different definitions or usages in different domains (e.g., technical, social, scientific, slang) in ENGLISH. Do not include minor nuances, only distinct alternative meanings.
-- "usageTips": All descriptions must be in ENGLISH.
-- "tenses": DO NOT provide a fixed list. Instead, identify the TOP 5 most natural, frequent, and relevant verbal forms/tenses for this specific expression in real-world usage.
-  Each tense must have a "text" (ENGLISH example) and a "translation" (SPANISH).
-  Provide exactly 3 different cinematic examples in the "examples" section.
-
-Expression: "${text}"
-
-Schema:
-{
-  "translation": "Spanish translation",
-  "meaning": "English explanation",
-  "secondaryMeanings": ["English secondary meaning"],
-  "type": "verb | phrasal_verb | idiom | expression | tense",
-  "cefr": "A1 | A2 | B1 | B2 | C1 | C2",
-  "ipa": "/phonetic transcription/",
-  "frequency": 0.0 to 1.0,
-  "formality": "formal | informal | neutral",
-  "mnemonic": "a clever memory trick or mnemonic device in English to remember this expression",
-  "imagePrompt": "a detailed, artistic prompt for an image generator (DALL-E/Midjourney style) that visually represents the core concept of this expression",
-  "usageTips": {
-    "naturalness": "English description",
-    "commonMistake": "English description",
-    "context": "English description"
-  },
-  "tenses": {
-    "tense_name_1": { "text": "...", "translation": "..." },
-    "tense_name_2": { "text": "...", "translation": "..." },
-    "tense_name_3": { "text": "...", "translation": "..." },
-    "tense_name_4": { "text": "...", "translation": "..." },
-    "tense_name_5": { "text": "...", "translation": "..." }
-  },
-  "examples": [
-    { 
-      "text": "English example", 
-      "translation": "Spanish translation",
-      "literalTranslation": "Word by word Spanish translation",
-      "subtitleAdaptation": "Netflix subtitle adaptation",
-      "category": "Medical Drama", 
-      "explanation": "English explanation",
-      "tone": "Sarcastic",
-      "register": "Casual"
-    }
-  ],
-  "wordFamilies": {
-    "noun": ["related noun"],
-    "verb": ["related verb"],
-    "adjective": ["related adjective"],
-    "adverb": ["related adverb"]
-  },
-  "phrasalVerbDetails": {
-    "verb": "base verb",
-    "particle": "preposition/adverb",
-    "separable": "no | optional | mandatory",
-    "transitive": true,
-    "commonCollocations": ["word1", "word2"]
-  },
-  "slangData": {
-    "regionalVariants": [
-      {
-        "region": "string (e.g. American English)",
-        "country": "string (e.g. United States)",
-        "flag": "emoji flag",
-        "word": "string (the expression itself or regional equivalent)",
-        "formality": "formal | neutral | informal | slang",
-        "slangLevel": 0,
-        "culturalNote": "brief explanation of origin/usage in English",
-        "usageContext": "where it is most common",
-        "example": "English example",
-        "exampleTranslation": "Spanish translation",
-        "tags": ["regional"]
-      }
-    ],
-    "_instruction": "If variants are identical across regions, provide ONLY the primary regional variant in regionalVariants[]. Only list multiple if they differ significantly.",
-    "detectedSlangLevel": 0,
-    "isSlang": false,
-    "similarWords": ["word1", "word2"]
-  }
-} `;
+    const prompt = this.getPedagogicalPrompt(text);
 
     const response = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
       method: 'POST',
@@ -238,7 +71,7 @@ Schema:
         'Authorization': `Bearer ${process.env.NVIDIA_API_KEY}`
       },
       body: JSON.stringify({
-        model: "meta/llama-3.1-70b-instruct",
+        model: "meta/llama-3.1-8b-instruct",
         messages: [
           { role: "system", content: "Return ONLY a valid JSON object." },
           { role: "user", content: prompt }
@@ -252,6 +85,65 @@ Schema:
     }
 
     const data = await response.json();
-    return JSON.parse(data.choices[0]?.message?.content || "{}");
+    const content = data.choices[0]?.message?.content || "{}";
+    const result = LinguisticSanitizer.safeJsonParse<GroqExpressionResponse>(content);
+    console.log(`[NvidiaLinguisticAnalyzer] Analysis finished. Has chronology: ${!!result.chronology}`);
+    return result;
+  }
+
+  async analyzeExpressionBasic(text: string): Promise<Partial<GroqExpressionResponse>> {
+    const prompt = this.getBasicPedagogicalPrompt(text);
+
+    const response = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.NVIDIA_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "meta/llama-3.1-8b-instruct",
+        messages: [
+          { role: "system", content: "Return ONLY a valid JSON object." },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.1,
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Nvidia API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const content = data.choices[0]?.message?.content || "{}";
+    return LinguisticSanitizer.safeJsonParse<Partial<GroqExpressionResponse>>(content);
+  }
+
+  async suggestRelated(failedTexts: string[]): Promise<AdaptivePathResponse> {
+    const prompt = this.getAdaptivePathPrompt(failedTexts);
+
+    const response = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.NVIDIA_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "meta/llama-3.1-8b-instruct",
+        messages: [
+          { role: "system", content: "Return ONLY a valid JSON object." },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.1,
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Nvidia API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const content = data.choices[0]?.message?.content || "{}";
+    return LinguisticSanitizer.safeJsonParse<AdaptivePathResponse>(content);
   }
 }

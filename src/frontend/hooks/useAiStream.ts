@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { StreamOptions } from '@/frontend/types/hooks';
 
 export function useAiStream() {
@@ -103,6 +103,15 @@ export function useAiStream() {
       const totalTime = performance.now();
       console.log(`[Client Stream] Stream FINISHED in ${((totalTime - clientStreamStart) / 1000).toFixed(2)}s`);
     }
+  }, []);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
   }, []);
 
   const stopStream = useCallback(() => {

@@ -8,6 +8,7 @@ import { SecurityEnvLeakAnalyzer } from './security-env-leak.analyzer';
 import { DeadCodeAnalyzer } from './dead-code.analyzer';
 import { SecurityOwaspAnalyzer } from './security-owasp.analyzer';
 import { DuplicateLogicAnalyzer } from './duplicate-logic.analyzer';
+import { GodComponentAnalyzer } from './god-component.analyzer';
 
 export const getProjectAnalyzers = (): Analyzer[] => [
   new DeadCodeAnalyzer(),
@@ -18,5 +19,6 @@ export const getProjectAnalyzers = (): Analyzer[] => [
   new ArchitectureBoundaryAnalyzer(),
   new SecurityEnvLeakAnalyzer(),
   new SecurityOwaspAnalyzer(),
-  new DuplicateLogicAnalyzer()
+  new DuplicateLogicAnalyzer(),
+  new GodComponentAnalyzer()
 ];

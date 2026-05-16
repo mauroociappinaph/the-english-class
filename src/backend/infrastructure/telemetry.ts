@@ -14,6 +14,21 @@ export async function withTelemetry<T>(
 
   try {
     const result = await fn();
+    
+    // Heuristic to detect handled errors in common response patterns
+    if (result && typeof result === 'object' && result !== null && 'success' in result) {
+      const res = result as Record<string, unknown>;
+      if (res.success === false) {
+        success = false;
+        if (res.error && typeof res.error === 'object') {
+          const err = res.error as Record<string, unknown>;
+          if ('message' in err) {
+            errorMsg = String(err.message);
+          }
+        }
+      }
+    }
+
     return result;
   } catch (error: unknown) {
     success = false;
@@ -25,8 +40,6 @@ export async function withTelemetry<T>(
     const duration = Math.round(end - start);
 
     // Persist metrics asynchronously
-    // We don't await this to keep the main action fast, 
-    // but we catch errors to avoid crashing.
     prisma.actionMetric.create({
       data: {
         actionName,
@@ -40,6 +53,6 @@ export async function withTelemetry<T>(
     });
 
 
-    console.log(`[Telemetry] ${actionName}: ${duration}ms (Success: ${success})`);
+    console.log(`[Telemetry] ${actionName}: ${duration}ms (Success: ${success}${errorMsg ? ` - Error: ${errorMsg}` : ''})`);
   }
 }

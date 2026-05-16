@@ -1,6 +1,7 @@
 import { IJournalAnalyzer } from "../../domain/interfaces/IJournalAnalyzer";
 import { IStreamable } from "../../domain/interfaces/IStreamable";
 import { LinguisticAnalysis } from "@/shared/types/journal";
+import { parseRobustJson } from "../utils/json-parser";
 
 export class NvidiaJournalAnalyzer implements IJournalAnalyzer, IStreamable {
   async *analyzeStream(text: string, userLevel: string = "B1"): AsyncGenerator<string, void, unknown> {
@@ -148,7 +149,8 @@ Schema:
     }
 
     const data = await response.json();
-    const parsed = JSON.parse(data.choices[0]?.message?.content || "{}");
+    const content = data.choices[0]?.message?.content || "{}";
+    const parsed = parseRobustJson(content) as unknown as LinguisticAnalysis;
     
     return {
       cefrLevel: parsed.cefrLevel || "B1",

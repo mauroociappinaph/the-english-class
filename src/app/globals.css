@@ -1,14 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #000000;
+  --foreground: #ffffff;
+  --font-inter: 'Inter', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: var(--font-inter);
+  -webkit-font-smoothing: antialiased;
 }
 
 @theme {
@@ -20,13 +24,6 @@ body {
   --color-cefr-b2: #6366f1;
   --color-cefr-c1: #a855f7;
   --color-cefr-c2: #ec4899;
-
-  --cefr-glow-A1: 34, 197, 94;
-  --cefr-glow-A2: 132, 204, 22;
-  --cefr-glow-B1: 59, 130, 246;
-  --cefr-glow-B2: 99, 102, 241;
-  --cefr-glow-C1: 168, 85, 247;
-  --cefr-glow-C2: 236, 72, 153;
 }
 
 @layer base {
@@ -77,4 +74,12 @@ body {
 
 .animate-float {
   animation: float 6s ease-in-out infinite;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

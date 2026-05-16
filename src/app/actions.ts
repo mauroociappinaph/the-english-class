@@ -30,6 +30,10 @@ export async function submitReview(id: string, performance: StudyPerformance) {
   return ExpressionController.submitReview(id, performance);
 }
 
+export async function getAdaptivePath(failedIds: string[]) {
+  return ExpressionController.getAdaptivePath(failedIds);
+}
+
 
 // Journal Actions
 export async function createJournalEntry(data: CreateJournalEntryDto) {
@@ -38,5 +42,16 @@ export async function createJournalEntry(data: CreateJournalEntryDto) {
 
 export async function analyzeJournalEntry(id: string) {
   return JournalController.analyze(id);
+}
+
+// Achievement Actions
+import { achievementService } from "@/backend/infrastructure/registry";
+
+export async function getAchievements() {
+  return achievementService.getAchievements();
+}
+
+export async function checkAchievements() {
+  return achievementService.checkAchievements();
 }
 

@@ -1,5 +1,5 @@
 import { ExpressionDetail, CreateExpressionDto } from "../types";
-import { StudyPerformance } from "@/shared/types/expression";
+import { StudyMetadata } from "../types/study";
 
 export interface IExpressionRepository {
   findByText(text: string): Promise<ExpressionDetail | null>;
@@ -7,6 +7,7 @@ export interface IExpressionRepository {
   findAll(): Promise<ExpressionDetail[]>;
   findDueForReview(limit: number): Promise<ExpressionDetail[]>;
   save(expression: CreateExpressionDto): Promise<ExpressionDetail>;
-  updateStudyProgress(id: string, performance: StudyPerformance): Promise<ExpressionDetail>;
+  update(id: string, expression: CreateExpressionDto): Promise<ExpressionDetail>;
+  updateStudyProgress(id: string, study: StudyMetadata): Promise<ExpressionDetail>;
   delete(id: string): Promise<void>;
 }

@@ -1,9 +1,9 @@
 import { prisma } from "../db";
 import { IExpressionRepository } from "../../domain/repositories/IExpressionRepository";
-import { ExpressionDetail, CreateExpressionDto } from "../../domain/types";
+import { ExpressionDetail, CreateExpressionDto, CefrLevel } from "../../domain/types";
 import { Prisma } from "@prisma/client";
 import { CollisionError } from "../../domain/errors";
-import { StudyPerformance } from "@/shared/types/expression";
+import { StudyMetadata } from "../../domain/types/study";
 
 import { BasePrismaRepository } from "./BasePrismaRepository";
 
@@ -49,32 +49,7 @@ export class PrismaExpressionRepository extends BasePrismaRepository implements 
   async save(expression: CreateExpressionDto): Promise<ExpressionDetail> {
     try {
       const newExpression = await prisma.expression.create({
-        data: {
-          text: expression.text,
-          translation: expression.translation,
-          meaning: expression.meaning,
-          secondaryMeanings: JSON.stringify(expression.metadata.secondaryMeanings),
-          type: expression.metadata.type,
-          cefr: expression.metadata.cefr,
-          ipa: expression.metadata.ipa,
-          frequency: expression.metadata.frequency,
-          formality: expression.metadata.formality,
-          mnemonic: expression.metadata.mnemonic,
-          imageUrl: expression.metadata.imageUrl,
-          usageTips: JSON.stringify(expression.linguistics.usageTips),
-          tenses: JSON.stringify(expression.linguistics.tenses),
-          wordFamilies: JSON.stringify(expression.linguistics.wordFamilies),
-          phrasalVerbDetails: JSON.stringify(expression.linguistics.phrasalVerbDetails),
-          slangData: expression.linguistics.slangData ? JSON.stringify(expression.linguistics.slangData) : null,
-          examples: {
-            create: expression.linguistics.examples.map(ex => ({
-              text: ex.text,
-              translation: ex.translation,
-              category: ex.category || "cotidiano",
-              explanation: ex.explanation,
-            })),
-          },
-        },
+        data: this.mapToPrismaData(expression) as Prisma.ExpressionCreateInput,
         include: { examples: true },
       });
       return this.formatExpression(newExpression)!;
@@ -86,53 +61,63 @@ export class PrismaExpressionRepository extends BasePrismaRepository implements 
     }
   }
 
-  async updateStudyProgress(id: string, performance: StudyPerformance): Promise<ExpressionDetail> {
-    const current = await prisma.expression.findUniqueOrThrow({
-      where: { id },
-    });
-
-    const performanceScore = performance === 'hard' ? 0 : performance === 'good' ? 3 : 5;
-
-    // SM-2 simplified: adjust easiness factor
-    const newEasiness = Math.max(
-      1.3,
-      current.easiness + (0.1 - (5 - performanceScore) * (0.08 + (5 - performanceScore) * 0.02))
-    );
-
-    // Calculate new interval
-    let newInterval: number;
-    if (performanceScore < 3) {
-      newInterval = 0; // Reset on hard
-    } else if (current.interval === 0) {
-      newInterval = 1;
-    } else if (current.interval === 1) {
-      newInterval = 6;
-    } else {
-      newInterval = Math.round(current.interval * newEasiness);
-    }
-
-    const nextReview = new Date();
-    nextReview.setDate(nextReview.getDate() + newInterval);
-
-    // Determine status
-    let newStatus: string;
-    if (newInterval >= 21) {
-      newStatus = 'mastered';
-    } else if (current.timesStudied >= 1 || performanceScore >= 3) {
-      newStatus = 'learning';
-    } else {
-      newStatus = 'pending';
-    }
+  async update(id: string, expression: CreateExpressionDto): Promise<ExpressionDetail> {
+    // Delete existing examples first for a clean state
+    await prisma.example.deleteMany({ where: { expressionId: id } });
 
     const updated = await prisma.expression.update({
       where: { id },
+      data: this.mapToPrismaData(expression, true) as Prisma.ExpressionUpdateInput,
+      include: { examples: true },
+    });
+    return this.formatExpression(updated)!;
+  }
+
+  private mapToPrismaData(expression: CreateExpressionDto, isUpdate = false): Prisma.ExpressionCreateInput | Prisma.ExpressionUpdateInput {
+    const data: Prisma.ExpressionUpdateInput & { text?: string } = {
+      translation: expression.translation,
+      meaning: expression.meaning,
+      secondaryMeanings: JSON.stringify(expression.metadata.secondaryMeanings),
+      type: expression.metadata.type,
+      cefr: expression.metadata.cefr,
+      ipa: expression.metadata.ipa,
+      frequency: expression.metadata.frequency,
+      formality: expression.metadata.formality,
+      mnemonic: expression.metadata.mnemonic,
+      imageUrl: expression.metadata.imageUrl,
+      usageTips: JSON.stringify(expression.linguistics.usageTips),
+      tenses: JSON.stringify(expression.linguistics.tenses),
+      wordFamilies: JSON.stringify(expression.linguistics.wordFamilies),
+      phrasalVerbDetails: JSON.stringify(expression.linguistics.phrasalVerbDetails),
+      chronology: JSON.stringify(expression.linguistics.chronology),
+      correctionData: expression.metadata.correction ? JSON.stringify(expression.metadata.correction) : null,
+      examples: {
+        create: expression.linguistics.examples.map(ex => ({
+          text: ex.text,
+          translation: ex.translation,
+          category: ex.category || "cotidiano",
+          explanation: ex.explanation,
+        })),
+      },
+    };
+
+    if (!isUpdate) {
+      data.text = expression.text;
+    }
+
+    return data;
+  }
+
+  async updateStudyProgress(id: string, study: StudyMetadata): Promise<ExpressionDetail> {
+    const updated = await prisma.expression.update({
+      where: { id },
       data: {
-        easiness: newEasiness,
-        interval: newInterval,
-        nextReviewAt: nextReview,
-        timesStudied: current.timesStudied + 1,
-        difficulty: performanceScore < 3 ? Math.min(current.difficulty + 1, 5) : current.difficulty,
-        status: newStatus,
+        easiness: study.easiness,
+        interval: study.interval,
+        nextReviewAt: study.nextReviewAt,
+        timesStudied: study.timesStudied,
+        difficulty: study.difficulty,
+        status: study.status,
       },
       include: { examples: true },
     });
@@ -156,28 +141,20 @@ export class PrismaExpressionRepository extends BasePrismaRepository implements 
       metadata: {
         secondaryMeanings: JSON.parse(expression.secondaryMeanings || "[]"),
         type: expression.type,
-        cefr: expression.cefr,
+        cefr: expression.cefr as CefrLevel,
         ipa: expression.ipa,
         frequency: expression.frequency,
         formality: expression.formality,
         mnemonic: expression.mnemonic,
         imageUrl: expression.imageUrl,
+        correction: expression.correctionData ? JSON.parse(expression.correctionData) : null,
       },
       linguistics: {
         usageTips: JSON.parse(expression.usageTips || "null"),
         tenses: JSON.parse(expression.tenses || "null"),
         wordFamilies: JSON.parse(expression.wordFamilies || "null"),
         phrasalVerbDetails: JSON.parse(expression.phrasalVerbDetails || "null"),
-        slangData: (() => {
-          const parsed = JSON.parse(expression.slangData || "null");
-          if (!parsed) return null;
-          return {
-            regionalVariants: parsed.regionalVariants || [],
-            detectedSlangLevel: parsed.detectedSlangLevel ?? 0,
-            isSlang: !!parsed.isSlang,
-            similarWords: parsed.similarWords || []
-          };
-        })(),
+        chronology: JSON.parse(expression.chronology || "null"),
         examples: expression.examples,
       },
       study: {
