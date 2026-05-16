@@ -47,7 +47,7 @@ export interface WordVariant {
   synonyms: string[];
   antonyms: string[];
   commonMistakes: string;
-  naturalContexts: ("formal" | "informal" | "business" | "academic" | "casual conversation")[];
+  naturalContexts: ("formal" | "informal" | "spoken" | "business" | "academic" | "casual conversation")[];
   patterns: string[]; // e.g. ["favor", "favorable", "favorably"]
   morphology: {
     prefix?: string;
