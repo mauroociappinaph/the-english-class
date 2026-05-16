@@ -2,197 +2,199 @@
 
 import { motion } from "framer-motion";
 import { WordFamilyListProps } from "../types/components";
-import { Sparkles, Box, Zap, Palette, Wind, ListTree, LucideIcon } from "lucide-react";
-import { WordVariantCard } from "./WordVariantCard";
-import { WordFamilies } from "@/shared/types/expression";
+import { Sparkles, ListTree, Box, Zap, Palette, Wind, ArrowRight, Quote } from "lucide-react";
+import { WordFamilies, WordVariant } from "@/shared/types/expression";
+import { MorphologyTree } from "./word-variant/MorphologyTree";
+import { RegisterSpectrum } from "./word-variant/RegisterSpectrum";
+import { clsx } from "clsx";
 
-const posConfig: Record<string, { label: string; sub: string; color: string; icon: LucideIcon }> = {
+const posConfig: Record<string, { label: string; sub: string; color: string; icon: any }> = {
   noun: { 
     label: "Noun", 
-    sub: "The Entity / Concept", 
+    sub: "Concept / Entity", 
     color: "text-blue-400 bg-blue-500/10 border-blue-500/20",
     icon: Box
   },
   verb: { 
     label: "Verb", 
-    sub: "The Action / State", 
+    sub: "Action / State", 
     color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
     icon: Zap
   },
   adjective: { 
     label: "Adjective", 
-    sub: "The Quality / Description", 
+    sub: "Quality / Description", 
     color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
     icon: Palette
   },
   adverb: { 
     label: "Adverb", 
-    sub: "The Manner / Degree", 
+    sub: "Manner / Degree", 
     color: "text-purple-400 bg-purple-500/10 border-purple-500/20",
     icon: Wind
   },
 };
 
 export function WordFamilyList({ families }: WordFamilyListProps) {
-  // Cast families to rich type if needed, or handle both for backward compatibility
   const richFamilies = families as unknown as WordFamilies;
   const entries = Object.entries(richFamilies || {}).filter(([_, variants]) => variants && variants.length > 0);
+  const allVariants = Object.values(richFamilies || {}).flat().filter(Boolean) as WordVariant[];
+  const rootWord = allVariants[0]?.morphology?.root || "Root";
 
   if (entries.length === 0) return null;
 
-  // Flatten all variants to check for patterns and counts
-  const allVariants = Object.values(richFamilies || {}).flat().filter(Boolean);
-
   return (
-    <div className="w-full relative space-y-12">
-      {/* Educational Header & Introduction */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 px-6 py-2 rounded-lg bg-blue-500/5 border border-blue-500/10 w-fit">
-            <ListTree size={14} className="text-blue-400" />
-            <p className="text-sm font-black text-blue-400/90 uppercase tracking-[0.3em]">
-              Morphology Map & Word Families
-            </p>
+    <div className="w-full relative space-y-32 pb-32">
+      {/* 1. EDITORIAL HEADER */}
+      <section className="flex flex-col md:flex-row md:items-end justify-between gap-12">
+        <div className="space-y-6 max-w-2xl">
+          <div className="flex items-center gap-3 px-4 py-1.5 rounded-full bg-blue-500/5 border border-blue-500/10 w-fit">
+            <ListTree size={12} className="text-blue-400" />
+            <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em]">
+              Morphology Architecture
+            </span>
           </div>
-          <h2 className="text-4xl font-black text-white tracking-tight leading-tight">
-            One root, <span className="text-blue-500">infinite</span> possibilities.
+          <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-[0.9]">
+            One root, <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">infinite</span> possibilities.
           </h2>
-          <p className="text-zinc-500 max-w-xl text-lg leading-relaxed">
-            Understanding how words morph into different parts of speech is the fastest way to expand your vocabulary. 
-            Learn the root, and you unlock the whole family.
+          <p className="text-zinc-500 text-xl leading-relaxed font-medium">
+            Mastering the root unlocks the whole family. It's the ultimate shortcut to natural English fluency.
           </p>
         </div>
 
-        {/* "Learn one, unlock many" Mini Stats */}
-        <div className="p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 flex items-center gap-6">
-          <div className="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400">
-            <Sparkles size={28} />
-          </div>
-          <div>
-            <p className="text-sm font-black uppercase tracking-widest text-zinc-400">Linguistic Boost</p>
-            <p className="text-xl font-black text-white">
-              Learn 1, Unlock {allVariants.length}
-            </p>
-            <p className="text-sm font-bold text-blue-500/70 uppercase mt-1">Efficiency +{allVariants.length * 100}%</p>
-          </div>
+        <div className="flex flex-col items-end gap-2">
+          <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Efficiency Boost</span>
+          <div className="text-5xl font-black text-white">x{allVariants.length}</div>
+          <div className="text-xs font-bold text-blue-500/60 uppercase">Vocabulary leverage</div>
         </div>
-      </div>
+      </section>
 
-      {/* Visual Tree / Connection Map (Simplified for now, but aesthetic) */}
-      <div className="relative">
-        {/* Background Connection Lines (Aesthetic) */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-10">
-          <svg width="100%" height="100%" className="overflow-visible">
-            <defs>
-              <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0" />
-                <stop offset="50%" stopColor="#3b82f6" stopOpacity="1" />
-                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-            <circle cx="50%" cy="50%" r="200" fill="none" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="10 20" className="animate-[spin_60s_linear_infinite]" />
-            <circle cx="50%" cy="50%" r="300" fill="none" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="5 15" className="animate-[spin_40s_linear_infinite_reverse]" />
-          </svg>
+      {/* 2. THE MORPHOLOGY TREE (Interactive Visual) */}
+      <section className="relative py-20 bg-zinc-950/50 rounded-[4rem] border border-white/5 overflow-hidden">
+        <div className="absolute top-0 left-0 p-12 opacity-20">
+          <Sparkles size={80} className="text-blue-500" />
         </div>
+        <MorphologyTree families={richFamilies} rootWord={rootWord} />
+      </section>
 
-        {/* Word Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-10">
-          {Object.entries(posConfig).map(([key, config]) => {
-            const variants = richFamilies[key as keyof WordFamilies];
-            if (!variants || variants.length === 0) return null;
+      {/* 3. EDITORIAL MODULES (Replacing Cards) */}
+      <section className="space-y-40">
+        {Object.entries(posConfig).map(([pos, config]) => {
+          const variants = richFamilies[pos as keyof WordFamilies];
+          if (!variants || variants.length === 0) return null;
 
-            return (
-              <div key={key} className="space-y-6">
-                <div className="flex items-center gap-4 px-2">
-                  <div className={`w-8 h-8 rounded-2xl ${config.color} flex items-center justify-center`}>
-                    <config.icon size={16} />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-black uppercase tracking-[0.2em] text-white">
-                      {config.label}s
-                    </h4>
-                    <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">
-                      {config.sub}
-                    </p>
-                  </div>
-                  <div className="h-px flex-1 bg-white/5 ml-4" />
+          return (
+            <div key={pos} className="relative">
+              {/* Sticky PoS Sidebar/Header */}
+              <div className="sticky top-24 z-30 mb-12 flex items-center gap-6">
+                <div className={clsx("w-12 h-12 rounded-2xl flex items-center justify-center shadow-2xl", config.color)}>
+                  <config.icon size={24} />
                 </div>
-
-                <div className="space-y-4">
-                  {variants.map((variant, idx) => (
-                    <WordVariantCard 
-                      key={`${key}-${variant.word}-${idx}`}
-                      variant={variant}
-                      category={config}
-                      index={idx}
-                    />
-                  ))}
+                <div>
+                  <h3 className="text-3xl font-black text-white tracking-tight leading-none">{config.label}s</h3>
+                  <p className="text-sm font-bold text-zinc-500 uppercase tracking-widest mt-1">{config.sub}</p>
                 </div>
+                <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
               </div>
-            );
-          })}
+
+              {/* The Words Flow */}
+              <div className="space-y-32 pl-4 md:pl-20 border-l border-white/5">
+                {variants.map((variant, idx) => (
+                  <motion.div 
+                    key={variant.word}
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    className="grid grid-cols-1 lg:grid-cols-12 gap-16"
+                  >
+                    {/* Word Identity Column */}
+                    <div className="lg:col-span-4 space-y-8">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-3">
+                          <h4 className="text-4xl font-black text-white tracking-tighter">{variant.word}</h4>
+                          <div className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black text-zinc-400 uppercase">
+                            {variant.cefr}
+                          </div>
+                        </div>
+                        <p className="text-sm font-bold text-blue-500/60 font-mono tracking-widest">
+                          {variant.pronunciation}
+                        </p>
+                      </div>
+
+                      <p className="text-xl text-zinc-400 leading-relaxed font-medium">
+                        {variant.simpleExplanation}
+                      </p>
+
+                      <div className="space-y-4">
+                        <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Usage Context</span>
+                        <RegisterSpectrum registers={variant.naturalContexts} />
+                      </div>
+                    </div>
+
+                    {/* Word Intelligence Column */}
+                    <div className="lg:col-span-8 space-y-12">
+                      {/* Examples Stream */}
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-3">
+                          <Quote size={16} className="text-emerald-500" />
+                          <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Real Usage</span>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {variant.examples.slice(0, 2).map((ex, i) => (
+                            <div key={i} className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-3 group hover:bg-white/[0.04] transition-colors">
+                              <p className="text-white font-bold tracking-tight">"{ex.text}"</p>
+                              <p className="text-sm text-zinc-500 font-medium">{ex.translation}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Collocations Grid */}
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-3">
+                          <Sparkles size={16} className="text-amber-500" />
+                          <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Common Partners</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {variant.commonCollocations?.map((col, i) => (
+                            <div key={i} className="px-5 py-2.5 rounded-2xl bg-zinc-950 border border-white/5 text-sm font-bold text-zinc-300 hover:border-blue-500/30 hover:text-blue-400 transition-all cursor-default">
+                              {col}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Discovery Interaction */}
+                      <button className="flex items-center gap-4 group/btn">
+                        <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover/btn:bg-blue-500 group-hover/btn:text-white transition-all">
+                          <ArrowRight size={18} />
+                        </div>
+                        <span className="text-sm font-black uppercase tracking-widest text-zinc-500 group-hover/btn:text-white transition-colors">
+                          Deep Dive into Nuances
+                        </span>
+                      </button>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </section>
+
+      {/* 4. FINAL PEDAGOGICAL CTA */}
+      <section className="p-16 rounded-[4rem] bg-gradient-to-br from-blue-600/10 to-purple-600/10 border border-white/10 relative overflow-hidden text-center space-y-8">
+        <div className="w-20 h-20 rounded-3xl bg-blue-500 flex items-center justify-center text-white mx-auto shadow-2xl shadow-blue-500/20">
+          <Sparkles size={40} />
         </div>
-      </div>
-
-      {/* "Learn one, unlock many" Pedagogical Section */}
-      <motion.div 
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="p-12 rounded-[2rem] bg-gradient-to-br from-blue-500/10 via-transparent to-purple-500/10 border border-white/5 relative overflow-hidden group"
-      >
-        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <div className="w-16 h-16 rounded-[2rem] bg-blue-500 flex items-center justify-center text-white shadow-2xl shadow-blue-500/20">
-              <Sparkles size={32} />
-            </div>
-            <h3 className="text-3xl font-black text-white tracking-tight">
-              Unlock the <span className="text-blue-400">Power of Morphology</span>
-            </h3>
-            <p className="text-zinc-400 leading-relaxed">
-              Native speakers don't learn each word in isolation. They learn the <strong>root</strong> and then apply 
-              morphological patterns to transform it. By understanding these prefixes and suffixes, you 
-              multiply your vocabulary capacity by 4x.
-            </p>
-            <div className="flex items-center gap-6">
-              <div className="flex flex-col">
-                <span className="text-2xl font-black text-white">400%</span>
-                <span className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Retention Speed</span>
-              </div>
-              <div className="w-px h-10 bg-white/10" />
-              <div className="flex flex-col">
-                <span className="text-2xl font-black text-white">x4</span>
-                <span className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Word Capacity</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <p className="text-sm font-black uppercase tracking-[0.3em] text-blue-500">Learning Strategy</p>
-            <div className="space-y-3">
-              {[
-                { title: "Spot the Root", desc: "Identify the core meaning that stays constant." },
-                { title: "Attach the Suffix", desc: "Notice how -ly makes it an adverb, -able makes it an adjective." },
-                { title: "Contextual Shift", desc: "Observe how the word changes role in a sentence." }
-              ].map((item, i) => (
-                <div key={i} className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors flex items-center gap-4 group">
-                  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-white/10 flex items-center justify-center text-sm font-black text-zinc-400 group-hover:text-blue-400 group-hover:border-blue-500/30 transition-all">
-                    {i + 1}
-                  </div>
-                  <div>
-                    <h5 className="text-sm font-bold text-white tracking-tight">{item.title}</h5>
-                    <p className="text-sm text-zinc-400">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Background Sparkles */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 blur-[100px] pointer-events-none" />
-      </motion.div>
+        <h3 className="text-4xl font-black text-white tracking-tight">Expand your mind.</h3>
+        <p className="text-zinc-400 max-w-xl mx-auto text-lg">
+          You didn't just learn a word. You mastered an entire structural branch of the English language. 
+          Keep exploring the patterns to reach effortless fluency.
+        </p>
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
+      </section>
     </div>
   );
 }
