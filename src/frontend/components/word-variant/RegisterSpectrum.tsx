@@ -2,19 +2,21 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
 
-type Register = "formal" | "informal" | "spoken" | "business" | "academic" | "casual conversation";
+type Register = "formal" | "informal" | "spoken" | "business" | "academic" | "casual conversation" | "literary" | "slang";
 
 interface RegisterSpectrumProps {
   registers: Register[];
 }
 
 const spectrum = [
-  { key: "informal", label: "Informal", position: 10 },
-  { key: "casual conversation", label: "Casual", position: 25 },
-  { key: "spoken", label: "Spoken", position: 40 },
-  { key: "business", label: "Business", position: 60 },
+  { key: "slang", label: "Slang", position: 5 },
+  { key: "informal", label: "Informal", position: 15 },
+  { key: "casual conversation", label: "Casual", position: 30 },
+  { key: "spoken", label: "Spoken", position: 45 },
+  { key: "business", label: "Business", position: 65 },
   { key: "academic", label: "Academic", position: 80 },
-  { key: "formal", label: "Formal", position: 95 },
+  { key: "formal", label: "Formal", position: 90 },
+  { key: "literary", label: "Literary", position: 100 },
 ];
 
 export function RegisterSpectrum({ registers }: RegisterSpectrumProps) {

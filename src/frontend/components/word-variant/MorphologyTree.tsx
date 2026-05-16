@@ -17,7 +17,9 @@ const posConfig = {
 };
 
 export function MorphologyTree({ families, rootWord }: MorphologyTreeProps) {
-  const entries = Object.entries(families).filter(([_, variants]) => variants && variants.length > 0);
+  const entries = Object.entries(families).filter((entry): entry is [string, WordVariant[]] => 
+    entry[1] !== undefined && entry[1].length > 0
+  );
 
   return (
     <div className="w-full aspect-[16/9] md:aspect-[21/9] relative flex items-center justify-center overflow-visible py-20">
@@ -94,7 +96,7 @@ export function MorphologyTree({ families, rootWord }: MorphologyTreeProps) {
 
                 {/* Variant Nodes */}
                 <div className="flex flex-col gap-3">
-                  {variants.slice(0, 2).map((v, i) => (
+                  {variants.slice(0, 2).map((v: WordVariant, i: number) => (
                     <motion.div 
                       key={v.word}
                       whileHover={{ scale: 1.05, x: index < entries.length / 2 ? 10 : -10 }}
