@@ -101,15 +101,15 @@ export const AnalysisHero: React.FC = () => {
         }, 800);
       } else {
         // Handle failure or empty responses
-        const rawError = response?.error;
+        const rawError = (response && typeof response === 'object' && 'error' in response) ? response.error : null;
         const errorData: AnalysisError = (rawError && typeof rawError === 'object' && Object.keys(rawError).length > 0) 
-          ? rawError 
+          ? rawError as AnalysisError
           : {
               code: "UNKNOWN",
-              message: !response || Object.keys(response).length === 0 
-                ? "The server returned an empty response. This usually indicates a timeout or a crash in the neural engine." 
+              message: (!response || Object.keys(response).length === 0) 
+                ? "The neural engine returned an empty sync state. This usually happens during high-load periods or provider timeouts." 
                 : "The server returned a failed state without detailed error metadata.",
-              pedagogicalTip: "El motor neuronal devolvió una respuesta vacía. Esto puede pasar si la conexión es inestable o si el servidor está saturado. ¡Probá de nuevo!"
+              pedagogicalTip: "La conexión con el motor neuronal fue interrumpida. ¡Probá una vez más, que ya casi lo tenemos!"
             };
             
         console.error("[AnalysisHero] Analysis Failed. Full Response:", response);

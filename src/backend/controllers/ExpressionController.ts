@@ -23,21 +23,30 @@ export class ExpressionController {
       return await withTelemetry("analyzeExpression", async () => {
         try {
           const result = await expressionService.analyzeExpression(text);
+          
+          if (!result) {
+            throw new Error("Analysis engine returned no data.");
+          }
+
           // Fire and forget achievement check
           achievementService.checkAchievements().catch(e => console.error("Achievement sync failed", e));
           
           // Deep clone to plain object to ensure Next.js serialization doesn't fail
+          // Also provides a safety net against Proxy objects or circular refs
           const serializableData = JSON.parse(JSON.stringify(result));
-          console.log(`[Controller] Analysis success for "${text}". Data size: ${JSON.stringify(serializableData).length} bytes`);
+          const response = { success: true as const, data: serializableData };
           
-          return { success: true, data: serializableData };
+          console.log(`[Controller] Analysis success for "${text}". Returning serializable object.`);
+          return JSON.parse(JSON.stringify(response));
         } catch (error) {
           console.error(`[Controller] Internal analysis error for "${text}":`, error);
           
           let code: AnalysisErrorCode = "UNKNOWN";
           let pedagogicalTip = "Tuvimos un problema técnico. ¿Podés intentar de nuevo?";
           
-          if (error && typeof error === 'object' && 'code' in error && (error as Record<string, unknown>).name === 'AnalysisPipelineError') {
+          const isPipelineError = error && typeof error === 'object' && 'code' in error && (error as Record<string, unknown>).name === 'AnalysisPipelineError';
+          
+          if (isPipelineError) {
             const pipelineError = error as { code: AnalysisErrorCode };
             code = pipelineError.code;
             switch (code) {
@@ -59,8 +68,8 @@ export class ExpressionController {
             }
           }
 
-          const errorResponse: AnalysisResponse<import("../domain/types").ExpressionDetail> = { 
-            success: false, 
+          const errorResponse = { 
+            success: false as const, 
             error: {
               code,
               message: error instanceof Error ? error.message : String(error),
@@ -68,13 +77,13 @@ export class ExpressionController {
             }
           };
           
-          console.log(`[Controller] Returning handled error response:`, JSON.stringify(errorResponse));
-          return errorResponse;
+          console.log(`[Controller] Returning handled error response for "${text}":`, JSON.stringify(errorResponse));
+          return JSON.parse(JSON.stringify(errorResponse));
         }
       }, { text });
     } catch (criticalError) {
       console.error(`[Controller] CRITICAL analysis failure for "${text}":`, criticalError);
-      return {
+      const criticalResponse: AnalysisResponse<import("../domain/types").ExpressionDetail> = {
         success: false,
         error: {
           code: "UNKNOWN",
@@ -82,6 +91,7 @@ export class ExpressionController {
           pedagogicalTip: "El motor neuronal sufrió una falla crítica. Por favor, intentá de nuevo."
         }
       };
+      return JSON.parse(JSON.stringify(criticalResponse)); // Force serialization check
     }
   }
 
