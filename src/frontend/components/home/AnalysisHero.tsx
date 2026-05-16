@@ -81,8 +81,10 @@ export const AnalysisHero: React.FC = () => {
       startStream(input);
       
       const response = await analyzeExpression(input);
+      console.log(`[AnalysisHero] Received response for "${input}":`, response);
       
-      if (response.success) {
+      // Robust response check
+      if (response && typeof response === 'object' && 'success' in response && response.success === true) {
         const result = response.data;
         addExpression(result);
         setCurrentAnalysis(result);
@@ -98,25 +100,28 @@ export const AnalysisHero: React.FC = () => {
           router.push(`/expression/${result.id}`);
         }, 800);
       } else {
+        // Handle failure or empty responses
         const rawError = response?.error;
-        const errorData: AnalysisError = (rawError && Object.keys(rawError).length > 0) 
+        const errorData: AnalysisError = (rawError && typeof rawError === 'object' && Object.keys(rawError).length > 0) 
           ? rawError 
           : {
               code: "UNKNOWN",
-              message: "Server returned a success:false state but no error details.",
-              pedagogicalTip: "El motor neuronal devolvió un error vacío. Intentá de nuevo en unos segundos."
+              message: !response || Object.keys(response).length === 0 
+                ? "The server returned an empty response. This usually indicates a timeout or a crash in the neural engine." 
+                : "The server returned a failed state without detailed error metadata.",
+              pedagogicalTip: "El motor neuronal devolvió una respuesta vacía. Esto puede pasar si la conexión es inestable o si el servidor está saturado. ¡Probá de nuevo!"
             };
             
-        console.error("[AnalysisHero] Full Response:", response);
+        console.error("[AnalysisHero] Analysis Failed. Full Response:", response);
         console.error("[AnalysisHero] Resolved Error Data:", errorData);
         setErrorState(errorData);
       }
     } catch (err) {
-      console.error(err);
+      console.error("[AnalysisHero] Catastrophic Error:", err);
       setErrorState({
         code: "UNKNOWN",
         message: err instanceof Error ? err.message : String(err),
-        pedagogicalTip: "Algo salió mal en el motor de análisis. ¿Probamos de nuevo?"
+        pedagogicalTip: "Algo salió mal de forma inesperada en el motor de análisis. ¿Probamos de nuevo?"
       });
     } finally {
       setAnalyzing(false);

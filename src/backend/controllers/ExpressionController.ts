@@ -18,57 +18,71 @@ export class ExpressionController {
 
   static async analyze(text: string): Promise<AnalysisResponse<import("../domain/types").ExpressionDetail>> {
     console.log(`[Controller] Starting analysis for: "${text}"`);
-    return withTelemetry("analyzeExpression", async () => {
-      try {
-        const result = await expressionService.analyzeExpression(text);
-        // Fire and forget achievement check
-        achievementService.checkAchievements().catch(e => console.error("Achievement sync failed", e));
-        
-        // Deep clone to plain object to ensure Next.js serialization doesn't fail
-        const serializableData = JSON.parse(JSON.stringify(result));
-        console.log(`[Controller] Analysis success for "${text}". Data size: ${JSON.stringify(serializableData).length} bytes`);
-        
-        return { success: true, data: serializableData };
-      } catch (error) {
-        console.error(`[Controller] Analysis failed for "${text}":`, error);
-        
-        let code: AnalysisErrorCode = "UNKNOWN";
-        let pedagogicalTip = "Tuvimos un problema técnico. ¿Podés intentar de nuevo?";
-        
-        if (error && typeof error === 'object' && 'code' in error && (error as Record<string, unknown>).name === 'AnalysisPipelineError') {
-          const pipelineError = error as { code: AnalysisErrorCode };
-          code = pipelineError.code;
-          switch (code) {
-            case "INPUT_TOO_SHORT":
-              pedagogicalTip = "La frase es muy corta. ¡Intentá con algo un poco más completo!";
-              break;
-            case "INPUT_NONSENSE":
-              pedagogicalTip = "No pude reconocer palabras en inglés. Revisá si hay algún error de tipeo.";
-              break;
-            case "PROVIDER_TIMEOUT":
-              pedagogicalTip = "El motor neuronal está lento hoy. ¡Probá de nuevo en unos segundos!";
-              break;
-            case "PROVIDER_RATE_LIMIT":
-              pedagogicalTip = "¡Mucho tráfico! Estamos calibrando los servidores. Esperá un ratito.";
-              break;
-            case "PARSING_FAILURE":
-              pedagogicalTip = "La estructura de esta frase confundió a mis algoritmos. ¿Podés simplificarla?";
-              break;
+    
+    try {
+      return await withTelemetry("analyzeExpression", async () => {
+        try {
+          const result = await expressionService.analyzeExpression(text);
+          // Fire and forget achievement check
+          achievementService.checkAchievements().catch(e => console.error("Achievement sync failed", e));
+          
+          // Deep clone to plain object to ensure Next.js serialization doesn't fail
+          const serializableData = JSON.parse(JSON.stringify(result));
+          console.log(`[Controller] Analysis success for "${text}". Data size: ${JSON.stringify(serializableData).length} bytes`);
+          
+          return { success: true, data: serializableData };
+        } catch (error) {
+          console.error(`[Controller] Internal analysis error for "${text}":`, error);
+          
+          let code: AnalysisErrorCode = "UNKNOWN";
+          let pedagogicalTip = "Tuvimos un problema técnico. ¿Podés intentar de nuevo?";
+          
+          if (error && typeof error === 'object' && 'code' in error && (error as Record<string, unknown>).name === 'AnalysisPipelineError') {
+            const pipelineError = error as { code: AnalysisErrorCode };
+            code = pipelineError.code;
+            switch (code) {
+              case "INPUT_TOO_SHORT":
+                pedagogicalTip = "La frase es muy corta. ¡Intentá con algo un poco más completo!";
+                break;
+              case "INPUT_NONSENSE":
+                pedagogicalTip = "No pude reconocer palabras en inglés. Revisá si hay algún error de tipeo.";
+                break;
+              case "PROVIDER_TIMEOUT":
+                pedagogicalTip = "El motor neuronal está lento hoy. ¡Probá de nuevo en unos segundos!";
+                break;
+              case "PROVIDER_RATE_LIMIT":
+                pedagogicalTip = "¡Mucho tráfico! Estamos calibrando los servidores. Esperá un ratito.";
+                break;
+              case "PARSING_FAILURE":
+                pedagogicalTip = "La estructura de esta frase confundió a mis algoritmos. ¿Podés simplificarla?";
+                break;
+            }
           }
-        }
 
-        const errorResponse: AnalysisResponse<import("../domain/types").ExpressionDetail> = { 
-          success: false, 
-          error: {
-            code,
-            message: error instanceof Error ? error.message : (typeof error === 'object' ? JSON.stringify(error) : String(error)),
-            pedagogicalTip
-          }
-        };
-        console.log(`[Controller] Returning error response:`, JSON.stringify(errorResponse, null, 2));
-        return errorResponse;
-      }
-    }, { text });
+          const errorResponse: AnalysisResponse<import("../domain/types").ExpressionDetail> = { 
+            success: false, 
+            error: {
+              code,
+              message: error instanceof Error ? error.message : String(error),
+              pedagogicalTip
+            }
+          };
+          
+          console.log(`[Controller] Returning handled error response:`, JSON.stringify(errorResponse));
+          return errorResponse;
+        }
+      }, { text });
+    } catch (criticalError) {
+      console.error(`[Controller] CRITICAL analysis failure for "${text}":`, criticalError);
+      return {
+        success: false,
+        error: {
+          code: "UNKNOWN",
+          message: criticalError instanceof Error ? criticalError.message : "Critical Controller Failure",
+          pedagogicalTip: "El motor neuronal sufrió una falla crítica. Por favor, intentá de nuevo."
+        }
+      };
+    }
   }
 
   static async getAll() {
