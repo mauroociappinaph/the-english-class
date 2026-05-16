@@ -15,17 +15,23 @@ export abstract class BaseLinguisticAnalyzer implements ILinguisticAnalyzer, ISt
    * Generates the standard pedagogical prompt for English linguistic analysis.
    */
   protected getPedagogicalPrompt(text: string): string {
-    return `You are a Senior English Professor and Linguistic Analyst (Cambridge standards). 
-Analyze the provided English expression and return a strictly valid JSON object.
+    return `You are a Master Linguist, English Professor, and Vocabulary Acquisition Expert (Cambridge/Oxford standards). 
+Analyze the provided English expression with extreme depth. Focus on accelerating vocabulary retention through morphology and logical connections.
+
+Return a strictly valid JSON object.
 
 RULES:
-- "translation": Provide a natural Spanish translation of the expression.
-- "meaning": Provide a clear explanation in ENGLISH.
-- "chronology": MUST include this field with retrospective, active, and projection modules. This is CRITICAL for the Visual Grammar Engine.
-- "secondaryMeanings": Scan for polysemy. Provide all other significantly different definitions or usages in different domains in ENGLISH.
-- "usageTips": All descriptions must be in ENGLISH.
-- "tenses": identify the TOP 5 most natural verbal forms/tenses. Each must have "text" (ENGLISH) and "translation" (SPANISH).
-- Provide exactly 3 different cinematic examples in "examples".
+- "translation": Natural Spanish translation.
+- "meaning": Comprehensive explanation in ENGLISH.
+- "chronology": MUST include this field with retrospective, active, and projection modules.
+- "secondaryMeanings": Provide all significant polysemic variations in ENGLISH.
+- "usageTips": Naturalness, Common Mistakes, and Context in ENGLISH.
+- "tenses": TOP 5 natural verbal forms.
+- "examples": 3 cinematic examples with "register" (e.g., informal, academic) and "tone".
+- "wordFamilies": This is the most important part. For each Part of Speech (noun, verb, adjective, adverb):
+    - Provide at least 2 variants if they exist.
+    - MUST include: "word", "translation", "pronunciation", "cefr", "simpleExplanation", "grammarExplanation", "synonyms", "antonyms", "commonCollocations", "commonExpressions", "naturalContexts", "morphology" (prefix, root, suffix).
+    - "naturalContexts" MUST be an array of: "formal", "informal", "spoken", "business", "academic", "literary", "slang", "casual conversation".
 
 Expression: "${text}"
 
@@ -47,71 +53,42 @@ Schema:
     }
   },
   "secondaryMeanings": ["English secondary meaning"],
-  "type": "verb", // Pick only one: verb | phrasal_verb | idiom | expression | tense
-  "cefr": "A1-C2", // CRITICAL: Provide an accurate Cambridge-based classification (A1, A2, B1, B2, C1, or C2). If unsure or the word is extremely rare/not standard, use "UNKNOWN". DO NOT default to B1.
+  "type": "verb", // verb | phrasal_verb | idiom | expression | tense
+  "cefr": "A1-C2", 
   "ipa": "/phonetic transcription/",
-  "correction": {
-    "isCorrect": true, // false if the input has grammatical errors or is very unnatural
-    "correctedText": "Fixed version if isCorrect is false",
-    "explanation": "Why it was wrong or how to improve it in Spanish"
-  },
-  "frequency": 0.5, // 0.0 to 1.0
-  "formality": "neutral", // Pick only one: formal | informal | neutral
-  "mnemonic": "memory trick in English",
-  "imagePrompt": "artistic prompt for image generator",
-  "usageTips": {
-    "naturalness": "English description",
-    "commonMistake": "English description",
-    "context": "English description"
-  },
-  "tenses": {
-    "tense_name": { "text": "...", "translation": "..." }
-  },
+  "correction": { "isCorrect": true, "correctedText": null, "explanation": "..." },
+  "frequency": 0.5, // 0.0 to 1.0 (Natural usage frequency)
+  "formality": "neutral", // formal | informal | neutral
+  "mnemonic": "memory trick",
+  "usageTips": { "naturalness": "...", "commonMistake": "...", "context": "..." },
+  "tenses": { "tense_name": { "text": "...", "translation": "..." } },
   "examples": [
     { 
-      "text": "English example", 
-      "translation": "Spanish translation",
-      "literalTranslation": "Word by word",
-      "subtitleAdaptation": "Netflix style",
-      "category": "Genre", 
-      "explanation": "English explanation",
-      "tone": "Tone",
-      "register": "Register"
+      "text": "...", "translation": "...", "literalTranslation": "...", "subtitleAdaptation": "...", 
+      "category": "Genre", "explanation": "...", "tone": "...", "register": "..." 
     }
   ],
   "wordFamilies": {
     "noun": [{ 
-      "word": "step", 
-      "translation": "paso", 
-      "pronunciation": "/step/",
-      "cefr": "A1",
-      "simpleExplanation": "A movement made by lifting your foot.",
-      "grammarExplanation": "Countable noun. Often used with 'take'.",
-      "patterns": ["step", "stepping", "stepped"],
-      "morphology": { "prefix": null, "root": "step", "suffix": null },
-      "synonyms": ["stride", "pace"],
-      "antonyms": [],
-      "commonMistakes": "Don't confuse with 'stairs'.",
-      "naturalContexts": ["casual conversation", "academic"],
-      "tips": ["Used in many idioms like 'step by step'."],
-      "examples": [{"text": "He took a step forward.", "translation": "Él dio un paso adelante."}], 
-      "commonCollocations": ["take a step", "next step", "giant step"] 
+      "word": "...", "translation": "...", "pronunciation": "...", "cefr": "...",
+      "simpleExplanation": "...", "grammarExplanation": "...",
+      "patterns": ["..."],
+      "morphology": { "prefix": "...", "root": "...", "suffix": "..." },
+      "synonyms": ["..."], "antonyms": ["..."],
+      "commonMistakes": "...",
+      "naturalContexts": ["..."],
+      "commonCollocations": ["..."],
+      "commonExpressions": ["..."],
+      "tips": ["..."]
     }],
-    "verb": [{ "word": "...", "...": "Add other parts of speech (verb, adjective, adverb) with the SAME structure as the noun example above" }]
+    "verb": [], "adjective": [], "adverb": []
   },
-    "phrasalVerbDetails": {
-      "verb": "base verb",
-      "particle": "preposition/adverb",
-      "separable": "no | optional | mandatory",
-      "transitive": true,
-      "logicExplanation": "...",
-      "transitiveExplanation": "...",
-      "separabilityExplanation": "...",
-      "validExamples": ["He sets the table up", "He sets up the table"],
-      "invalidExamples": ["He sets up it"],
-      "collocations": [{ "phrase": "...", "frequency": "high|medium|low", "example": "...", "translation": "..." }]
-    } // IMPORTANT: If the expression is NOT a phrasal verb, this field MUST be null. DO NOT hallucinate details for adjectives or standard verbs.
-  }
+  "phrasalVerbDetails": { 
+    "verb": "...", "particle": "...", "separable": "...", "transitive": true,
+    "logicExplanation": "...", "transitiveExplanation": "...", "separabilityExplanation": "...",
+    "validExamples": ["..."], "invalidExamples": ["..."],
+    "collocations": [{ "phrase": "...", "frequency": "...", "example": "...", "translation": "..." }]
+  } 
 }
 `;
   }

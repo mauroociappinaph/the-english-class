@@ -44,10 +44,11 @@ export interface WordVariant {
   examples: Example[];
   grammarExplanation: string;
   commonCollocations: string[];
+  commonExpressions: string[];
   synonyms: string[];
   antonyms: string[];
   commonMistakes: string;
-  naturalContexts: ("formal" | "informal" | "spoken" | "business" | "academic" | "casual conversation")[];
+  naturalContexts: ("formal" | "informal" | "spoken" | "business" | "academic" | "casual conversation" | "literary" | "slang")[];
   patterns: string[]; // e.g. ["favor", "favorable", "favorably"]
   morphology: {
     prefix?: string;
