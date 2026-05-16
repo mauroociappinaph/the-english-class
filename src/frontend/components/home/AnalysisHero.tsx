@@ -98,13 +98,18 @@ export const AnalysisHero: React.FC = () => {
           router.push(`/expression/${result.id}`);
         }, 800);
       } else {
-        const errorData = response?.error || {
-          code: "UNKNOWN",
-          message: "Empty error received from server",
-          pedagogicalTip: "El motor neuronal devolvió un error vacío. Intentá de nuevo."
-        };
-        console.error("[AnalysisHero] Failed to analyze expression:", errorData);
-        setErrorState(errorData as AnalysisError);
+        const rawError = response?.error;
+        const errorData: AnalysisError = (rawError && Object.keys(rawError).length > 0) 
+          ? rawError 
+          : {
+              code: "UNKNOWN",
+              message: "Server returned a success:false state but no error details.",
+              pedagogicalTip: "El motor neuronal devolvió un error vacío. Intentá de nuevo en unos segundos."
+            };
+            
+        console.error("[AnalysisHero] Full Response:", response);
+        console.error("[AnalysisHero] Resolved Error Data:", errorData);
+        setErrorState(errorData);
       }
     } catch (err) {
       console.error(err);
