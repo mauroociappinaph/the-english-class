@@ -23,7 +23,12 @@ export class ExpressionController {
         const result = await expressionService.analyzeExpression(text);
         // Fire and forget achievement check
         achievementService.checkAchievements().catch(e => console.error("Achievement sync failed", e));
-        return { success: true, data: result };
+        
+        // Deep clone to plain object to ensure Next.js serialization doesn't fail
+        const serializableData = JSON.parse(JSON.stringify(result));
+        console.log(`[Controller] Analysis success for "${text}". Data size: ${JSON.stringify(serializableData).length} bytes`);
+        
+        return { success: true, data: serializableData };
       } catch (error) {
         console.error(`[Controller] Analysis failed for "${text}":`, error);
         
