@@ -38,7 +38,7 @@ export function SessionSummary() {
       try {
         const newAchievements = await checkAchievements();
         if (newAchievements && newAchievements.length > 0) {
-          newAchievements.forEach((a: any) => addAchievement(a as unknown as import("@/frontend/store/useAchievementStore").Achievement));
+          newAchievements.forEach((a: any) => addAchievement(a as unknown as import("@/frontend/types/achievements").Achievement));
         }
       } catch (err) {
         console.error("Failed to check achievements:", err);

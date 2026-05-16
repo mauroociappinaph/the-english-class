@@ -20,7 +20,7 @@ export function StudySection() {
   useEffect(() => {
     const fetchAchievements = async () => {
       const data = await getAchievements();
-      setAchievements(data as unknown as import("@/frontend/store/useAchievementStore").Achievement[]);
+      setAchievements(data as unknown as import("@/frontend/types/achievements").Achievement[]);
     };
     fetchAchievements();
   }, [setAchievements]);

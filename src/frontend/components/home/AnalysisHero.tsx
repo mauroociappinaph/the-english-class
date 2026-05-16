@@ -93,7 +93,7 @@ export const AnalysisHero: React.FC = () => {
         const newAch = await checkAchievements();
         if (newAch && newAch.length > 0) {
           const { addAchievement } = useAchievementStore.getState();
-          newAch.forEach((a) => addAchievement(a as unknown as import("@/frontend/store/useAchievementStore").Achievement));
+          newAch.forEach((a) => addAchievement(a as unknown as import("@/frontend/types/achievements").Achievement));
         }
 
         setTimeout(() => {
