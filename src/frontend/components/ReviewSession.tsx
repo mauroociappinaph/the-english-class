@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, Lightbulb } from "lucide-react";
 import { useStudyStore } from "@/frontend/store/useStudyStore";
 import { submitReview } from "@/app/actions";
 import { StudyPerformance } from "@/frontend/types/store";
@@ -179,6 +179,26 @@ export function ReviewSession() {
                 {currentExpression.meaning}
               </p>
             </div>
+
+            {currentExpression.metadata.mnemonic && (
+              <>
+                <div className="w-full h-px bg-white/10" />
+                <div className="p-5 rounded-2xl border border-blue-500/10 bg-blue-500/[0.02] relative overflow-hidden group text-left">
+                  <div className="absolute top-0 right-0 p-4 opacity-5">
+                    <Lightbulb size={64} className="text-blue-500" />
+                  </div>
+                  <div className="relative space-y-2">
+                    <div className="flex items-center gap-2 text-blue-400">
+                      <Lightbulb size={14} />
+                      <span className="text-xs font-black uppercase tracking-[0.2em]">Memory Bridge</span>
+                    </div>
+                    <p className="text-zinc-200 text-sm font-semibold italic">
+                      &ldquo;{currentExpression.metadata.mnemonic}&rdquo;
+                    </p>
+                  </div>
+                </div>
+              </>
+            )}
 
             {currentExpression.linguistics.wordFamilies && (
               <>
