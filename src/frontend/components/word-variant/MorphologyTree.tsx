@@ -59,7 +59,8 @@ export function MorphologyTree({ families, rootWord }: MorphologyTreeProps) {
 
       {/* Orbital Branches */}
       <div className="absolute inset-0 pointer-events-none">
-        {entries.map(([pos, variants], index) => {
+        {entries.map(([pos, rawVariants], index) => {
+          const variants = rawVariants as WordVariant[];
           const config = posConfig[pos as keyof typeof posConfig];
           if (!config || !variants) return null;
 

@@ -8,7 +8,7 @@ import { MorphologyTree } from "./word-variant/MorphologyTree";
 import { RegisterSpectrum } from "./word-variant/RegisterSpectrum";
 import { clsx } from "clsx";
 
-const posConfig: Record<string, { label: string; sub: string; color: string; icon: any }> = {
+const posConfig: Record<string, { label: string; sub: string; color: string; icon: React.ComponentType<{ size?: number; className?: string }> }> = {
   noun: { 
     label: "Noun", 
     sub: "Concept / Entity", 
