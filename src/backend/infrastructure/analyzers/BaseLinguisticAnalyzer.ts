@@ -23,12 +23,20 @@ Return a strictly valid JSON object.
 RULES:
 - "translation": Natural Spanish translation.
 - "meaning": Comprehensive explanation in ENGLISH.
-- "cefr": MUST be exactly one of: "A1", "A2", "B1", "B2", "C1", "C2" representing the primary difficulty level.
+- "cefr": MUST be exactly one of: "A1", "A2", "B1", "B2", "C1", "C2". 
+  Be extremely precise using Cambridge/Oxford vocabulary levels guidelines:
+  - "A1" (Beginner): Extremely simple, everyday words (e.g. cat, hello, walk).
+  - "A2" (Elementary): Simple verbs, adjectives, basic daily objects (e.g. airport, expensive, decide).
+  - "B1" (Intermediate): Intermediate vocabulary, simple idioms, common phrasal verbs (e.g. absolute, depend on, keep up).
+  - "B2" (Upper-Intermediate): Sophisticated vocabulary, business concepts, idiomatic phrasal verbs (e.g. accomplish, point out, break down).
+  - "C1" (Advanced): High-level academic/literary terms, rare phrasal verbs, complex idioms (e.g. ubiquitous, meticulous, grass on).
+  - "C2" (Proficiency): Obscure, highly literary, archaic, or native-level expressions (e.g. serendipity, ephemeral, chock-a-block).
 - "chronology": MUST include this field with retrospective, active, and projection modules.
 - "secondaryMeanings": Provide all significant polysemic variations in ENGLISH.
 - "usageTips": Naturalness, Common Mistakes, and Context in ENGLISH.
 - "tenses": TOP 5 natural verbal forms.
 - "examples": 3 cinematic examples with "register" (e.g., informal, academic) and "tone".
+- "mnemonic": A vivid, highly pedagogical memory trick or word association in Spanish to help the student remember the phrase. For example, linking the pronunciation to a Spanish sound or using a funny association. Avoid generic placeholders.
 - "wordFamilies": This is the most important part. For each Part of Speech (noun, verb, adjective, adverb):
     - Provide at least 2 variants if they exist.
     - MUST include: "word", "translation", "pronunciation", "cefr", "simpleExplanation", "grammarExplanation", "synonyms", "antonyms", "commonCollocations", "commonExpressions", "naturalContexts", "morphology" (prefix, root, suffix).
@@ -60,7 +68,7 @@ Schema:
   "correction": { "isCorrect": true, "correctedText": null, "explanation": "..." },
   "frequency": 0.5, // 0.0 to 1.0 (Natural usage frequency)
   "formality": "neutral", // formal | informal | neutral
-  "mnemonic": "memory trick",
+  "mnemonic": "un truco de memoria o regla mnemotécnica en español",
   "usageTips": { "naturalness": "...", "commonMistake": "...", "context": "..." },
   "tenses": { "tense_name": { "text": "...", "translation": "..." } },
   "examples": [
@@ -127,11 +135,23 @@ Return a strictly valid JSON object with:
     return `You are a helpful English teacher. 
 Provide a basic analysis of the expression: "${text}"
 
+RULES:
+- "cefr": MUST be exactly one of: "A1", "A2", "B1", "B2", "C1", "C2". 
+  Be extremely precise using Cambridge/Oxford vocabulary levels guidelines:
+  - "A1" (Beginner): Extremely simple, everyday words (e.g. cat, hello, walk).
+  - "A2" (Elementary): Simple verbs, adjectives, basic daily objects (e.g. airport, expensive, decide).
+  - "B1" (Intermediate): Intermediate vocabulary, simple idioms, common phrasal verbs (e.g. absolute, depend on, keep up).
+  - "B2" (Upper-Intermediate): Sophisticated vocabulary, business concepts, idiomatic phrasal verbs (e.g. accomplish, point out, break down).
+  - "C1" (Advanced): High-level academic/literary terms, rare phrasal verbs, complex idioms (e.g. ubiquitous, meticulous, grass on).
+  - "C2" (Proficiency): Obscure, highly literary, archaic, or native-level expressions (e.g. serendipity, ephemeral, chock-a-block).
+- "mnemonic": A vivid, highly pedagogical memory trick or word association in Spanish to help the student remember the phrase. Avoid generic placeholders.
+
 Return ONLY a valid JSON object with this schema:
 {
   "translation": "Natural Spanish translation",
   "meaning": "Simple English explanation",
   "cefr": "B2", // Must be exactly one of: A1 | A2 | B1 | B2 | C1 | C2
+  "mnemonic": "un truco de memoria o regla mnemotécnica en español",
   "correction": {
     "isCorrect": true,
     "correctedText": null,
