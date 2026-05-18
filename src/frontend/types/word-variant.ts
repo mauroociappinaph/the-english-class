@@ -1,8 +1,4 @@
-import { WordFamilies, WordVariant } from '@/shared/types/expression';
-
-export interface HumanContextProps {
-  variant: WordVariant;
-}
+import { WordFamilies } from '@/shared/types/expression';
 
 export interface MorphologyTreeProps {
   families: WordFamilies;
