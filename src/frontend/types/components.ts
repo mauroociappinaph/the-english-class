@@ -14,7 +14,23 @@ export interface GrammarSectionProps {
   items: GrammarItem[];
 }
 
-export interface ExpressionLibraryProps {}
+export interface ReviewHeaderProps {
+  currentReviewIndex: number;
+  queueLength: number;
+  cefr: string;
+  isTestMode: boolean;
+  toggleTestMode: () => void;
+  endReview: () => void;
+}
+
+export interface ReviewProgressBarProps {
+  progress: number;
+}
+
+export interface RatingButtonsProps {
+  onRate: (performance: import("@/frontend/types/store").StudyPerformance) => void;
+  isSubmitting: boolean;
+}
 
 export interface InteractiveTextProps {
   text: string;

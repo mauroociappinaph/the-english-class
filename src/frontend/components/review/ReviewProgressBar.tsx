@@ -1,8 +1,5 @@
 import { motion } from "framer-motion";
-
-interface ReviewProgressBarProps {
-  progress: number;
-}
+import { ReviewProgressBarProps } from "@/frontend/types/components";
 
 export function ReviewProgressBar({ progress }: ReviewProgressBarProps) {
   return (

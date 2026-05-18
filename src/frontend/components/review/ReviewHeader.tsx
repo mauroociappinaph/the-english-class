@@ -1,14 +1,6 @@
 import { X } from "lucide-react";
 import { getCefrStyle } from "../cefr-styles";
-
-interface ReviewHeaderProps {
-  currentReviewIndex: number;
-  queueLength: number;
-  cefr: string;
-  isTestMode: boolean;
-  toggleTestMode: () => void;
-  endReview: () => void;
-}
+import { ReviewHeaderProps } from "@/frontend/types/components";
 
 export function ReviewHeader({
   currentReviewIndex,
