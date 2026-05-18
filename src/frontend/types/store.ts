@@ -3,18 +3,18 @@ import {
   StudyPerformance 
 } from "@/shared/types/expression";
 
-export interface Expression extends SharedExpression {}
+interface Expression extends SharedExpression {}
 
 export { type StudyPerformance };
 
-export interface ExpressionDataState {
+interface ExpressionDataState {
   expressions: Expression[];
   setExpressions: (exprs: Expression[]) => void;
   addExpression: (expr: Expression) => void;
   removeExpression: (id: string) => void;
 }
 
-export interface ExpressionProcessState {
+interface ExpressionProcessState {
   isAnalyzing: boolean;
   currentAnalysis: Expression | null;
   setAnalyzing: (val: boolean) => void;
@@ -22,7 +22,7 @@ export interface ExpressionProcessState {
   clearCurrentAnalysis: () => void;
 }
 
-export interface ReviewSessionState {
+interface ReviewSessionState {
   reviewQueue: Expression[];
   currentReviewIndex: number;
   isReviewing: boolean;
