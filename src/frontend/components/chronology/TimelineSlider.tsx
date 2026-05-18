@@ -1,5 +1,5 @@
 import React, { useRef, useMemo } from 'react';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useTransform, PanInfo } from 'framer-motion';
 import { TimelineSliderProps } from './types';
 import { ChronologyModule } from '@/shared/types/expression';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -19,7 +19,7 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({ data, activeModu
   const activeIndex = points.findIndex(p => p.module.tense === activeModule.tense);
   
   // Calculate drag constraints and mapping
-  const handleDrag = (_: any, info: any) => {
+  const handleDrag = (_: unknown, info: PanInfo) => {
     if (!containerRef.current) return;
     const width = containerRef.current.offsetWidth;
     const x = info.point.x - containerRef.current.getBoundingClientRect().left;
