@@ -2,11 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
 
-type Register = "formal" | "informal" | "spoken" | "business" | "academic" | "casual conversation" | "literary" | "slang";
-
-interface RegisterSpectrumProps {
-  registers: Register[];
-}
+import { RegisterSpectrumProps, Register } from '@/frontend/types/word-variant';
 
 const spectrum = [
   { key: "slang", label: "Slang", position: 5 },
