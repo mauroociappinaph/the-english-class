@@ -1,6 +1,6 @@
 import { IExpressionRepository } from "../domain/repositories/IExpressionRepository";
 import { ILinguisticAnalyzer } from "../domain/interfaces/ILinguisticAnalyzer";
-import { Expression, CreateExpressionDto, AdaptivePathResponse, ExpressionDetail, GroqExample } from "../domain/types";
+import { Expression, CreateExpressionDto, AdaptivePathResponse, ExpressionDetail, GroqExample, GroqExpressionResponse } from "../domain/types";
 import { CefrLevel } from "@/shared/types/expression";
 import { CollisionError } from "../domain/errors";
 import { StudyPerformance } from "@/shared/types/expression";
@@ -72,12 +72,13 @@ export class ExpressionService {
     }
 
     // 3. Multi-stage analysis
-    let result: any;
+    let result: GroqExpressionResponse;
     try {
       console.log(`[ExpressionService] Attempting DEEP analysis for: "${normalizedText}"`);
       result = await this.analyzer.analyzeExpression(normalizedText);
-    } catch (deepError: any) {
-      console.warn(`[ExpressionService] DEEP analysis failed for "${normalizedText}". Error: ${deepError.message}. Attempting BASIC fallback...`);
+    } catch (deepError: unknown) {
+      const deepErrorMsg = deepError instanceof Error ? deepError.message : String(deepError);
+      console.warn(`[ExpressionService] DEEP analysis failed for "${normalizedText}". Error: ${deepErrorMsg}. Attempting BASIC fallback...`);
       
       try {
         const basicResult = await this.analyzer.analyzeExpressionBasic(normalizedText);
@@ -91,15 +92,16 @@ export class ExpressionService {
           phrasalVerbDetails: null,
           chronology: null,
           examples: []
-        };
-      } catch (basicError: any) {
+        } as unknown as GroqExpressionResponse;
+      } catch (basicError: unknown) {
+        const basicErrorMsg = basicError instanceof Error ? basicError.message : String(basicError);
         console.error(`[ExpressionService] BASIC analysis ALSO failed for "${normalizedText}".`);
         
-        const isTimeout = deepError.message?.includes("TIMEOUT") || basicError.message?.includes("TIMEOUT");
-        const isRateLimit = deepError.message?.includes("429") || basicError.message?.includes("rate limit");
+        const isTimeout = deepErrorMsg.includes("TIMEOUT") || basicErrorMsg.includes("TIMEOUT");
+        const isRateLimit = deepErrorMsg.includes("429") || basicErrorMsg.includes("rate limit");
         
         const errorCode: AnalysisErrorCode = isRateLimit ? "PROVIDER_RATE_LIMIT" : isTimeout ? "PROVIDER_TIMEOUT" : "PARSING_FAILURE";
-        throw new AnalysisPipelineError(errorCode, `Analysis pipeline failed: ${deepError.message}`);
+        throw new AnalysisPipelineError(errorCode, `Analysis pipeline failed: ${deepErrorMsg}`);
       }
     }
 
