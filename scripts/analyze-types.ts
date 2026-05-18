@@ -106,7 +106,7 @@ export class SemanticAuditSuite {
         circularDepRules: auditConfig.rules.circularDeps,
         deduplicationRules: auditConfig.rules.deduplication,
         startTime,
-        changedFiles: changedFiles.length > 0 ? changedFiles : loadedFilePaths,
+        changedFiles: changedFiles,
         graph: this.graph
       };
 
