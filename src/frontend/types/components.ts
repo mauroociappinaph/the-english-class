@@ -97,3 +97,23 @@ export interface FlashcardProps {
 export interface AnalysisLoadingProps {
   streamedText: string;
 }
+
+export interface TransitivityCardProps {
+  details: import("@/shared/types/expression").PhrasalVerbDetails;
+}
+
+export interface SeparabilityCardProps {
+  details: import("@/shared/types/expression").PhrasalVerbDetails;
+}
+
+export interface SyntaxAnatomyProps {
+  details: import("@/shared/types/expression").PhrasalVerbDetails;
+}
+
+export interface UsageLogicSectionProps {
+  details: import("@/shared/types/expression").PhrasalVerbDetails;
+}
+
+export interface LogicDocumentationProps {
+  details: import("@/shared/types/expression").PhrasalVerbDetails | null;
+}
