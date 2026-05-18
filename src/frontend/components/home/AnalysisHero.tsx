@@ -62,8 +62,8 @@ export const AnalysisHero: React.FC = () => {
               pedagogicalTip: "El motor neuronal devolvió una respuesta vacía. Esto puede pasar si la conexión es inestable o si el servidor está saturado. ¡Probá de nuevo!"
             };
             
-        console.error("[AnalysisHero] Analysis Failed. Full Response:", response);
-        console.error("[AnalysisHero] Resolved Error Data:", errorData);
+        console.error("[AnalysisHero] Analysis Failed. Full Response:", JSON.stringify(response));
+        console.error("[AnalysisHero] Resolved Error Data:", JSON.stringify(errorData));
         setErrorState(errorData);
       }
     } catch (err) {

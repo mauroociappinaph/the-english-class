@@ -141,7 +141,7 @@ export function WordFamilyList({ families }: WordFamilyListProps) {
                           <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Real Usage</span>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {variant.examples.slice(0, 2).map((ex, i) => (
+                          {(variant.examples || []).slice(0, 2).map((ex, i) => (
                             <div key={i} className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-3 group hover:bg-white/[0.04] transition-colors">
                               <p className="text-white font-bold tracking-tight">"{ex.text}"</p>
                               <p className="text-sm text-zinc-500 font-medium">{ex.translation}</p>

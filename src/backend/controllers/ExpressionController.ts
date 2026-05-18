@@ -69,19 +69,20 @@ export class ExpressionController {
           };
           
           console.log(`[Controller] Returning handled error response:`, JSON.stringify(errorResponse));
-          return errorResponse;
+          return JSON.parse(JSON.stringify(errorResponse));
         }
       }, { text });
     } catch (criticalError) {
       console.error(`[Controller] CRITICAL analysis failure for "${text}":`, criticalError);
-      return {
-        success: false,
+      const criticalResponse = {
+        success: false as const,
         error: {
-          code: "UNKNOWN",
+          code: "UNKNOWN" as const,
           message: criticalError instanceof Error ? criticalError.message : "Critical Controller Failure",
           pedagogicalTip: "El motor neuronal sufrió una falla crítica. Por favor, intentá de nuevo."
         }
       };
+      return JSON.parse(JSON.stringify(criticalResponse));
     }
   }
 
