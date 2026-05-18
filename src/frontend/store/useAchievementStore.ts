@@ -1,22 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { Achievement, AchievementState } from '../types/achievements';
 
-export interface Achievement {
-  id: string;
-  slug: string;
-  title: string;
-  description: string;
-  type: 'CEFR' | 'FAMILY' | 'STREAK';
-  unlockedAt: string;
-}
-
-interface AchievementState {
-  achievements: Achievement[];
-  newlyUnlocked: Achievement | null;
-  setAchievements: (achievements: Achievement[]) => void;
-  addAchievement: (achievement: Achievement) => void;
-  clearNewNotification: () => void;
-}
+export type { Achievement, AchievementState };
 
 export const useAchievementStore = create<AchievementState>()(
   persist(
