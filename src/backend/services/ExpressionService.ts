@@ -214,8 +214,8 @@ export class ExpressionService {
 
     const normalized = rawCefr.trim().toUpperCase();
     
-    // Strict match for Cambridge levels
-    const match = normalized.match(/^(A1|A2|B1|B2|C1|C2)$/i);
+    // Robust match for Cambridge levels (supports exact match or extracting first level from ranges like "B1-C2")
+    const match = normalized.match(/(A1|A2|B1|B2|C1|C2)/i);
     if (match) {
       const level = match[1].toUpperCase() as CefrLevel;
       console.log(`[ExpressionService] CEFR level validated: ${level}`);

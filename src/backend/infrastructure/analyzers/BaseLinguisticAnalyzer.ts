@@ -23,6 +23,7 @@ Return a strictly valid JSON object.
 RULES:
 - "translation": Natural Spanish translation.
 - "meaning": Comprehensive explanation in ENGLISH.
+- "cefr": MUST be exactly one of: "A1", "A2", "B1", "B2", "C1", "C2" representing the primary difficulty level.
 - "chronology": MUST include this field with retrospective, active, and projection modules.
 - "secondaryMeanings": Provide all significant polysemic variations in ENGLISH.
 - "usageTips": Naturalness, Common Mistakes, and Context in ENGLISH.
@@ -54,7 +55,7 @@ Schema:
   },
   "secondaryMeanings": ["English secondary meaning"],
   "type": "verb", // verb | phrasal_verb | idiom | expression | tense
-  "cefr": "A1-C2", 
+  "cefr": "B2", // Must be exactly one of: A1 | A2 | B1 | B2 | C1 | C2
   "ipa": "/phonetic transcription/",
   "correction": { "isCorrect": true, "correctedText": null, "explanation": "..." },
   "frequency": 0.5, // 0.0 to 1.0 (Natural usage frequency)
@@ -130,7 +131,7 @@ Return ONLY a valid JSON object with this schema:
 {
   "translation": "Natural Spanish translation",
   "meaning": "Simple English explanation",
-  "cefr": "CEFR Level (A1-C2)",
+  "cefr": "B2", // Must be exactly one of: A1 | A2 | B1 | B2 | C1 | C2
   "correction": {
     "isCorrect": true,
     "correctedText": null,
