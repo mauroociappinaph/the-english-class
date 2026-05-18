@@ -93,3 +93,7 @@ export interface FlashcardProps {
   className?: string;
   disableFlipClick?: boolean;
 }
+
+export interface AnalysisLoadingProps {
+  streamedText: string;
+}
