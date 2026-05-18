@@ -79,3 +79,12 @@ export interface AnalysisErrorCardProps {
   onRetry: () => void;
   onClear: () => void;
 }
+
+export interface FlashcardProps {
+  isFlipped: boolean;
+  onFlip: () => void;
+  front: React.ReactNode;
+  back: React.ReactNode;
+  className?: string;
+  disableFlipClick?: boolean;
+}
