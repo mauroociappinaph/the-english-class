@@ -14,7 +14,23 @@ export interface GrammarSectionProps {
   items: GrammarItem[];
 }
 
-export interface ExpressionLibraryProps {}
+export interface ReviewHeaderProps {
+  currentReviewIndex: number;
+  queueLength: number;
+  cefr: string;
+  isTestMode: boolean;
+  toggleTestMode: () => void;
+  endReview: () => void;
+}
+
+export interface ReviewProgressBarProps {
+  progress: number;
+}
+
+export interface RatingButtonsProps {
+  onRate: (performance: import("@/frontend/types/store").StudyPerformance) => void;
+  isSubmitting: boolean;
+}
 
 export interface InteractiveTextProps {
   text: string;
@@ -76,4 +92,28 @@ export interface FlashcardProps {
   back: React.ReactNode;
   className?: string;
   disableFlipClick?: boolean;
+}
+
+export interface AnalysisLoadingProps {
+  streamedText: string;
+}
+
+export interface TransitivityCardProps {
+  details: import("@/shared/types/expression").PhrasalVerbDetails;
+}
+
+export interface SeparabilityCardProps {
+  details: import("@/shared/types/expression").PhrasalVerbDetails;
+}
+
+export interface SyntaxAnatomyProps {
+  details: import("@/shared/types/expression").PhrasalVerbDetails;
+}
+
+export interface UsageLogicSectionProps {
+  details: import("@/shared/types/expression").PhrasalVerbDetails;
+}
+
+export interface LogicDocumentationProps {
+  details: import("@/shared/types/expression").PhrasalVerbDetails | null;
 }

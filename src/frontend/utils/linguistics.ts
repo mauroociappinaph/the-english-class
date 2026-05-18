@@ -20,3 +20,12 @@ export function createCloze(target: string, example: string): string {
 
   return example;
 }
+
+export function safeVal(v: unknown): string {
+  if (typeof v === "string") return v;
+  if (v && typeof v === "object") {
+    const obj = v as Record<string, string>;
+    return obj.phrase || obj.text || obj.explanation || obj.logic || "";
+  }
+  return String(v ?? "");
+}
