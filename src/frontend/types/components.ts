@@ -38,17 +38,6 @@ export interface WordFamilyListProps {
   families: WordFamilies;
 }
 
-export interface WordVariantCardProps {
-  variant: WordVariant;
-  category: {
-    label: string;
-    sub: string;
-    color: string;
-    icon: LucideIcon;
-  };
-  index: number;
-}
-
 export interface PhrasalVerbDetailsProps {
   details: PhrasalVerbDetails;
 }
