@@ -117,3 +117,9 @@ export interface UsageLogicSectionProps {
 export interface LogicDocumentationProps {
   details: import("@/shared/types/expression").PhrasalVerbDetails | null;
 }
+
+export interface NuanceDeepDiveModalProps {
+  isOpen: boolean;
+  variant: WordVariant | null;
+  onClose: () => void;
+}
