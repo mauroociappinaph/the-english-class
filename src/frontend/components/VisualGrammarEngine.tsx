@@ -3,6 +3,14 @@ import { LucideIcon, Activity, Clock, Timer, FastForward, History } from "lucide
 import { InteractiveText } from "./InteractiveText";
 import { TenseTimelineProps } from "@/frontend/types/components";
 
+function formatTenseKey(key: string): string {
+  const clean = key
+    .replace(/([A-Z])/g, " $1")
+    .replace(/[_-]/g, " ")
+    .trim();
+  return clean.charAt(0).toUpperCase() + clean.slice(1);
+}
+
 export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
   const tenseOrder = ["past", "present", "future"];
   
@@ -92,7 +100,7 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
                       >
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-mono text-zinc-400 uppercase tracking-tighter group-hover/module:text-emerald-400 transition-colors">
-                            MOD_{tense.key.toUpperCase()}
+                            {formatTenseKey(tense.key)}
                           </span>
                           <Activity size={10} className="text-zinc-800 group-hover/module:text-emerald-500/30 transition-colors" />
                         </div>
@@ -111,10 +119,10 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
                         </div>
                         <div className="text-center">
                           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-1">
-                            Neutral Zone Detected
+                            Awaiting Timeline Data
                           </p>
                           <p className="text-xs text-zinc-600 max-w-[150px] mx-auto leading-relaxed">
-                            No temporal data for this path yet. Try searching for <span className="text-emerald-400">"Go"</span>.
+                            No temporal patterns analyzed for this path yet. Try searching for a dynamic verb like <span className="text-emerald-400">"Go"</span>.
                           </p>
                         </div>
                       </div>
@@ -131,15 +139,15 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
           <div className="flex gap-8">
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-rose-400/20 border border-rose-400/40" />
-              <span className="text-sm font-mono text-zinc-400 uppercase">Past Matrix</span>
+              <span className="text-sm font-mono text-zinc-400 uppercase">Past Timeline</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-blue-400/20 border border-blue-400/40" />
-              <span className="text-sm font-mono text-zinc-400 uppercase">Current Flow</span>
+              <span className="text-sm font-mono text-zinc-400 uppercase">Present Actions</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-400/20 border border-emerald-400/40" />
-              <span className="text-sm font-mono text-zinc-400 uppercase">Future Vector</span>
+              <span className="text-sm font-mono text-zinc-400 uppercase">Future Path</span>
             </div>
           </div>
           <button 
