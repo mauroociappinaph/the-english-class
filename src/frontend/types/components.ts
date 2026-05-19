@@ -123,3 +123,11 @@ export interface NuanceDeepDiveModalProps {
   variant: WordVariant | null;
   onClose: () => void;
 }
+
+export interface CollapsiblePanelProps {
+  title: string;
+  subtitle?: string;
+  icon: LucideIcon;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}
