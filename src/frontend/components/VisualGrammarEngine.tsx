@@ -34,9 +34,9 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
   });
 
   const zoneLabels: Record<string, { label: string; icon: LucideIcon; color: string }> = {
-    past: { label: "PAST TIMELINE", icon: History, color: "text-rose-400" },
-    present: { label: "PRESENT ACTIONS", icon: Timer, color: "text-blue-400" },
-    future: { label: "FUTURE PATH", icon: FastForward, color: "text-emerald-400" }
+    past: { label: "PAST MATRIX", icon: History, color: "text-rose-400" },
+    present: { label: "CURRENT FLOW", icon: Timer, color: "text-blue-400" },
+    future: { label: "FUTURE VECTOR", icon: FastForward, color: "text-emerald-400" }
   };
 
   return (
@@ -119,10 +119,10 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
                         </div>
                         <div className="text-center">
                           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-1">
-                            Awaiting Timeline Data
+                            Neutral Zone Detected
                           </p>
                           <p className="text-xs text-zinc-600 max-w-[150px] mx-auto leading-relaxed">
-                            No temporal patterns analyzed for this path yet. Try searching for a dynamic verb like <span className="text-emerald-400">"Go"</span>.
+                            No temporal data for this path yet. Try searching for <span className="text-emerald-400">"Go"</span>.
                           </p>
                         </div>
                       </div>
@@ -139,15 +139,15 @@ export function VisualGrammarEngine({ tenses = {} }: TenseTimelineProps) {
           <div className="flex gap-8">
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-rose-400/20 border border-rose-400/40" />
-              <span className="text-sm font-mono text-zinc-400 uppercase">Past Timeline</span>
+              <span className="text-sm font-mono text-zinc-400 uppercase">Past Matrix</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-blue-400/20 border border-blue-400/40" />
-              <span className="text-sm font-mono text-zinc-400 uppercase">Present Actions</span>
+              <span className="text-sm font-mono text-zinc-400 uppercase">Current Flow</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-400/20 border border-emerald-400/40" />
-              <span className="text-sm font-mono text-zinc-400 uppercase">Future Path</span>
+              <span className="text-sm font-mono text-zinc-400 uppercase">Future Vector</span>
             </div>
           </div>
           <button 
