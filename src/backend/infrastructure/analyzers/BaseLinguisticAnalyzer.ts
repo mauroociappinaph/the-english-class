@@ -63,7 +63,7 @@ Schema:
   },
   "secondaryMeanings": ["English secondary meaning"],
   "type": "verb", // verb | phrasal_verb | idiom | expression | tense
-  "cefr": "B2", // Must be exactly one of: A1 | A2 | B1 | B2 | C1 | C2
+  "cefr": "A1 | A2 | B1 | B2 | C1 | C2", // Must be exactly one of: A1 | A2 | B1 | B2 | C1 | C2. Evaluate accurately.
   "ipa": "/phonetic transcription/",
   "correction": { "isCorrect": true, "correctedText": null, "explanation": "..." },
   "frequency": 0.5, // 0.0 to 1.0 (Natural usage frequency)

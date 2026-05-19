@@ -1,11 +1,12 @@
 import { IExpressionRepository } from "../domain/repositories/IExpressionRepository";
 import { ILinguisticAnalyzer } from "../domain/interfaces/ILinguisticAnalyzer";
 import { Expression, CreateExpressionDto, AdaptivePathResponse, ExpressionDetail, GroqExample, GroqExpressionResponse } from "../domain/types";
-import { CefrLevel } from "@/shared/types/expression";
+import { CefrLevel, WordVariant } from "@/shared/types/expression";
 import { CollisionError } from "../domain/errors";
 import { StudyPerformance } from "@/shared/types/expression";
 import { SpacedRepetitionEngine, StudyMetadata } from "../domain/logic/SpacedRepetitionEngine";
 import { AnalysisErrorCode } from "@/shared/types/analysis";
+import { CefrClassifier } from "../domain/logic/CefrClassifier";
 
 export class AnalysisPipelineError extends Error {
   constructor(public code: AnalysisErrorCode, message: string) {
@@ -112,7 +113,7 @@ export class ExpressionService {
       metadata: {
         secondaryMeanings: result.secondaryMeanings || [],
         type: result.type || "expression",
-        cefr: this.validateCefr(result.cefr),
+        cefr: this.validateCefr(result.cefr, normalizedText),
         isAiEstimated: true, // Mark as AI estimated as it comes from the analyzer
         ipa: result.ipa || "",
         frequency: result.frequency || 0.5,
@@ -128,7 +129,12 @@ export class ExpressionService {
           context: result.usageTips?.context || ""
         },
         tenses: result.tenses || null,
-        wordFamilies: result.wordFamilies || null,
+        wordFamilies: result.wordFamilies ? {
+          noun: (result.wordFamilies.noun || []).map((v: WordVariant) => ({ ...v, cefr: this.validateCefr(v.cefr, v.word) })),
+          verb: (result.wordFamilies.verb || []).map((v: WordVariant) => ({ ...v, cefr: this.validateCefr(v.cefr, v.word) })),
+          adjective: (result.wordFamilies.adjective || []).map((v: WordVariant) => ({ ...v, cefr: this.validateCefr(v.cefr, v.word) })),
+          adverb: (result.wordFamilies.adverb || []).map((v: WordVariant) => ({ ...v, cefr: this.validateCefr(v.cefr, v.word) })),
+        } : null,
         phrasalVerbDetails: result.phrasalVerbDetails || null,
         chronology: result.chronology || null,
         examples: (result.examples || []).map((ex: GroqExample) => ({
@@ -206,9 +212,18 @@ export class ExpressionService {
    * Validates and normalizes CEFR levels.
    * Prevents hardcoded fallbacks and ensures typed consistency.
    */
-  private validateCefr(rawCefr: string | undefined | null): CefrLevel {
+  private validateCefr(rawCefr: string | undefined | null, text: string): CefrLevel {
+    const cleanText = text.trim().toLowerCase();
+    
+    // 1. Static lookup override
+    const staticLevel = CefrClassifier.classify(cleanText);
+    if (staticLevel) {
+      console.log(`[ExpressionService] Static CEFR lookup override for "${cleanText}": ${staticLevel}`);
+      return staticLevel;
+    }
+
     if (!rawCefr) {
-      console.warn(`[ExpressionService] No CEFR level provided by analyzer. Falling back to NOT_CLASSIFIED.`);
+      console.warn(`[ExpressionService] No CEFR level provided by analyzer for "${cleanText}". Falling back to NOT_CLASSIFIED.`);
       return "NOT_CLASSIFIED";
     }
 
@@ -218,7 +233,7 @@ export class ExpressionService {
     const match = normalized.match(/(A1|A2|B1|B2|C1|C2)/i);
     if (match) {
       const level = match[1].toUpperCase() as CefrLevel;
-      console.log(`[ExpressionService] CEFR level validated: ${level}`);
+      console.log(`[ExpressionService] CEFR level validated for "${cleanText}": ${level}`);
       return level;
     }
 
@@ -226,7 +241,7 @@ export class ExpressionService {
       return normalized as CefrLevel;
     }
 
-    console.warn(`[ExpressionService] Invalid CEFR level received: "${rawCefr}". Falling back to UNKNOWN.`);
+    console.warn(`[ExpressionService] Invalid CEFR level received for "${cleanText}": "${rawCefr}". Falling back to UNKNOWN.`);
     return "UNKNOWN";
   }
 }

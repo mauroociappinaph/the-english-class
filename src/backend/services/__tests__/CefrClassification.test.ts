@@ -100,4 +100,13 @@ describe('ExpressionService CEFR Classification', () => {
     const result = await service.analyzeExpression('accurate');
     expect(result.metadata.isAiEstimated).toBe(true);
   });
+
+  it('should override LLM hallucinations for foundational A1 words', async () => {
+    vi.mocked(mockRepository.findByText).mockResolvedValue(null);
+    vi.mocked(mockAnalyzer.analyzeExpression).mockResolvedValue(createMockResponse('C2')); // Hallucinated level
+    vi.mocked(mockRepository.save).mockImplementation((data: CreateExpressionDto) => Promise.resolve({ ...data, id: '1', study: {} } as unknown as ExpressionDetail));
+
+    const result = await service.analyzeExpression('how');
+    expect(result.metadata.cefr).toBe('A1'); // Statically overridden to correct A1 level
+  });
 });
