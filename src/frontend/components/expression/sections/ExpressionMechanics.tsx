@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Settings2, ListTree } from "lucide-react";
 import { MechanicsBlueprint } from "@/frontend/components/mechanics/MechanicsBlueprint";
 import { WordFamilyList } from "@/frontend/components/WordFamilyList";
+import { CollapsiblePanel } from "@/frontend/components/ui/CollapsiblePanel";
 import { ExpressionMechanicsProps, sectionVariants } from "./types";
 
 export function ExpressionMechanics({ phrasalVerbDetails, wordFamilies, type }: ExpressionMechanicsProps) {
@@ -32,7 +33,13 @@ export function ExpressionMechanics({ phrasalVerbDetails, wordFamilies, type }: 
 
       {wordFamilies && (
         <div className="pt-16">
-          <WordFamilyList families={wordFamilies} />
+          <CollapsiblePanel
+            title="Word Family & Morphology"
+            subtitle="Explore how the root word transforms into nouns, verbs, adjectives, and adverbs"
+            icon={ListTree}
+          >
+            <WordFamilyList families={wordFamilies} />
+          </CollapsiblePanel>
         </div>
       )}
     </motion.section>
