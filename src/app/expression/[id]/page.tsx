@@ -3,14 +3,13 @@
 import { useStudyStore } from "@/frontend/store/useStudyStore";
 import { useParams } from "next/navigation";
 import { motion, Variants } from "framer-motion";
-import { VisualGrammarEngine } from "@/frontend/components/VisualGrammarEngine";
 import { SectionDivider } from "@/frontend/components/expression/sections/SectionDivider";
 import { ExpressionHero } from "@/frontend/components/expression/sections/ExpressionHero";
 import { ExpressionMeaning } from "@/frontend/components/expression/sections/ExpressionMeaning";
 import { ExpressionMechanics } from "@/frontend/components/expression/sections/ExpressionMechanics";
 import { ExpressionScenarios } from "@/frontend/components/expression/sections/ExpressionScenarios";
 import { ExpressionMastery } from "@/frontend/components/expression/sections/ExpressionMastery";
-import { ChronologyEngine } from "@/frontend/components/chronology/ChronologyEngine";
+import { ExpressionChronology } from "@/frontend/components/expression/sections/ExpressionChronology";
 import { OnboardingTour } from "@/frontend/components/onboarding/OnboardingTour";
 import { Loader2 } from "lucide-react";
 
@@ -143,19 +142,7 @@ export default function ExpressionPage() {
             />
           </div>
 
-          <div>
-            <SectionDivider label="chronology" type="secondary" />
-            <motion.section
-              id="chronology"
-              variants={sectionVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-10%" }}
-              className="space-y-10"
-            >
-              <ChronologyEngine data={currentAnalysis.linguistics.chronology} />
-            </motion.section>
-          </div>
+          <ExpressionChronology chronology={currentAnalysis.linguistics.chronology} />
         </div>
       </div>
 
