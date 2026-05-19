@@ -14,7 +14,23 @@ export interface GrammarSectionProps {
   items: GrammarItem[];
 }
 
-export interface ExpressionLibraryProps {}
+export interface ReviewHeaderProps {
+  currentReviewIndex: number;
+  queueLength: number;
+  cefr: string;
+  isTestMode: boolean;
+  toggleTestMode: () => void;
+  endReview: () => void;
+}
+
+export interface ReviewProgressBarProps {
+  progress: number;
+}
+
+export interface RatingButtonsProps {
+  onRate: (performance: import("@/frontend/types/store").StudyPerformance) => void;
+  isSubmitting: boolean;
+}
 
 export interface InteractiveTextProps {
   text: string;
@@ -36,17 +52,6 @@ export interface TenseTimelineProps {
 
 export interface WordFamilyListProps {
   families: WordFamilies;
-}
-
-export interface WordVariantCardProps {
-  variant: WordVariant;
-  category: {
-    label: string;
-    sub: string;
-    color: string;
-    icon: LucideIcon;
-  };
-  index: number;
 }
 
 export interface PhrasalVerbDetailsProps {
@@ -78,4 +83,43 @@ export interface AnalysisErrorCardProps {
   error: import('@/shared/types/analysis').AnalysisError;
   onRetry: () => void;
   onClear: () => void;
+}
+
+export interface FlashcardProps {
+  isFlipped: boolean;
+  onFlip: () => void;
+  front: React.ReactNode;
+  back: React.ReactNode;
+  className?: string;
+  disableFlipClick?: boolean;
+}
+
+export interface AnalysisLoadingProps {
+  streamedText: string;
+}
+
+export interface TransitivityCardProps {
+  details: import("@/shared/types/expression").PhrasalVerbDetails;
+}
+
+export interface SeparabilityCardProps {
+  details: import("@/shared/types/expression").PhrasalVerbDetails;
+}
+
+export interface SyntaxAnatomyProps {
+  details: import("@/shared/types/expression").PhrasalVerbDetails;
+}
+
+export interface UsageLogicSectionProps {
+  details: import("@/shared/types/expression").PhrasalVerbDetails;
+}
+
+export interface LogicDocumentationProps {
+  details: import("@/shared/types/expression").PhrasalVerbDetails | null;
+}
+
+export interface NuanceDeepDiveModalProps {
+  isOpen: boolean;
+  variant: WordVariant | null;
+  onClose: () => void;
 }

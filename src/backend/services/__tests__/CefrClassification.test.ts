@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ExpressionService } from '../ExpressionService';
 import { IExpressionRepository } from '@/backend/domain/repositories/IExpressionRepository';
 import { ILinguisticAnalyzer } from '@/backend/domain/interfaces/ILinguisticAnalyzer';
-import { GroqExpressionResponse } from '@/backend/domain/types';
+import { GroqExpressionResponse, CreateExpressionDto, ExpressionDetail } from '@/backend/domain/types';
 import { PhrasalVerbDetails, ChronologyData } from '@/shared/types/expression';
 
 describe('ExpressionService CEFR Classification', () => {
@@ -50,7 +50,7 @@ describe('ExpressionService CEFR Classification', () => {
   it('should correctly classify A1 level', async () => {
     vi.mocked(mockRepository.findByText).mockResolvedValue(null);
     vi.mocked(mockAnalyzer.analyzeExpression).mockResolvedValue(createMockResponse('A1'));
-    vi.mocked(mockRepository.save).mockImplementation((data: any) => Promise.resolve({ ...data, id: '1', study: {} }));
+    vi.mocked(mockRepository.save).mockImplementation((data: CreateExpressionDto) => Promise.resolve({ ...data, id: '1', study: {} } as unknown as ExpressionDetail));
 
     const result = await service.analyzeExpression('cat');
     expect(result.metadata.cefr).toBe('A1');
@@ -59,7 +59,7 @@ describe('ExpressionService CEFR Classification', () => {
   it('should correctly classify C2 level', async () => {
     vi.mocked(mockRepository.findByText).mockResolvedValue(null);
     vi.mocked(mockAnalyzer.analyzeExpression).mockResolvedValue(createMockResponse('C2'));
-    vi.mocked(mockRepository.save).mockImplementation((data: any) => Promise.resolve({ ...data, id: '1', study: {} }));
+    vi.mocked(mockRepository.save).mockImplementation((data: CreateExpressionDto) => Promise.resolve({ ...data, id: '1', study: {} } as unknown as ExpressionDetail));
 
     const result = await service.analyzeExpression('ubiquitous');
     expect(result.metadata.cefr).toBe('C2');
@@ -68,7 +68,7 @@ describe('ExpressionService CEFR Classification', () => {
   it('should fallback to UNKNOWN for invalid levels', async () => {
     vi.mocked(mockRepository.findByText).mockResolvedValue(null);
     vi.mocked(mockAnalyzer.analyzeExpression).mockResolvedValue(createMockResponse('Z9')); // Invalid
-    vi.mocked(mockRepository.save).mockImplementation((data: any) => Promise.resolve({ ...data, id: '1', study: {} }));
+    vi.mocked(mockRepository.save).mockImplementation((data: CreateExpressionDto) => Promise.resolve({ ...data, id: '1', study: {} } as unknown as ExpressionDetail));
 
     const result = await service.analyzeExpression('nonsense');
     expect(result.metadata.cefr).toBe('UNKNOWN');
@@ -77,7 +77,7 @@ describe('ExpressionService CEFR Classification', () => {
   it('should fallback to NOT_CLASSIFIED for empty response', async () => {
     vi.mocked(mockRepository.findByText).mockResolvedValue(null);
     vi.mocked(mockAnalyzer.analyzeExpression).mockResolvedValue(createMockResponse('')); 
-    vi.mocked(mockRepository.save).mockImplementation((data: any) => Promise.resolve({ ...data, id: '1', study: {} }));
+    vi.mocked(mockRepository.save).mockImplementation((data: CreateExpressionDto) => Promise.resolve({ ...data, id: '1', study: {} } as unknown as ExpressionDetail));
 
     const result = await service.analyzeExpression('missing');
     expect(result.metadata.cefr).toBe('NOT_CLASSIFIED');
@@ -86,7 +86,7 @@ describe('ExpressionService CEFR Classification', () => {
   it('should handle lowercase input correctly', async () => {
     vi.mocked(mockRepository.findByText).mockResolvedValue(null);
     vi.mocked(mockAnalyzer.analyzeExpression).mockResolvedValue(createMockResponse('b1')); 
-    vi.mocked(mockRepository.save).mockImplementation((data: any) => Promise.resolve({ ...data, id: '1', study: {} }));
+    vi.mocked(mockRepository.save).mockImplementation((data: CreateExpressionDto) => Promise.resolve({ ...data, id: '1', study: {} } as unknown as ExpressionDetail));
 
     const result = await service.analyzeExpression('improve');
     expect(result.metadata.cefr).toBe('B1');
@@ -95,9 +95,18 @@ describe('ExpressionService CEFR Classification', () => {
   it('should set isAiEstimated to true', async () => {
     vi.mocked(mockRepository.findByText).mockResolvedValue(null);
     vi.mocked(mockAnalyzer.analyzeExpression).mockResolvedValue(createMockResponse('B2'));
-    vi.mocked(mockRepository.save).mockImplementation((data: any) => Promise.resolve({ ...data, id: '1', study: {} }));
+    vi.mocked(mockRepository.save).mockImplementation((data: CreateExpressionDto) => Promise.resolve({ ...data, id: '1', study: {} } as unknown as ExpressionDetail));
 
     const result = await service.analyzeExpression('accurate');
     expect(result.metadata.isAiEstimated).toBe(true);
+  });
+
+  it('should override LLM hallucinations for foundational A1 words', async () => {
+    vi.mocked(mockRepository.findByText).mockResolvedValue(null);
+    vi.mocked(mockAnalyzer.analyzeExpression).mockResolvedValue(createMockResponse('C2')); // Hallucinated level
+    vi.mocked(mockRepository.save).mockImplementation((data: CreateExpressionDto) => Promise.resolve({ ...data, id: '1', study: {} } as unknown as ExpressionDetail));
+
+    const result = await service.analyzeExpression('how');
+    expect(result.metadata.cefr).toBe('A1'); // Statically overridden to correct A1 level
   });
 });

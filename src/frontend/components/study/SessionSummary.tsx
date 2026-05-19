@@ -2,9 +2,8 @@
 
 import { motion } from "framer-motion";
 import { useStudyStore } from "@/frontend/store/useStudyStore";
-import { useAchievementStore } from "@/frontend/store/useAchievementStore";
+import { useAchievementStore, Achievement } from "@/frontend/store/useAchievementStore";
 import { getAdaptivePath, checkAchievements } from "@/app/actions";
-import { Achievement } from "@/frontend/types/achievements";
 import { useEffect, useState } from "react";
 import { AdaptivePathResponse } from "@/frontend/types/store";
 import { Loader2, Sparkles, AlertCircle, ArrowRight, CheckCircle2, TrendingUp } from "lucide-react";
@@ -37,9 +36,9 @@ export function SessionSummary() {
 
     async function verifyAchievements() {
       try {
-        const newAchievements = await checkAchievements();
+        const newAchievements = await checkAchievements() as unknown as Achievement[];
         if (newAchievements && newAchievements.length > 0) {
-          newAchievements.forEach((a: Achievement) => addAchievement(a as unknown as Achievement));
+          newAchievements.forEach((a: Achievement) => addAchievement(a));
         }
       } catch (err) {
         console.error("Failed to check achievements:", err);

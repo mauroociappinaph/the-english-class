@@ -1,14 +1,25 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { WordFamilyListProps } from "../types/components";
-import { Sparkles, ListTree, Box, Zap, Palette, Wind, ArrowRight, Quote } from "lucide-react";
+import { 
+  Sparkles, 
+  ListTree, 
+  Box, 
+  Zap, 
+  Palette, 
+  Wind, 
+  ArrowRight, 
+  Quote
+} from "lucide-react";
 import { WordFamilies, WordVariant } from "@/shared/types/expression";
 import { MorphologyTree } from "./word-variant/MorphologyTree";
 import { RegisterSpectrum } from "./word-variant/RegisterSpectrum";
+import { NuanceDeepDiveModal } from "./word-variant/NuanceDeepDiveModal";
 import { clsx } from "clsx";
 
-const posConfig: Record<string, { label: string; sub: string; color: string; icon: any }> = {
+const posConfig: Record<string, { label: string; sub: string; color: string; icon: React.ComponentType<{ size?: number; className?: string }> }> = {
   noun: { 
     label: "Noun", 
     sub: "Concept / Entity", 
@@ -36,6 +47,7 @@ const posConfig: Record<string, { label: string; sub: string; color: string; ico
 };
 
 export function WordFamilyList({ families }: WordFamilyListProps) {
+  const [selectedVariant, setSelectedVariant] = useState<WordVariant | null>(null);
   const richFamilies = families as unknown as WordFamilies;
   const entries = Object.entries(richFamilies || {}).filter(([_, variants]) => variants && variants.length > 0);
   const allVariants = Object.values(richFamilies || {}).flat().filter(Boolean) as WordVariant[];
@@ -141,7 +153,7 @@ export function WordFamilyList({ families }: WordFamilyListProps) {
                           <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Real Usage</span>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {variant.examples.slice(0, 2).map((ex, i) => (
+                          {(variant.examples || []).slice(0, 2).map((ex, i) => (
                             <div key={i} className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-3 group hover:bg-white/[0.04] transition-colors">
                               <p className="text-white font-bold tracking-tight">"{ex.text}"</p>
                               <p className="text-sm text-zinc-500 font-medium">{ex.translation}</p>
@@ -166,7 +178,10 @@ export function WordFamilyList({ families }: WordFamilyListProps) {
                       </div>
 
                       {/* Discovery Interaction */}
-                      <button className="flex items-center gap-4 group/btn">
+                      <button 
+                        onClick={() => setSelectedVariant(variant)}
+                        className="flex items-center gap-4 group/btn hover:scale-[1.02] transition-transform duration-200"
+                      >
                         <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover/btn:bg-blue-500 group-hover/btn:text-white transition-all">
                           <ArrowRight size={18} />
                         </div>
@@ -195,6 +210,13 @@ export function WordFamilyList({ families }: WordFamilyListProps) {
         </p>
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
       </section>
+
+      {/* 5. NUANCES DEEP DIVE MODAL */}
+      <NuanceDeepDiveModal 
+        isOpen={!!selectedVariant} 
+        variant={selectedVariant} 
+        onClose={() => setSelectedVariant(null)} 
+      />
     </div>
   );
 }

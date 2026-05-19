@@ -1,10 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Box, Zap, Palette, Wind, Info } from 'lucide-react';
-import { WordFamilies, WordVariant } from '@/shared/types/expression';
+import { WordVariant } from '@/shared/types/expression';
 import { clsx } from 'clsx';
-
-import { MorphologyTreeProps } from "@/frontend/types/word-variant";
+import { MorphologyTreeProps } from '@/frontend/types/word-variant';
 
 const posConfig = {
   noun: { label: 'Noun', icon: Box, color: 'text-blue-400', stroke: '#3b82f6' },
@@ -14,9 +13,7 @@ const posConfig = {
 };
 
 export function MorphologyTree({ families, rootWord }: MorphologyTreeProps) {
-  const entries = Object.entries(families).filter((entry): entry is [string, WordVariant[]] => 
-    entry[1] !== undefined && entry[1].length > 0
-  );
+  const entries = Object.entries(families).filter(([_, variants]) => variants && variants.length > 0);
 
   return (
     <div className="w-full aspect-[16/9] md:aspect-[21/9] relative flex items-center justify-center overflow-visible py-20">
@@ -58,7 +55,8 @@ export function MorphologyTree({ families, rootWord }: MorphologyTreeProps) {
 
       {/* Orbital Branches */}
       <div className="absolute inset-0 pointer-events-none">
-        {entries.map(([pos, variants], index) => {
+        {entries.map(([pos, rawVariants], index) => {
+          const variants = rawVariants as WordVariant[];
           const config = posConfig[pos as keyof typeof posConfig];
           if (!config || !variants) return null;
 
@@ -93,7 +91,7 @@ export function MorphologyTree({ families, rootWord }: MorphologyTreeProps) {
 
                 {/* Variant Nodes */}
                 <div className="flex flex-col gap-3">
-                  {variants.slice(0, 2).map((v: WordVariant, i: number) => (
+                  {variants.slice(0, 2).map((v, i) => (
                     <motion.div 
                       key={v.word}
                       whileHover={{ scale: 1.05, x: index < entries.length / 2 ? 10 : -10 }}

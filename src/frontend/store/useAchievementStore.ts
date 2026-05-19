@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Achievement, AchievementState } from '../types/achievements';
 
+export type { Achievement, AchievementState };
+
 export const useAchievementStore = create<AchievementState>()(
   persist(
     (set) => ({

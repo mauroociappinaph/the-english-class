@@ -19,7 +19,7 @@ ${text}
 
 Schema:
 {
-  "cefrLevel": "CEFR (A1-C2)",
+  "cefrLevel": "A1 | A2 | B1 | B2 | C1 | C2 (Evaluate carefully based on Cambridge vocabulary and grammar complexity standards)",
   "metrics": {
     "grammar": 0 to 100,
     "vocabulary": 0 to 100,
@@ -74,7 +74,7 @@ ${text}
 
 Schema:
 {
-  "cefrLevel": "CEFR (A1-C2)",
+  "cefrLevel": "A1 | A2 | B1 | B2 | C1 | C2 (Evaluate carefully based on Cambridge vocabulary and grammar complexity standards)",
   "metrics": {
     "grammar": 0 to 100,
     "vocabulary": 0 to 100,
